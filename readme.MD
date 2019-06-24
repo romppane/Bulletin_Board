@@ -1,6 +1,9 @@
 # Commands
 
-## Project launching:
+## Project installing and launching:
+
+### Install
+npm install
 
 ### Compile
 npm run tsc
