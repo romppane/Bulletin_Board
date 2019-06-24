@@ -1,0 +1,32 @@
+{
+  "name": "bulletin_board",
+  "version": "1.0.0",
+  "description": "Restful api for a bulletin board",
+  "main": "index.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev --respawn --transpileOnly ./app/app.ts",
+    "prod": "tsc && node ./build/app.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romppane/Bulletin_Board.git"
+  },
+  "keywords": [
+    "Bulletin",
+    "board"
+  ],
+  "author": "Roni Metsämuuronen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/romppane/Bulletin_Board/issues"
+  },
+  "homepage": "https://github.com/romppane/Bulletin_Board#readme",
+  "dependencies": {
+    "@types/express": "^4.17.0",
+    "express": "^4.17.1",
+    "ts-node-dev": "^1.0.0-pre.40",
+    "typescript": "^3.5.2"
+  }
+}
