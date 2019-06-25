@@ -1,7 +1,7 @@
 import express = require('express');
 import bodyparser = require ('body-parser');
 
-class Post{
+export class Post{
   private id: number;
   private owner_id: number;
   private likes: number;
@@ -81,7 +81,7 @@ for(let i = 0; i<20; i++) {
   posts.push(new Post(i, i, "category", "toimii"));
 }
 
-// Basic message to see that connection works
+// Basic message to see that the connection works
 app.get('/', function (req, res) {
   res.status(200).send('Bulletin_Board');
 });
@@ -100,8 +100,8 @@ app.get('/Post/:id', (req, res) => {
 
 // Create post
 app.post('/Post', (req, res) => {
-  // !!Doesn't use the constructor which is a problem!!
-  const post : Post = req.body;
+  // Post now using constructor with static id values. Once the project moves on to use db the id's can be auto incremented and fetched from the correct users.
+  const post : Post = new Post(100, 100, req.body.category, req.body.message);
   posts.push(post)
   res.status(201).send(post);
 })
