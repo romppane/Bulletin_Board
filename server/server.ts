@@ -28,7 +28,7 @@ app.use(bodyparser.json());
 let posts: Post[] = [];
 
 // Fill posts
-for(var i = 0; i<20; i++) {
+for(let i = 0; i<20; i++) {
   posts.push(new Post(i, i, i, "category", i, "toimii"));
 }
 
