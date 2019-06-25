@@ -2,24 +2,36 @@ import express = require('express');
 import bodyparser = require ('body-parser');
 
 class Post{
-  id: number;
-  owner: number;
-  likes: number;
-  category: string;
-  views: number;
-  message: string;
+  private id: number;
+  private owner_id: number;
+  private likes: number;
+  private category: string;
+  private views: number;
+  private message: string;
 
-  constructor(id: number, owner: number, likes: number, category: string, views: number, message: string){
+  public constructor(id: number, owner_id: number, category: string, message: string){
     this.id = id;
-    this.owner = owner;
-    this.likes = likes;
+    this.owner_id = owner_id;
+    this.likes = 0;
     this.category = category;
-    this.views = views;
+    this.views = 0;
     this.message = message;
+  }
+
+  public getId() : number {
+    return this.id;
+  }
+
+  public getOwner_id() : number {
+    return this.owner_id;
   }
 
   public addView() {
     this.views += 1;
+  }
+
+  public getViews() : number {
+    return this.views;
   }
 
   // With this way of implementing likes, it's impossible to keep track of who likes the post or not.
@@ -33,12 +45,24 @@ class Post{
     this.likes -= 1;
   }
 
+  public getLikes() : number {
+    return this.likes;
+  }
+
   public setCategory(category:string) {
     this.category = category
   }
 
+  public getCategory() : string {
+    return this.category;
+  }
+
   public setMessage(message:string) {
     this.message = message;
+  }
+
+  public getMessage() : string {
+    return this.message;
   }
 
 
@@ -54,7 +78,7 @@ let posts: Post[] = [];
 
 // Fill posts
 for(let i = 0; i<20; i++) {
-  posts.push(new Post(i, i, i, "category", i, "toimii"));
+  posts.push(new Post(i, i, "category", "toimii"));
 }
 
 // Basic message to see that connection works
@@ -76,6 +100,7 @@ app.get('/Post/:id', (req, res) => {
 
 // Create post
 app.post('/Post', (req, res) => {
+  // !!Doesn't use the constructor which is a problem!!
   const post : Post = req.body;
   posts.push(post)
   res.status(201).send(post);
@@ -86,7 +111,7 @@ app.delete('/Post/:id', (req, res) => {
   const deleted: Post = posts[req.params.id];
   // Not very optimal to leave holes with null, but splicing changes the positioning for the rest of the array.
   // The problem should disapper when working with a database, with real id's and not indexes.
-  delete(posts[deleted.id]);
+  delete(posts[deleted.getId()]);
   res.status(202).send(deleted);
 
 })
@@ -101,7 +126,7 @@ app.delete('/Post/:id', (req, res) => {
      updated.setMessage(req.body.message);
    }
    posts[req.params.id] = updated;
-   res.status(200).send(posts[updated.id]);
+   res.status(200).send(posts[updated.getId()]);
  })
 
 
@@ -110,7 +135,7 @@ app.put('/Post/:id/like', (req, res) => {
   console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.likePost();
-  res.status(200).send(posts[updated.id]);
+  res.status(200).send(posts[updated.getId()]);
 })
 
 // Don't like
@@ -118,7 +143,7 @@ app.put('/Post/:id/unlike', (req, res) => {
   console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.unlikePost();
-  res.status(200).send(posts[updated.id]);
+  res.status(200).send(posts[updated.getId()]);
 })
 
 
