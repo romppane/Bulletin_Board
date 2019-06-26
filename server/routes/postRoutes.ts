@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
 // Dummy for post/id
 router.get('/:id', (req, res) => {
-  let post : Post = posts[req.params.id];
+  const post : Post = posts[req.params.id];
   post.addView();
   res.status(200).send(post);
 })

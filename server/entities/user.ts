@@ -1,4 +1,6 @@
 export class User {
+
+  // Not putting too many variables here yet, as I've still to study log in possiblities. How does Google sign in for example work?
   private id: number;
   private avatar: string;
 
