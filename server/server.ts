@@ -1,5 +1,12 @@
 import express = require('express');
 import bodyparser = require ('body-parser');
+import {comparePosts} from './helpers';
+
+
+
+// Create a new express application instance
+const app: express.Application = express();
+app.use(bodyparser.json());
 
 export class Post{
   private id: number;
@@ -68,11 +75,6 @@ export class Post{
 
 }
 
-
-// Create a new express application instance
-const app: express.Application = express();
-app.use(bodyparser.json());
-
 // Empty array of posts
 let posts: Post[] = [];
 
@@ -111,7 +113,9 @@ app.delete('/Post/:id', (req, res) => {
   const deleted: Post = posts[req.params.id];
   // Not very optimal to leave holes with null, but splicing changes the positioning for the rest of the array.
   // The problem should disapper when working with a database, with real id's and not indexes.
-  delete(posts[deleted.getId()]);
+
+  // Now compares objects and removes the matching one
+  posts = posts.filter((post) => !comparePosts(post, deleted));
   res.status(202).send(deleted);
 
 })
@@ -126,7 +130,7 @@ app.delete('/Post/:id', (req, res) => {
      updated.setMessage(req.body.message);
    }
    posts[req.params.id] = updated;
-   res.status(200).send(posts[updated.getId()]);
+   res.status(200).send(updated);
  })
 
 
@@ -135,7 +139,7 @@ app.put('/Post/:id/like', (req, res) => {
   console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.likePost();
-  res.status(200).send(posts[updated.getId()]);
+  res.status(200).send(updated);
 })
 
 // Don't like
@@ -143,7 +147,8 @@ app.put('/Post/:id/unlike', (req, res) => {
   console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.unlikePost();
-  res.status(200).send(posts[updated.getId()]);
+  console.log(updated);
+  res.status(200).send(updated);
 })
 
 
