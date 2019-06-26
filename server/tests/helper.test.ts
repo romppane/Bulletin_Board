@@ -1,5 +1,5 @@
-import { comparePosts } from '../helpers';
-import { Post } from '../server';
+import { comparePosts } from '../helpers/helpers';
+import { Post } from '../entities/post';
 
 const p : Post = new Post(0,0,"cat","dog");
 const o : Post = new Post(0,0,"cat","doggo");

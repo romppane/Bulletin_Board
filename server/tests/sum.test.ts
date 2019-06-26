@@ -1,4 +1,4 @@
-import { sum } from "../sum";
+import { sum } from "../helpers/sum";
 
 
 test('adds 1 + 2 to equal 3', () => {
