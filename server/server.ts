@@ -18,6 +18,7 @@ app.use('/post', postRoutes);
 app.use('/user', userRoutes);
 app.use('/reply', replyRoutes);
 
+// Should probably be configurable by config file
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Bulletin board server listening on port 3000!');
 });
