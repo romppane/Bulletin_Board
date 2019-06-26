@@ -8,6 +8,7 @@ export class Post{
   private message: string;
 
   public constructor(id: number, owner_id: number, category: string, message: string){
+    // Autogeneration will replace
     this.id = id;
     this.owner_id = owner_id;
     this.likes = 0;
