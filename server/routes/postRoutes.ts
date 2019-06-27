@@ -1,6 +1,6 @@
 import express = require('express');
 const router = express.Router();
-import {comparePosts} from '../helpers/helpers';
+import {comparePosts, limitResponces} from '../helpers/helpers';
 import {Post} from '../entities/post';
 
 // Empty array of posts
@@ -13,7 +13,14 @@ for(let i = 0; i<20; i++) {
 
 // Return all posts
 router.get('/', (req, res) => {
-  res.status(200).send(posts);
+  let responce = posts;
+  // parseInt to check if req.query.limit starts with a number
+  // Should probably come up with a better way to see what parameters have been set and do the parsing elsewhere?
+  if(parseInt(req.query.limit)) {
+    responce = limitResponces(responce, parseInt(req.query.limit));
+  }
+  //console.log(responce);
+  res.status(200).send(responce);
 })
 
 // Dummy for post/id
@@ -58,7 +65,7 @@ router.delete('/:id', (req, res) => {
 
 
 // Like post
-router.put('/:id/like', (req, res) => {
+router.patch('/:id/like', (req, res) => {
   console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.likePost();
@@ -66,7 +73,7 @@ router.put('/:id/like', (req, res) => {
 })
 
 // Don't like
-router.put('/:id/unlike', (req, res) => {
+router.delete('/:id/like', (req, res) => {
   console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.unlikePost();

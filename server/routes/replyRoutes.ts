@@ -39,13 +39,13 @@ router.put('/:id', (req, res) => {
 })
 
 //Add and delete likes
-router.put('/:id/like', (req,res) => {
+router.patch('/:id/like', (req,res) => {
   const updated : Reply = replies[req.params.id];
   updated.likeReply();
   res.status(200).send(updated);
 })
 
-router.put('/:id/unlike', (req,res) => {
+router.delete('/:id/like', (req,res) => {
   const updated : Reply = replies[req.params.id];
   updated.unlikeReply();
   res.status(200).send(updated);

@@ -14,9 +14,9 @@ const replyRoutes = require ('./routes/replyRoutes');
 const app: express.Application = express();
 app.use(bodyparser.json());
 app.use('/', root);
-app.use('/post', postRoutes);
-app.use('/user', userRoutes);
-app.use('/reply', replyRoutes);
+app.use('/posts', postRoutes);
+app.use('/users', userRoutes);
+app.use('/posts/:id/comments', replyRoutes);
 
 // Should probably be configurable by config file
 app.listen(3000, function () {
