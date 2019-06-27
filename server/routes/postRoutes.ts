@@ -1,6 +1,6 @@
 import express = require('express');
 const router = express.Router();
-import {comparePosts, limitResponces} from '../helpers/helpers';
+import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
 import {Post} from '../entities/post';
 
 // Empty array of posts
@@ -18,6 +18,9 @@ router.get('/', (req, res) => {
   // Should probably come up with a better way to see what parameters have been set and do the parsing elsewhere?
   if(parseInt(req.query.limit)) {
     responce = limitResponces(responce, parseInt(req.query.limit));
+  }
+  if(req.query.sort && req.query.field) {
+    responce = sortBy(responce, req.query.field.toLowerCase(), req.query.sort.toLowerCase());
   }
   //console.log(responce);
   res.status(200).send(responce);
@@ -66,7 +69,6 @@ router.delete('/:id', (req, res) => {
 
 // Like post
 router.patch('/:id/like', (req, res) => {
-  console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.likePost();
   res.status(200).send(updated);
@@ -74,10 +76,8 @@ router.patch('/:id/like', (req, res) => {
 
 // Don't like
 router.delete('/:id/like', (req, res) => {
-  console.log(posts[req.params.id]);
   let updated: Post = posts[req.params.id];
   updated.unlikePost();
-  console.log(updated);
   res.status(200).send(updated);
 })
 module.exports = router;

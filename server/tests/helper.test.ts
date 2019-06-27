@@ -1,8 +1,15 @@
-import { comparePosts, limitResponces } from '../helpers/helpers';
+import { comparePosts, limitResponces, sortBy } from '../helpers/helpers';
 import { Post } from '../entities/post';
+import { User } from '../entities/user';
 
 const p : Post = new Post(0,0,"cat","dog");
 const o : Post = new Post(0,0,"cat","doggo");
+
+const objectList : User[] = [new User(0, "Zed"), new User(1, "Bertta"), new User(2, "Azim")];
+const correctList : User[] = [new User(2, "Azim"),new User(1, "Bertta"), new User(0, "Zed")];
+//console.log(objectList);
+//const sorted = sortByFieldAtoZ(objectList, "avatar");
+//console.log(sorted);
 
 const list : number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const strings : string[] = ["aa", "aaa", "aaaa", "bb", "bbb", "bbbb", "cc", "ccc", "cccc", "dd"];
@@ -33,4 +40,12 @@ test('takes in a list of strings, expecting to return without changes', () => {
 
 test('takes in a list of 10 strings, expecting to return without changes', () => {
   expect(limitResponces(strings, 11)).toStrictEqual(["aa", "aaa", "aaaa", "bb", "bbb", "bbbb", "cc", "ccc", "cccc", "dd"]);
+})
+
+test('takes in a list of objects and returns it in a-z order by the column', () => {
+  expect(sortBy(objectList, "avatar", "ascending")).toStrictEqual(correctList);
+})
+
+test('takes in a list of objects and returns it in descending numerical order by column', () => {
+  expect(sortBy(objectList, "id", "descending")).toStrictEqual(correctList);
 })
