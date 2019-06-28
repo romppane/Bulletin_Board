@@ -1,5 +1,6 @@
 import express = require('express');
 import bodyparser = require ('body-parser');
+import "reflect-metadata";
 
 
 

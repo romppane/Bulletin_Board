@@ -1,10 +1,22 @@
+import { MinLength, IsNotEmpty, MaxLength } from 'class-validator'
+import {Expose, plainToClass} from "class-transformer";
+
 
 export class Post{
+  @Expose()
   private id: number;
+  @Expose()
   private owner_id: number;
+  @Expose()
   private likes: number;
+  @Expose()
+  @IsNotEmpty()
+  @MaxLength(1)
   private category: string;
+  @Expose()
   private views: number;
+  @Expose()
+  @MinLength(1)
   private message: string;
 
   public constructor(id: number, owner_id: number, category: string, message: string){

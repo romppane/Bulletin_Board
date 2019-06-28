@@ -2,6 +2,7 @@ import express = require('express');
 const router = express.Router();
 import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
 import {Post} from '../entities/post';
+import { validatePost } from '../helpers/validation';
 
 // Empty array of posts
 let posts: Post[] = [];
@@ -34,9 +35,10 @@ router.get('/:id', (req, res) => {
 })
 
 // Create post
-router.post('/', (req, res) => {
+router.post('/', validatePost, (req, res) => {
   // Post now using constructor with static id values. Once the project moves on to use db the id's can be auto incremented and fetched from the correct users.
-  const post : Post = new Post(100, 100, req.body.category, req.body.message);
+  console.log(req.body);
+  const post : Post = req.body;
   posts.push(post)
   res.status(201).send(post);
 })
