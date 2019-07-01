@@ -3,6 +3,7 @@ import { validate, ValidationSchema } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
 
+// As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
 // conditionalValidation = isOptional -> https://github.com/typestack/class-validator/issues/147
 // The validation still doesn't check what the user inputs very well.

@@ -23,7 +23,6 @@ router.get('/', (req, res) => {
   if(req.query.sort && req.query.field) {
     responce = sortBy(responce, req.query.field.toLowerCase(), req.query.sort.toLowerCase());
   }
-  //console.log(responce);
   res.status(200).send(responce);
 })
 
