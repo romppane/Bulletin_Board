@@ -1,15 +1,18 @@
 import express = require('express');
 const router = express.Router();
 import {User} from '../entities/user';
+import { getRepository } from 'typeorm';
 
 let users: User[] = [];
 
 for(let i = 0; i<5; i++) {
-  users.push(new User(i, "abcd%d" + i));
+  users.push(new User("abcd%d" + i));
 }
 
-router.get('/', (req, res) => {
-  res.status(200).send(users);
+router.get('/', async (req, res) => {
+  const dbusers = await getRepository(User).find();
+  console.log(dbusers);
+  res.status(200).send(dbusers);
 })
 
 router.get('/:id', (req, res) => {
@@ -19,7 +22,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req,res) => {
   // Should probably make the avatar default to ""
-  const user : User = new User(req.body.id, req.body.avatar);
+  const user : User = new User(req.body.avatar);
   users.push(user);
   res.status(201).send(user);
 })

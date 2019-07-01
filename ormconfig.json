@@ -1,14 +1,14 @@
 {
-   "type": "mysql",
+   "type": "mariadb",
    "host": "localhost",
    "port": 3306,
-   "username": "test",
-   "password": "test",
-   "database": "test",
+   "username": "BulletinBoarder",
+   "password": "fjWvxuY4edDwGiAv6qOa6",
+   "database": "BulletBoardDB",
    "synchronize": true,
    "logging": false,
    "entities": [
-      "entities/**/*.ts"
+      "C:/Users/romppane/Desktop/Bulletin_Board/server/entities/*.ts"
    ],
    "migrations": [
       "migrations/**/*.ts"

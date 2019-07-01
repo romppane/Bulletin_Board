@@ -1,5 +1,8 @@
 import express = require('express');
 import bodyparser = require ('body-parser');
+import "reflect-metadata";
+import { createConnection, getConnection, getRepository } from "typeorm";
+import { User } from "./entities/user";
 
 
 
@@ -17,6 +20,10 @@ app.use('/', root);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 app.use('/posts/:id/comments', replyRoutes);
+
+
+// Create db connection
+const connection = createConnection();
 
 // Should probably be configurable by config file
 app.listen(3000, function () {
