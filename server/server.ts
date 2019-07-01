@@ -2,7 +2,6 @@ import express = require('express');
 import bodyparser = require ('body-parser');
 import "reflect-metadata";
 import { createConnection, getConnection, getRepository } from "typeorm";
-import { User } from "./entities/user";
 
 
 
