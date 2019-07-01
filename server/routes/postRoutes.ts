@@ -2,7 +2,7 @@ import express = require('express');
 const router = express.Router();
 import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
 import {Post} from '../entities/post';
-import { validatePost } from '../helpers/validation';
+import { validatePost, validatePostPUT } from '../helpers/validation';
 
 // Empty array of posts
 let posts: Post[] = [];
@@ -30,6 +30,7 @@ router.get('/', (req, res) => {
 // Dummy for post/id
 router.get('/:id', (req, res) => {
   const post : Post = posts[req.params.id];
+  // !!! GET SHOULD NEVER CHANGE THE OBJECTS !!!
   post.addView();
   res.status(200).send(post);
 })
@@ -56,7 +57,7 @@ router.delete('/:id', (req, res) => {
 })
 
  // Update post, change the tittle and/or the message
- router.put('/:id', (req, res) => {
+ router.put('/:id', validatePostPUT, (req, res) => {
    let updated: Post = posts[req.params.id];
    if(req.body.category) {
      updated.setCategory(req.body.category);
