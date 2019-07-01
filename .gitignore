@@ -68,3 +68,4 @@ build/
 .vscode/
 tmp/
 temp/
+ormconfig.json
