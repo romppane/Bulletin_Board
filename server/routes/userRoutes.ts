@@ -4,32 +4,60 @@ import { User } from '../entities/user';
 import { getRepository } from 'typeorm';
 
 router.get('/', async (req, res) => {
-  const dbusers = await getRepository(User).find();
-  console.log(dbusers);
-  res.status(200).send(dbusers);
+  try {
+    const dbusers = await getRepository(User).find();
+    res.status(200).send(dbusers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+
 })
 
 router.get('/:id', async (req, res) => {
-  const responce = await getRepository(User).findOne(req.params.id);
-  res.status(200).send(responce);
+  try {
+    const responce = await getRepository(User).findOne(req.params.id);
+    if (responce) {
+      res.status(200).send(responce);
+    }
+    else {
+      res.status(404).send({
+        message: "User not found"
+      })
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 })
 
 router.post('/', async (req, res) => {
   // Should probably make the avatar default to ""
   // Using the constructors for now instead of repository.create()
-  const user: User = new User(req.body.avatar);
-  await getRepository(User).save(user);
-  res.status(201).send(user);
+  try {
+    const user: User = new User(req.body.avatar);
+    await getRepository(User).save(user);
+    res.status(201).send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 })
 
 router.delete('/:id', async (req, res) => {
-  const deleted = await getRepository(User).delete(req.params.id);
-  if (deleted.affected) {
-    res.sendStatus(204);
-  }
-  else {
-    // Come up with something better than deleted promise.
-    res.status(404).send(deleted);
+  try {
+    const deleted = await getRepository(User).delete(req.params.id);
+    if (deleted.affected) {
+      res.sendStatus(204);
+    }
+    else {
+      // Come up with something better than deleted promise.
+      res.status(404).send({ Affected: deleted.affected });
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
 
 })
@@ -53,7 +81,7 @@ router.put('/:id', async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.send(error);
+    res.status(500).send(error);
   }
 
 
