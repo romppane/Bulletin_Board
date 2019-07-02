@@ -12,7 +12,7 @@ export const postPUTSchema: ValidationSchema = {
     properties: {
         category: [{
             type: 'conditionalValidation', constraints: [(object: any, value: any) => {
-                return object['message'] !== null && object['message'] !== undefined;
+                return object['category'] !== null && object['category'] !== undefined;
             }]
         },  {
             type: "minLength",
