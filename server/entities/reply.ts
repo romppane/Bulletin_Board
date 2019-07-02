@@ -1,16 +1,22 @@
+import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+
+@Entity()
 export class Reply {
-  private id: number;
+
+  @PrimaryGeneratedColumn()
+  private id!: number;
+  @Column()
   private user_id: number;
+  @Column()
   private post_id: number;
-  private likes: number;
+  @Column({ default: 0 })
+  private likes!: number;
+  @Column("text")
   private message: string;
 
-  public constructor(id: number, user_id: number, post_id: number, message: string){
-    // Will be replaced by autogeneration
-    this.id = id;
+  public constructor(user_id: number, post_id: number, message: string){
     this.user_id = user_id;
     this.post_id = post_id;
-    this.likes = 0;
     this.message = message;
   }
 

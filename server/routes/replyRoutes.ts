@@ -1,44 +1,94 @@
 import express = require('express');
 const router = express.Router();
 import {Reply} from '../entities/reply';
+import { getRepository } from 'typeorm';
 
-let replies: Reply[] = [];
 
-for(let i = 0; i<5; i++) {
-  replies.push(new Reply(i, i, i, "#"+i));
-}
-
-router.get('/', (req, res) => {
-  res.status(200).send(replies);
-})
-
-router.get('/:id', (req, res) => {
-  const reply : Reply = replies[req.params.id];
-  res.status(200).send(reply);
-})
-
-router.post('/', (req, res) => {
-  const reply : Reply = new Reply(req.body.id, req.body.user_id, req.body.post_id, req.body.message);
-  replies.push(reply);
-  res.status(201).send(reply);
-})
-
-router.delete('/:id', (req, res) => {
-  const deleted = replies[req.params.id];
-  replies.splice(req.params.id, 1);
-  res.status(202).send(deleted);
-})
-
-router.put('/:id', (req, res) => {
-  const updated : Reply = replies[req.params.id];
-  if(req.body.message) {
-    updated.setMessage(req.body.message);
+router.get('/', async (req, res) => {
+  try {
+    const replies = await getRepository(Reply).find();
+    res.status(200).send(replies);
+  } catch (error) {
+    console.log(error);
+    // Internal error
+    res.send(error);
   }
-  replies[req.params.id] = updated;
-  res.status(200).send(updated);
+  
+})
+
+router.get('/:id', async (req, res) => {
+  try {
+    const reply = await getRepository(Reply).findOne(req.params.id);
+    if(reply) {
+      res.status(200).send(reply);
+    }
+    else {
+      res.status(404).send({message : "User not found!"})
+    }
+  } catch (error) {
+    console.log(error);
+    // in case of an internal error
+    res.send(error);
+  }
+  
+})
+
+router.post('/', async (req, res) => {
+  try {
+    const reply : Reply = new Reply(req.body.user_id, req.body.post_id, req.body.message);
+    await getRepository(Reply).save(reply);
+    res.status(201).send(reply);
+  } catch (error) {
+    // Could be a user error or internal, find out the possibilities and design messages
+    console.log(error);
+    res.send(error);
+  }
+  
+})
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const deleted = await getRepository(Reply).delete(req.params.id);
+  if(deleted.affected) {
+    res.sendStatus(204);
+  }
+  else {
+    res.status(404).send({Affected : deleted.affected});
+  }
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+  
+})
+
+router.put('/:id', async (req, res) => {
+
+  try {
+    // Validate out any unnecessary fields
+    await getRepository(Reply).update(req.params.id, req.body);
+    const updated = await getRepository(Reply).findOne(req.params.id);
+    if(updated) {
+    
+      res.status(200).send(updated);
+    }
+    else {
+      res.status(404).send({
+        message : "User not found"
+      })
+    }
+  
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+  
+  
+
 })
 
 //Add and delete likes
+/*
 router.patch('/:id/like', (req,res) => {
   const updated : Reply = replies[req.params.id];
   updated.likeReply();
@@ -50,4 +100,5 @@ router.delete('/:id/like', (req,res) => {
   updated.unlikeReply();
   res.status(200).send(updated);
 })
+*/
 module.exports = router;
