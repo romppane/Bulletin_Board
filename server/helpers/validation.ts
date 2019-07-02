@@ -46,7 +46,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
             console.log("validation failed. errors: ", errors);
-            res.send(errors);
+            res.status(400).send(errors);
         } else {
             console.log("validation succeed");
             req.body = newpost;
@@ -61,7 +61,7 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
             console.log("validation failed. errors: ", errors);
-            res.send(errors);
+            res.status(400).send(errors);
         } else {
             console.log("validation succeed");
             next();
