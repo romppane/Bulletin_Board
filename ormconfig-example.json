@@ -9,6 +9,7 @@
    "logging": false,
    "entities": [
       "./server/entities/*.ts"
+      
    ],
    "migrations": [
       "migrations/**/*.ts"
