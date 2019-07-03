@@ -3,6 +3,7 @@ const router = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 
+const notFound : Error = new Error("Comment doesn't exist");
 
 router.get('/', async (req, res, next) => {
   try {
@@ -22,7 +23,8 @@ router.get('/:id', async (req, res, next) => {
       res.status(200).send(reply);
     }
     else {
-      res.status(404).send({ message: "Comment not found!" })
+      res.status(404);
+      next(notFound);
     }
   } catch (error) {
     // in case of an internal error
@@ -52,7 +54,8 @@ router.delete('/:id', async (req, res, next) => {
       res.sendStatus(204);
     }
     else {
-      res.status(404).send({ Affected: deleted.affected });
+      res.status(404);
+      next(notFound);
     }
   } catch (error) {
     res.status(500);
@@ -72,9 +75,8 @@ router.put('/:id', async (req, res, next) => {
       res.status(200).send(updated);
     }
     else {
-      res.status(404).send({
-        message: "Comment not found"
-      })
+      res.status(404);
+      next(notFound);
     }
 
   } catch (error) {
