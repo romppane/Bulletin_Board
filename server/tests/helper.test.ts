@@ -5,8 +5,8 @@ import { User } from '../entities/user';
 const p : Post = new Post(0,0,"cat","dog");
 const o : Post = new Post(0,0,"cat","doggo");
 
-const objectList : User[] = [new User(0, "Zed"), new User(1, "Bertta"), new User(2, "Azim")];
-const correctList : User[] = [new User(2, "Azim"),new User(1, "Bertta"), new User(0, "Zed")];
+const objectList : User[] = [new User("Zed"), new User("Bertta"), new User("Azim")];
+const correctList : User[] = [new User("Azim"),new User("Bertta"), new User("Zed")];
 //console.log(objectList);
 //const sorted = sortByFieldAtoZ(objectList, "avatar");
 //console.log(sorted);
@@ -44,8 +44,4 @@ test('takes in a list of 10 strings, expecting to return without changes', () =>
 
 test('takes in a list of objects and returns it in a-z order by the column', () => {
   expect(sortBy(objectList, "avatar", "ascending")).toStrictEqual(correctList);
-})
-
-test('takes in a list of objects and returns it in descending numerical order by column', () => {
-  expect(sortBy(objectList, "id", "descending")).toStrictEqual(correctList);
 })

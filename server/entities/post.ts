@@ -1,10 +1,26 @@
+import { Length, IsNotEmpty, IsInt } from 'class-validator'
+import { Expose } from "class-transformer";
+
 
 export class Post{
+  @Expose()
   private id: number;
+
+  @Expose()
+  @IsInt()
   private owner_id: number;
+
   private likes: number;
+
+  @Expose()
+  @IsNotEmpty()
+  @Length(1, 50)
   private category: string;
+
   private views: number;
+  
+  @Expose()
+  @Length(1, 1000)
   private message: string;
 
   public constructor(id: number, owner_id: number, category: string, message: string){

@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
       res.status(200).send(reply);
     }
     else {
-      res.status(404).send({ message: "User not found!" })
+      res.status(404).send({ message: "Comment not found!" })
     }
   } catch (error) {
     console.log(error);
