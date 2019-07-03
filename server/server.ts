@@ -1,12 +1,12 @@
 import express = require('express');
 import bodyparser = require ('body-parser');
 import "reflect-metadata";
+import { createConnection } from "typeorm";
 import { registerSchema } from "class-validator";
 import { postPUTSchema } from './helpers/validation'
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
-
 
 
 // Construct routes
@@ -23,6 +23,10 @@ app.use('/', root);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 app.use('/posts/:id/comments', replyRoutes);
+
+
+// Create db connection
+const connection = createConnection();
 
 // Should probably be configurable by config file
 app.listen(3000, function () {

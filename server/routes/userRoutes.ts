@@ -1,44 +1,90 @@
 import express = require('express');
 const router = express.Router();
-import {User} from '../entities/user';
+import { User } from '../entities/user';
+import { getRepository } from 'typeorm';
 
-let users: User[] = [];
+router.get('/', async (req, res) => {
+  try {
+    const dbusers = await getRepository(User).find();
+    res.status(200).send(dbusers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 
-for(let i = 0; i<5; i++) {
-  users.push(new User(i, "abcd%d" + i));
-}
-
-router.get('/', (req, res) => {
-  res.status(200).send(users);
 })
 
-router.get('/:id', (req, res) => {
-  const responce : User = users[req.params.id];
-  res.status(200).send(responce);
+router.get('/:id', async (req, res) => {
+  try {
+    const responce = await getRepository(User).findOne(req.params.id);
+    if (responce) {
+      res.status(200).send(responce);
+    }
+    else {
+      res.status(404).send({
+        message: "User not found"
+      })
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 })
 
-router.post('/', (req,res) => {
+router.post('/', async (req, res) => {
   // Should probably make the avatar default to ""
-  const user : User = new User(req.body.id, req.body.avatar);
-  users.push(user);
-  res.status(201).send(user);
+  // Using the constructors for now instead of repository.create()
+  try {
+    const user: User = new User(req.body.avatar);
+    await getRepository(User).save(user);
+    res.status(201).send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 })
 
-router.delete('/:id', (req,res) => {
-  const deleted : User = users[req.params.id];
-  users.splice(req.params.id, 1);
-  res.status(202).send(deleted);
+router.delete('/:id', async (req, res) => {
+  try {
+    const deleted = await getRepository(User).delete(req.params.id);
+    if (deleted.affected) {
+      res.sendStatus(204);
+    }
+    else {
+      // Come up with something better than deleted promise.
+      res.status(404).send({ Affected: deleted.affected });
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+
 })
 
 // With the limited attributes given to user, only thing they're allowed to change is avatar picture
 // Have to explore how sending pictures in url parameters works, but I'm guessing this is a spot where
 // picture to base64 needs to be run?
-router.put('/:id', (req,res) => {
-  const updated : User = users[req.params.id];
-  if(req.body.avatar) {
-    updated.setAvatar(req.body.avatar);
+router.put('/:id', async (req, res) => {
+  try {
+    // Make validation that prevents the changing of id.
+    await getRepository(User).update(req.params.id, req.body);
+    // Not class instance
+    const updated = await getRepository(User).findOne(req.params.id);
+    if (updated) {
+      res.status(200).send(updated);
+    }
+    else {
+      res.status(404).send({
+        message: "User not found"
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
-  res.status(200).send(updated);
+
+
 })
 
 

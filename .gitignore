@@ -62,3 +62,10 @@ typings/
 
 # Build files
 build/
+
+#TypeORM
+.idea/
+.vscode/
+tmp/
+temp/
+ormconfig.json
