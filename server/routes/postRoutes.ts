@@ -2,6 +2,7 @@ import express = require('express');
 const router = express.Router();
 import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
 import {Post} from '../entities/post';
+import { validatePost, validatePostPUT } from '../helpers/validation';
 
 // Empty array of posts
 let posts: Post[] = [];
@@ -22,21 +23,22 @@ router.get('/', (req, res) => {
   if(req.query.sort && req.query.field) {
     responce = sortBy(responce, req.query.field.toLowerCase(), req.query.sort.toLowerCase());
   }
-  //console.log(responce);
   res.status(200).send(responce);
 })
 
 // Dummy for post/id
 router.get('/:id', (req, res) => {
   const post : Post = posts[req.params.id];
+  // !!! GET SHOULD NEVER CHANGE THE OBJECTS !!!
   post.addView();
   res.status(200).send(post);
 })
 
 // Create post
-router.post('/', (req, res) => {
+router.post('/', validatePost, (req, res) => {
   // Post now using constructor with static id values. Once the project moves on to use db the id's can be auto incremented and fetched from the correct users.
-  const post : Post = new Post(100, 100, req.body.category, req.body.message);
+  console.log(req.body);
+  const post : Post = req.body;
   posts.push(post)
   res.status(201).send(post);
 })
@@ -54,7 +56,7 @@ router.delete('/:id', (req, res) => {
 })
 
  // Update post, change the tittle and/or the message
- router.put('/:id', (req, res) => {
+ router.put('/:id', validatePostPUT, (req, res) => {
    let updated: Post = posts[req.params.id];
    if(req.body.category) {
      updated.setCategory(req.body.category);

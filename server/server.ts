@@ -1,5 +1,11 @@
 import express = require('express');
 import bodyparser = require ('body-parser');
+import "reflect-metadata";
+import { registerSchema } from "class-validator";
+import { postPUTSchema } from './helpers/validation'
+
+// It's essential to register schemas. Otherwise all will pass.
+registerSchema(postPUTSchema);
 
 
 
