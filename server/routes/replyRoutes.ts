@@ -4,19 +4,18 @@ import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const replies = await getRepository(Reply).find();
     res.status(200).send(replies);
   } catch (error) {
-    console.log(error);
-    // Internal error
-    res.status(500).send(error);
+    res.status(500);
+    next(error);
   }
 
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const reply = await getRepository(Reply).findOne(req.params.id);
     if (reply) {
@@ -26,27 +25,27 @@ router.get('/:id', async (req, res) => {
       res.status(404).send({ message: "Comment not found!" })
     }
   } catch (error) {
-    console.log(error);
     // in case of an internal error
-    res.status(500).send(error);
+    res.status(500);
+    next(error);
   }
 
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const reply: Reply = new Reply(req.body.user_id, req.body.post_id, req.body.message);
     await getRepository(Reply).save(reply);
     res.status(201).send(reply);
   } catch (error) {
     // Could be a user error or internal, find out the possibilities and design messages
-    console.log(error);
-    res.status(500).send(error);
+    res.status(500);
+    next(error);
   }
 
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const deleted = await getRepository(Reply).delete(req.params.id);
     if (deleted.affected) {
@@ -56,13 +55,13 @@ router.delete('/:id', async (req, res) => {
       res.status(404).send({ Affected: deleted.affected });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    res.status(500);
+    next(error);
   }
 
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields
@@ -74,13 +73,13 @@ router.put('/:id', async (req, res) => {
     }
     else {
       res.status(404).send({
-        message: "User not found"
+        message: "Comment not found"
       })
     }
 
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    res.status(500);
+    next(error);
   }
 
 
