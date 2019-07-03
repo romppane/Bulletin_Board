@@ -16,7 +16,7 @@ export function handleErrors(err: Error, req: Request, res: Response, next: Next
     }
     case 400: {
       res.send({
-        message : "There seems to be an error with data validation."
+        Error : err.message
       })
       // Validation error, bad syntax
       break;

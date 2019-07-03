@@ -2,6 +2,17 @@ import { plainToClass } from 'class-transformer';
 import { validate, ValidationSchema } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
+import { constants } from 'os';
+
+/*export class ValidationError extends Error{
+    constraints?: string[];
+    constructor(message: string, constraints : string[]) {
+        super(message);
+        this.constraints = constraints;
+    }
+}
+*/
+
 
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
@@ -45,8 +56,19 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-            console.log("validation failed. errors: ", errors);
-            res.status(400).send(errors);
+
+            // JSON monster
+            const msg = errors.map((value) => {return {
+                property : value.property,
+                constraints : value.constraints+""
+            };
+        }).reduce((accumulator, current) => {
+            return accumulator + current.property+": "+current.constraints+'\n';
+        }, "")
+        console.log(msg);
+
+            res.status(400);
+            next(new Error(msg));
         } else {
             console.log("validation succeed");
             req.body = newpost;
