@@ -26,9 +26,9 @@ morgan.token('date', (req : express.Request, res : express.Response, zone : stri
   return moment().tz(zone).format()+"";
 })
 
-
-morgan.format('outFormat', ':remote-addr - :remote-user [:date[Europe/Helsinki]]:method|:url|HTTP/:http-version|:status|:res[content-length] - :response-time ms|:user-agent|');
-morgan.format('incFormat', ':remote-addr - :remote-user [:date[Europe/Helsinki]]:method|:url|HTTP/:http-version|:user-agent|');
+// :remote-addr - :remote-user , possibly later
+morgan.format('outFormat', ':remote-addr [:date[Europe/Helsinki]] :method [:url] HTTP/:http-version [:status] :res[content-length] - :response-time ms [:user-agent]');
+morgan.format('incFormat', ':remote-addr [:date[Europe/Helsinki]] :method [:url] HTTP/:http-version [:user-agent]');
 
 const infoLogStream = fs.createWriteStream(
   path.join('.', 'logs', 'info.log'),
