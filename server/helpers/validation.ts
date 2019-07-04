@@ -84,7 +84,6 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            console.log(errors[0].constraints)
             const msg = JSON.stringify(errors.map((value) => {
                 return {
                     property: value.property,
