@@ -25,7 +25,7 @@ export const postPUTSchema: ValidationSchema = {
             type: 'conditionalValidation', constraints: [(object: any, value: any) => {
                 return object['category'] !== null && object['category'] !== undefined;
             }]
-        },  {
+        }, {
             type: "minLength",
             constraints: [1]
         }, {
@@ -58,14 +58,16 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
         if (errors.length > 0) {
 
             // JSON monster
-            const msg = errors.map((value) => {return {
-                property : value.property,
-                constraints : value.constraints+""
-            };
-        }).reduce((accumulator, current) => {
-            return accumulator + current.property+": "+current.constraints+'\n';
-        }, "")
-        console.log(msg);
+            // Returns a list of errors objects and turns it into a string.
+            // For some reason doesn't want to get parsed prettier.. I'll be back!
+            const msg = JSON.stringify(errors.map((value) => {
+                return {
+                    property: value.property,
+                    constraints: value.constraints
+                };
+            }))
+
+            console.log(msg);
 
             res.status(400);
             next(new Error(msg));
@@ -82,8 +84,18 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            console.log("validation failed. errors: ", errors);
-            res.status(400).send(errors);
+            console.log(errors[0].constraints)
+            const msg = JSON.stringify(errors.map((value) => {
+                return {
+                    property: value.property,
+                    constraints: value.constraints
+                };
+            }))
+
+            console.log(msg);
+
+            res.status(400);
+            next(new Error(msg));
         } else {
             console.log("validation succeed");
             next();
