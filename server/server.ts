@@ -26,19 +26,39 @@ morgan.token('date', (req : express.Request, res : express.Response, zone : stri
   return moment().tz(zone).format()+"";
 })
 
-morgan.format('myformat', ':remote-addr - :remote-user [:date[Europe/Helsinki]] :method :url HTTP/:http-version :status :res[content-length] - :response-time ms :user-agent');
+
+morgan.format('outFormat', ':remote-addr - :remote-user [:date[Europe/Helsinki]]:method|:url|HTTP/:http-version|:status|:res[content-length] - :response-time ms|:user-agent|');
+morgan.format('incFormat', ':remote-addr - :remote-user [:date[Europe/Helsinki]]:method|:url|HTTP/:http-version|:user-agent|');
 
 const infoLogStream = fs.createWriteStream(
   path.join('.', 'logs', 'info.log'),
   { flags: 'a' }
 );
 
+const errorLogStream = fs.createWriteStream(
+  path.join('.', 'logs', 'error.log'),
+  { flags: 'a'}
+);
+
 // Create a new express application instance
 const app: express.Application = express();
 app.use(bodyparser.json());
 
-// Log everything that comes in
-app.use(morgan('myformat', { stream: infoLogStream }));
+// Log incoming requests
+app.use(morgan('incFormat', {
+  immediate: true,
+  stream: infoLogStream}))
+
+// Log successfull responces
+app.use(morgan('outFormat', {skip: (req : express.Request, res : express.Response) => {
+  return res.statusCode >= 399
+}, stream : infoLogStream}))
+
+// Logs error responces
+app.use(morgan('outFormat', {skip: (req : express.Request, res : express.Response) => {
+  return res.statusCode < 400
+}, stream : errorLogStream}))
+
 
 // Routing
 app.use('/', root);
