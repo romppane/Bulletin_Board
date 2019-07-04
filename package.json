@@ -24,6 +24,7 @@
    },
    "homepage": "https://github.com/romppane/Bulletin_Board#readme",
    "dependencies": {
+      "@hapi/boom": "^7.4.2",
       "@types/express": "^4.17.0",
       "@types/moment-timezone": "^0.5.12",
       "@types/morgan": "^1.7.35",
