@@ -3,7 +3,11 @@ import { validate, ValidationSchema } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
 import Boom from '@hapi/boom';
+import { Reply } from '../entities/reply';
+import { error } from 'util';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
+
+const validationError : Boom = new Boom("Validation error", {statusCode : 400});
 
 // conditionalValidation = isOptional -> https://github.com/typestack/class-validator/issues/147
 // The validation still doesn't check what the user inputs very well.
@@ -39,19 +43,46 @@ export const postPUTSchema: ValidationSchema = {
     }
 }
 
+export const replyPUTSchema: ValidationSchema = {
+    name: "replyPUTSchema",
+    properties: {
+        message: [{
+            type : "maxLength",
+            constraints: [500]
+        }, {
+            type: "isString"
+        }]
+    }
+}
+
 export const validatePost = (req: Request, res: Response, next: NextFunction) => {
     // Remove any extra fields and turn the plain object in to instance of a Post
     const newpost = plainToClass(Post, req.body, { excludeExtraneousValues: true })
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-            next(new Boom("Validation error", {statusCode : 400}));
+            next(validationError);
         } else {
             req.body = newpost;
             next();
         }
     });
 }
+
+export const validateReply = (req: Request, res: Response, next: NextFunction) => {
+    // Remove any extra fields and turn the plain object in to instance of a Post
+    const reply = plainToClass(Reply, req.body, { excludeExtraneousValues: true })
+    // See if the newly made Post is valid
+    validate(reply).then(errors => { // errors is an array of validation errors
+        if (errors.length > 0) {
+            next(validationError);
+        } else {
+            req.body = reply;
+            next();
+        }
+    });
+}
+
 
 interface validPostBody {
     message?: string,
@@ -63,7 +94,7 @@ interface validPostBody {
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            next(new Boom("Validation error", {statusCode : 400}));
+            next(validationError);
         } else {
             // Strip unwanted fields.
             let fields : validPostBody = {};
@@ -74,6 +105,25 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
                 fields.category = req.body.category;
             }
             req.body = fields;
+            next();
+        }
+
+    });
+}
+
+interface validReplyBody {
+    message : string
+}
+
+export const validateReplyPUT = (req: Request, res: Response, next: NextFunction) => {
+    validate("replyPUTSchema", req.body).then(errors => {
+        if(errors.length > 0) {
+            next(validationError);
+        } else {
+            const valid : validReplyBody = {
+                message: req.body.message
+            }
+            req.body = valid;
             next();
         }
 

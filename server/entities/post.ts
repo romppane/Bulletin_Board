@@ -1,4 +1,4 @@
-import { Length, IsNotEmpty, IsInt } from 'class-validator'
+import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
 import { Expose } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
@@ -10,6 +10,7 @@ export class Post{
   @Column()
   @Expose()
   @IsInt()
+  @Min(0)
   private owner_id: number;
 
   @Column({default : 0})
@@ -26,6 +27,7 @@ export class Post{
   
   @Column("text")
   @Expose()
+  @IsNotEmpty()
   @Length(1, 1000)
   private message: string;
 

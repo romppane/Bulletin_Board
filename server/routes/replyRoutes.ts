@@ -3,6 +3,7 @@ const router = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
+import { validateReply, validateReplyPUT } from '../helpers/validation';
 
 const notFound : Boom = new Boom("Comment doesn't exist", {statusCode : 404});
 
@@ -32,7 +33,7 @@ router.get('/:id', async (req, res, next) => {
 
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', validateReply, async (req, res, next) => {
   try {
     const reply: Reply = new Reply(req.body.user_id, req.body.post_id, req.body.message);
     await getRepository(Reply).save(reply);
@@ -58,7 +59,7 @@ router.delete('/:id', async (req, res, next) => {
 
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', validateReplyPUT ,async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields
