@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
 import Boom from '@hapi/boom';
 import { Reply } from '../entities/reply';
-import { error } from 'util';
+import { isNumber } from 'util';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
 const validationError : Boom = new Boom("Validation error", {statusCode : 400});
@@ -51,6 +51,19 @@ export const replyPUTSchema: ValidationSchema = {
             constraints: [500]
         }, {
             type: "isString"
+        }]
+    }
+}
+
+// Once routing starts using more than params.id add the values here as optional
+export const requestParamSchema : ValidationSchema = {
+    name: "requestParamSchema",
+    properties: {
+        id: [{
+            type: "isInt"
+        }, {
+            type: "min",
+            constraints: [0]
         }]
     }
 }
@@ -127,5 +140,16 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
             next();
         }
 
+    });
+}
+
+// ID VALUES ARE STRING... Figure out how to convert, then test
+export const validateParams = (req: Request, res: Response, next: NextFunction) => {
+    validate("requestParamSchema", req.params).then(errors => {
+        if(errors.length > 0) {
+            next(new Boom("Invalid parameters", {statusCode: 400}))
+        } else {
+            next();
+        }
     });
 }

@@ -2,7 +2,7 @@ import express = require('express');
 const router = express.Router();
 import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
 import {Post} from '../entities/post';
-import { validatePost, validatePostPUT } from '../helpers/validation';
+import { validatePost, validatePostPUT, validateParams } from '../helpers/validation';
 import Boom = require('@hapi/boom');
 import { getRepository } from 'typeorm';
 

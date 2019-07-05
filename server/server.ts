@@ -6,12 +6,13 @@ import {Request, Response} from 'express'
 import bodyparser = require ('body-parser');
 import { createConnection } from "typeorm";
 import { registerSchema } from "class-validator";
-import { postPUTSchema, replyPUTSchema } from './helpers/validation';
+import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/validation';
 import { handleErrors } from './helpers/errors';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
 registerSchema(replyPUTSchema);
+//registerSchema(requestParamSchema);
 
 // Construct morgan
 const morgan = require ("morgan");
