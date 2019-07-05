@@ -53,6 +53,11 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     });
 }
 
+interface validPostBody {
+    message?: string,
+    category?: string
+}
+
 // Validating a PUT request can not be done the same way as Post as PUT requires only half the data
 // and even that data can be optional. Thats why the validation in this case is done with a schema
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
@@ -61,7 +66,14 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
             next(new Boom("Validation error", {statusCode : 400}));
         } else {
             // Strip unwanted fields.
-            req.body = {message : req.body.message, category: req.body.category};
+            let fields : validPostBody = {};
+            if(req.body.message) {
+                fields.message = req.body.message;
+            }
+            if(req.body.category) {
+                fields.category = req.body.category;
+            }
+            req.body = fields;
             next();
         }
 
