@@ -1,35 +1,38 @@
 import { Length, IsNotEmpty, IsInt } from 'class-validator'
 import { Expose } from "class-transformer";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-
+@Entity()
 export class Post{
+  @PrimaryGeneratedColumn()
   @Expose()
-  private id: number;
+  private id!: number;
 
+  @Column()
   @Expose()
   @IsInt()
   private owner_id: number;
 
-  private likes: number;
+  @Column({default : 0})
+  private likes!: number;
 
+  @Column()
   @Expose()
   @IsNotEmpty()
   @Length(1, 50)
   private category: string;
 
-  private views: number;
+  @Column({default: 0})
+  private views!: number;
   
+  @Column("text")
   @Expose()
   @Length(1, 1000)
   private message: string;
 
-  public constructor(id: number, owner_id: number, category: string, message: string){
-    // Autogeneration will replace
-    this.id = id;
+  public constructor(owner_id: number, category: string, message: string){
     this.owner_id = owner_id;
-    this.likes = 0;
     this.category = category;
-    this.views = 0;
     this.message = message;
   }
 

@@ -60,6 +60,8 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
         if (errors.length > 0) {
             next(new Boom("Validation error", {statusCode : 400}));
         } else {
+            // Strip unwanted fields.
+            req.body = {message : req.body.message, category: req.body.category};
             next();
         }
 

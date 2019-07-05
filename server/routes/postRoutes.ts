@@ -3,73 +3,84 @@ const router = express.Router();
 import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
 import {Post} from '../entities/post';
 import { validatePost, validatePostPUT } from '../helpers/validation';
+import Boom = require('@hapi/boom');
+import { getRepository } from 'typeorm';
 
-// Empty array of posts
-let posts: Post[] = [];
-
-// Fill posts
-for(let i = 0; i<20; i++) {
-  posts.push(new Post(i, i, "category", "toimii"));
-}
+const notFound : Boom = new Boom("Post doesn't exist", {statusCode : 404});
 
 // Return all posts
-router.get('/', (req, res) => {
-  let responce = posts;
-  // parseInt to check if req.query.limit starts with a number
-  // Should probably come up with a better way to see what parameters have been set and do the parsing elsewhere?
-  if(parseInt(req.query.limit)) {
-    responce = limitResponces(responce, parseInt(req.query.limit));
+router.get('/', async (req, res, next) => {
+  try {
+    let posts = await getRepository(Post).find();
+    res.status(200).send(posts);
+  } catch (error) {
+    next(Boom.boomify(error, {statusCode: 500}));
   }
-  if(req.query.sort && req.query.field) {
-    responce = sortBy(responce, req.query.field.toLowerCase(), req.query.sort.toLowerCase());
-  }
-  res.status(200).send(responce);
 })
 
-// Dummy for post/id
-router.get('/:id', (req, res) => {
-  const post : Post = posts[req.params.id];
-  // !!! GET SHOULD NEVER CHANGE THE OBJECTS !!!
-  post.addView();
-  res.status(200).send(post);
+
+router.get('/:id', async (req, res, next) => {
+try {
+  // REMEMBER TO ADD VIEWS
+  const post = await getRepository(Post).findOne(req.params.id)
+  if(post) {
+    res.status(200).send(post);
+  }
+  else {
+    next(notFound);
+  }
+} catch (error) {
+  next(Boom.boomify(error, {statusCode: 500}));
+}
+
 })
 
 // Create post
-router.post('/', validatePost, (req, res) => {
-  // Post now using constructor with static id values. Once the project moves on to use db the id's can be auto incremented and fetched from the correct users.
-  console.log(req.body);
-  const post : Post = req.body;
-  posts.push(post)
-  res.status(201).send(post);
+router.post('/', validatePost, async (req, res, next) => {
+  try {
+    const post : Post = new Post(req.body.owner_id, req.body.category, req.body.message);
+    await getRepository(Post).save(post);
+    res.status(201).send(post);
+  } catch (error) {
+    next(Boom.boomify(error, {statusCode: 500}));
+  }
 })
 
 // Delete post
-router.delete('/:id', (req, res) => {
-  const deleted: Post = posts[req.params.id];
-  // Not very optimal to leave holes with null, but splicing changes the positioning for the rest of the array.
-  // The problem should disapper when working with a database, with real id's and not indexes.
-
-  // Now compares objects and removes the matching one (same can be achieved with splice)
-  posts = posts.filter((post) => !comparePosts(post, deleted));
-  res.status(202).send(deleted);
-
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const deleted = await getRepository(Post).delete(req.params.id);
+    if(deleted.affected) {
+      res.sendStatus(204);
+    }
+    else {
+      next(notFound);
+    }
+  } catch (error) {
+    next(Boom.boomify(error, {statusCode: 500}));
+  }
 })
 
  // Update post, change the tittle and/or the message
- router.put('/:id', validatePostPUT, (req, res) => {
-   let updated: Post = posts[req.params.id];
-   if(req.body.category) {
-     updated.setCategory(req.body.category);
+ // LETS CHANGE ID
+ router.put('/:id', validatePostPUT, async (req, res, next) => {
+   try {
+     await getRepository(Post).update(req.params.id, req.body);
+     const updated = await getRepository(Post).findOne(req.params.id);
+     if(updated) {
+       res.status(200).send(updated);
+     }
+     else {
+       next(notFound);
+     }
+   } catch (error) {
+     next(Boom.boomify(error, {statusCode: 500}));
    }
-   if(req.body.message) {
-     updated.setMessage(req.body.message);
-   }
-   posts[req.params.id] = updated;
-   res.status(200).send(updated);
  })
 
 
 // Like post
+/*
 router.patch('/:id/like', (req, res) => {
   let updated: Post = posts[req.params.id];
   updated.likePost();
@@ -82,4 +93,19 @@ router.delete('/:id/like', (req, res) => {
   updated.unlikePost();
   res.status(200).send(updated);
 })
+*/
 module.exports = router;
+
+
+/*
+  Skeleton of old sorting, f
+let responce = posts;
+  // parseInt to check if req.query.limit starts with a number
+  // Should probably come up with a better way to see what parameters have been set and do the parsing elsewhere?
+  if(parseInt(req.query.limit)) {
+    responce = limitResponces(responce, parseInt(req.query.limit));
+  }
+  if(req.query.sort && req.query.field) {
+    responce = sortBy(responce, req.query.field.toLowerCase(), req.query.sort.toLowerCase());
+  }
+  */
