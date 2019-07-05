@@ -9,7 +9,6 @@ import { registerSchema } from "class-validator";
 import { postPUTSchema } from './helpers/validation';
 import { handleErrors } from './helpers/errors';
 
-
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
 

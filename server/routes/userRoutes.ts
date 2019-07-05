@@ -2,6 +2,7 @@ import express = require('express');
 const router = express.Router();
 import { User } from '../entities/user';
 import { getRepository } from 'typeorm';
+import Boom from '@hapi/boom';
 
 const notFound: Error = new Error("User doesn't exist");
 
@@ -10,8 +11,7 @@ router.get('/', async (req, res, next) => {
     const dbusers = await getRepository(User).find();
     res.status(200).send(dbusers);
   } catch (error) {
-    res.status(500);
-    next(error);
+    next(Boom.boomify(error, {statusCode : 500}));
   }
 
 })
@@ -23,12 +23,10 @@ router.get('/:id', async (req, res, next) => {
       res.status(200).send(responce);
     }
     else {
-      res.status(404);
-      next(notFound);
+      next(Boom.boomify(notFound, {statusCode : 404}));
     }
   } catch (error) {
-    res.status(500);
-    next(error);
+    next(Boom.boomify(error, {statusCode : 500}));
   }
 })
 
@@ -40,8 +38,7 @@ router.post('/', async (req, res, next) => {
     await getRepository(User).save(user);
     res.status(201).send(user);
   } catch (error) {
-    res.status(500);
-    next(error);
+    next(Boom.boomify(error, {statusCode : 500}));
   }
 })
 
@@ -57,8 +54,7 @@ router.delete('/:id', async (req, res, next) => {
     }
 
   } catch (error) {
-    res.status(500);
-    next(error);
+    next(Boom.boomify(error, {statusCode : 500}));
   }
 
 })
@@ -80,8 +76,7 @@ router.put('/:id', async (req, res, next) => {
       next(notFound);
     }
   } catch (error) {
-    res.status(500);
-    next(error);
+    next(Boom.boomify(error, {statusCode : 500}));
   }
 
 

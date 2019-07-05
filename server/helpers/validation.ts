@@ -2,18 +2,7 @@ import { plainToClass } from 'class-transformer';
 import { validate, ValidationSchema } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
-import { constants } from 'os';
-
-/*export class ValidationError extends Error{
-    constraints?: string[];
-    constructor(message: string, constraints : string[]) {
-        super(message);
-        this.constraints = constraints;
-    }
-}
-*/
-
-
+import Boom from '@hapi/boom';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
 // conditionalValidation = isOptional -> https://github.com/typestack/class-validator/issues/147
@@ -56,21 +45,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-
-            // JSON monster
-            // Returns a list of errors objects and turns it into a string.
-            // For some reason doesn't want to get parsed prettier.. I'll be back!
-            const msg = JSON.stringify(errors.map((value) => {
-                return {
-                    property: value.property,
-                    constraints: value.constraints
-                };
-            }))
-
-            console.log(msg);
-
-            res.status(400);
-            next(new Error(msg));
+            next(new Boom("Validation error", {statusCode : 400}));
         } else {
             console.log("validation succeed");
             req.body = newpost;
@@ -84,17 +59,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            const msg = JSON.stringify(errors.map((value) => {
-                return {
-                    property: value.property,
-                    constraints: value.constraints
-                };
-            }))
-
-            console.log(msg);
-
-            res.status(400);
-            next(new Error(msg));
+            next(new Boom("Validation error", {statusCode : 400}));
         } else {
             console.log("validation succeed");
             next();
