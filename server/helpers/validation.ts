@@ -47,7 +47,6 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
         if (errors.length > 0) {
             next(new Boom("Validation error", {statusCode : 400}));
         } else {
-            console.log("validation succeed");
             req.body = newpost;
             next();
         }
@@ -61,7 +60,6 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
         if (errors.length > 0) {
             next(new Boom("Validation error", {statusCode : 400}));
         } else {
-            console.log("validation succeed");
             next();
         }
 

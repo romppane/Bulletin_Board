@@ -4,7 +4,7 @@ import { User } from '../entities/user';
 import { getRepository } from 'typeorm';
 import Boom from '@hapi/boom';
 
-const notFound: Error = new Error("User doesn't exist");
+const notFound: Boom = new Boom("User doesn't exist", {statusCode: 404});
 
 router.get('/', async (req, res, next) => {
   try {
@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
       res.status(200).send(responce);
     }
     else {
-      next(Boom.boomify(notFound, {statusCode : 404}));
+      next(notFound);
     }
   } catch (error) {
     next(Boom.boomify(error, {statusCode : 500}));
@@ -49,7 +49,6 @@ router.delete('/:id', async (req, res, next) => {
       res.sendStatus(204);
     }
     else {
-      res.status(404);
       next(notFound);
     }
 
@@ -72,7 +71,6 @@ router.put('/:id', async (req, res, next) => {
       res.status(200).send(updated);
     }
     else {
-      res.status(404);
       next(notFound);
     }
   } catch (error) {
