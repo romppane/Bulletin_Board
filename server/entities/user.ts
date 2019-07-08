@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 import { Post } from './post';
+import { type } from 'os';
+import { Reply } from './reply';
 
 @Entity()
 export class User {
@@ -12,6 +14,9 @@ export class User {
 
   @OneToMany(type => Post, post => post.getOwner)
   posts!: Post[];
+
+  @OneToMany(type => Reply, reply => reply.getOwner)
+  replies!: Reply[];
 
   public constructor(avatar: string){
     this.avatar = avatar;

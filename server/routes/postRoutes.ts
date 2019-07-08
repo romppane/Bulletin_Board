@@ -42,9 +42,14 @@ try {
 router.post('/:id', validateParams, validatePost, async (req, res, next) => {
   try {
     const user : User = plainToClass(User, await getRepository(User).findOne(req.params.id));
-    const post : Post = new Post(user, req.body.category, req.body.message);
-    await getRepository(Post).save(post);
-    res.status(201).send(post);
+    if(user) {
+      const post : Post = new Post(user, req.body.category, req.body.message);
+      await getRepository(Post).save(post);
+      res.status(201).send(post);
+    }
+    else {
+      next(Boom.notFound("User doesn't exist"));
+    }
   } catch (error) {
     next(Boom.badImplementation());
   }

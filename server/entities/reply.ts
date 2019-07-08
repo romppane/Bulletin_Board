@@ -1,6 +1,8 @@
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { IsInt, MaxLength, Min } from 'class-validator';
 import { Expose } from 'class-transformer';
+import { User } from './user';
+import { Post } from './post';
 
 @Entity()
 export class Reply {
@@ -8,17 +10,20 @@ export class Reply {
   @PrimaryGeneratedColumn()
   private id!: number;
 
-  @Column()
-  @Expose()
-  @IsInt()
-  @Min(0)
-  private user_id: number;
-  
-  @Column()
-  @Expose()
-  @IsInt()
-  @Min(0)
-  private post_id: number;
+  @ManyToOne(type => User, user => user.replies)
+  @JoinColumn({ name: "userId" })
+  private user!: User;
+
+  @Column({ nullable: false })
+  private userId!: number;
+
+  @ManyToOne(type => Post, post => post.replies)
+  @JoinColumn({ name: "postId" })
+  private post : Post;
+
+
+  @Column({ nullable: false })
+  private postId!: number;
   
   @Column({ default: 0 })
   private likes!: number;
@@ -28,10 +33,18 @@ export class Reply {
   @MaxLength(500)
   private message: string;
 
-  public constructor(user_id: number, post_id: number, message: string){
-    this.user_id = user_id;
-    this.post_id = post_id;
+  public constructor(user: User, post: Post, message: string){
+    this.user = user;
+    this.post = post;
     this.message = message;
+  }
+
+  public getOwner() : User {
+    return this.user;
+  }
+
+  public getPost() : Post {
+    return this.post;
   }
 
   public getId() : number {
@@ -39,11 +52,11 @@ export class Reply {
   }
 
   public getUser_id() : number {
-    return this.user_id;
+    return this.userId;
   }
 
   public getPost_id() : number {
-    return this.post_id;
+    return this.postId;
   }
 
   public likeReply() {

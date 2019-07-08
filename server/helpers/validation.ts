@@ -143,12 +143,13 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
 }
 
 interface validParams {
-    id: number
+    id: number,
+    user: number
 }
 
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
-    const valid : validParams = {id : parseInt(req.params.id)};
+    const valid : validParams = {id : parseInt(req.params.id), user: req.params.user};
     validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {
             next(Boom.badRequest("Invalid parameters"))

@@ -1,7 +1,8 @@
 import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
 import { Expose } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, RelationId } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, RelationId, OneToMany } from "typeorm";
 import { User } from './user';
+import { Reply } from './reply';
 
 @Entity()
 export class Post{
@@ -33,6 +34,8 @@ export class Post{
   @Length(1, 1000)
   private message: string;
 
+  @OneToMany(type => Reply, reply => reply.getPost)
+  replies!: Reply[]
 
   public constructor(user: User, category: string, message: string){
     this.user = user;

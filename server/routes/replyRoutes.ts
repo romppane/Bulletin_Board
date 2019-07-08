@@ -4,6 +4,8 @@ import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
 import { validateReply, validateReplyPUT, validateParams } from '../helpers/validation';
+import { User } from '../entities/user';
+import { Post } from '../entities/post';
 
 const notFound : Boom = Boom.notFound("User doesn't exist");
 
@@ -34,11 +36,25 @@ router.get('/:id', validateParams, async (req, res, next) => {
 
 })
 
-router.post('/', validateReply, async (req, res, next) => {
+// Experimental routing..
+router.post('/:user/:post', validateReply, async (req, res, next) => {
   try {
-    const reply: Reply = new Reply(req.body.user_id, req.body.post_id, req.body.message);
-    await getRepository(Reply).save(reply);
-    res.status(201).send(reply);
+    console.log(req.params)
+    const user = await getRepository(User).findOne(req.params.user);
+    if(user) {
+      const post = await getRepository(Post).findOne(req.params.post);
+      if(post) {
+        const reply: Reply = new Reply(user, post, req.body.message);
+        await getRepository(Reply).save(reply);
+        res.status(201).send(reply);
+      }
+      else {
+        next(Boom.notFound("Post doesn't exist"))
+      }
+    }
+    else {
+      next(Boom.notFound("User doesn't exist"))
+    }
   } catch (error) {
     next(Boom.badImplementation());
   }
