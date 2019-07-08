@@ -4,14 +4,15 @@ import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
 
-const notFound : Boom = new Boom("Comment doesn't exist", {statusCode : 404});
+const notFound : Boom = Boom.notFound("User doesn't exist");
+
 
 router.get('/', async (req, res, next) => {
   try {
     const replies = await getRepository(Reply).find();
     res.status(200).send(replies);
   } catch (error) {
-    next(Boom.boomify(error, {statusCode : 500}));
+    next(Boom.badImplementation());
   }
 
 })
@@ -27,7 +28,7 @@ router.get('/:id', async (req, res, next) => {
     }
   } catch (error) {
     // in case of an internal error
-    next(Boom.boomify(error, {statusCode : 500}));
+    next(Boom.badImplementation());
   }
 
 })
@@ -38,7 +39,7 @@ router.post('/', async (req, res, next) => {
     await getRepository(Reply).save(reply);
     res.status(201).send(reply);
   } catch (error) {
-    next(Boom.boomify(error, {statusCode : 500}));
+    next(Boom.badImplementation());
   }
 
 })
@@ -53,7 +54,7 @@ router.delete('/:id', async (req, res, next) => {
       next(notFound);
     }
   } catch (error) {
-    next(Boom.boomify(error, {statusCode : 500}));
+    next(Boom.badImplementation());
   }
 
 })
@@ -73,7 +74,7 @@ router.put('/:id', async (req, res, next) => {
     }
 
   } catch (error) {
-    next(Boom.boomify(error, {statusCode : 500}));
+    next(Boom.badImplementation());
   }
 
 

@@ -45,7 +45,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-            next(new Boom("Validation error", {statusCode : 400}));
+            next(Boom.badRequest("Validation error"));
         } else {
             req.body = newpost;
             next();
@@ -58,7 +58,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            next(new Boom("Validation error", {statusCode : 400}));
+            next(Boom.badRequest("Validation error"));
         } else {
             next();
         }
