@@ -5,6 +5,8 @@ import {Post} from '../entities/post';
 import { validatePost, validatePostPUT, validateParams } from '../helpers/validation';
 import Boom = require('@hapi/boom');
 import { getRepository } from 'typeorm';
+import { User } from '../entities/user';
+import { plainToClass } from 'class-transformer';
 
 const notFound : Boom = new Boom("Post doesn't exist", {statusCode : 404});
 
@@ -36,9 +38,11 @@ try {
 })
 
 // Create post
-router.post('/', validatePost, async (req, res, next) => {
+// Now requires user id to make a post...
+router.post('/:id', validateParams, validatePost, async (req, res, next) => {
   try {
-    const post : Post = new Post(req.body.owner_id, req.body.category, req.body.message);
+    const user : User = plainToClass(User, await getRepository(User).findOne(req.params.id));
+    const post : Post = new Post(user, req.body.category, req.body.message);
     await getRepository(Post).save(post);
     res.status(201).send(post);
   } catch (error) {

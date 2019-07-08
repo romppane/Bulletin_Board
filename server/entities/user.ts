@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { Post } from './post';
 
 @Entity()
 export class User {
@@ -8,6 +9,9 @@ export class User {
 
   @Column()
   private avatar: string;
+
+  @OneToMany(type => Post, post => post.getOwner)
+  posts!: Post[];
 
   public constructor(avatar: string){
     this.avatar = avatar;

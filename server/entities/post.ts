@@ -1,17 +1,19 @@
 import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
 import { Expose } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, RelationId } from "typeorm";
+import { User } from './user';
 
 @Entity()
 export class Post{
   @PrimaryGeneratedColumn()
   private id!: number;
 
-  @Column()
-  @Expose()
-  @IsInt()
-  @Min(0)
-  private owner_id: number;
+  @ManyToOne(type => User, user => user.posts)
+  @JoinColumn({ name: "ownerId" })
+  private user: User;
+
+  @Column({ nullable: false })
+  private ownerId!: number;
 
   @Column({default : 0})
   private likes!: number;
@@ -31,18 +33,23 @@ export class Post{
   @Length(1, 1000)
   private message: string;
 
-  public constructor(owner_id: number, category: string, message: string){
-    this.owner_id = owner_id;
+
+  public constructor(user: User, category: string, message: string){
+    this.user = user;
     this.category = category;
     this.message = message;
   }
 
-  public getId() : number {
+  public getid() : number {
     return this.id;
   }
 
-  public getOwner_id() : number {
-    return this.owner_id;
+  public getOwner() : User {
+    return this.user;
+  }
+
+  public getOwnerId() : number {
+    return this.ownerId;
   }
 
   public addView() {

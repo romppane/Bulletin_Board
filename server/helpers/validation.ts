@@ -74,6 +74,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
+            console.log(errors);
             next(validationError);
         } else {
             req.body = newpost;
