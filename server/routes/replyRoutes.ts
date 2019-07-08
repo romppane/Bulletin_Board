@@ -3,7 +3,7 @@ const router = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
-import { validateReply, validateReplyPUT } from '../helpers/validation';
+import { validateReply, validateReplyPUT, validateParams } from '../helpers/validation';
 
 const notFound : Boom = new Boom("Comment doesn't exist", {statusCode : 404});
 
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', validateParams, async (req, res, next) => {
   try {
     const reply = await getRepository(Reply).findOne(req.params.id);
     if (reply) {
@@ -44,7 +44,7 @@ router.post('/', validateReply, async (req, res, next) => {
 
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateParams, async (req, res, next) => {
   try {
     const deleted = await getRepository(Reply).delete(req.params.id);
     if (deleted.affected) {
@@ -59,7 +59,7 @@ router.delete('/:id', async (req, res, next) => {
 
 })
 
-router.put('/:id', validateReplyPUT ,async (req, res, next) => {
+router.put('/:id', validateParams, validateReplyPUT ,async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields

@@ -143,12 +143,18 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
     });
 }
 
+interface validParams {
+    id: number
+}
+
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
-    validate("requestParamSchema", req.params).then(errors => {
+    const valid : validParams = {id : parseInt(req.params.id)};
+    validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {
             next(new Boom("Invalid parameters", {statusCode: 400}))
         } else {
+            req.params = valid;
             next();
         }
     });

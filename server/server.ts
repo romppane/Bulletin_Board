@@ -12,7 +12,7 @@ import { handleErrors } from './helpers/errors';
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
 registerSchema(replyPUTSchema);
-//registerSchema(requestParamSchema);
+registerSchema(requestParamSchema);
 
 // Construct morgan
 const morgan = require ("morgan");
