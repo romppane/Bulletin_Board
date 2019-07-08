@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
 import Boom from '@hapi/boom';
 import { Reply } from '../entities/reply';
-import { isNumber } from 'util';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
 const validationError : Boom = new Boom("Validation error", {statusCode : 400});
@@ -74,8 +73,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-            console.log(errors);
-            next(validationError);
+            next(Boom.badRequest("Validation error"));
         } else {
             req.body = newpost;
             next();
@@ -108,7 +106,7 @@ interface validPostBody {
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            next(validationError);
+            next(Boom.badRequest("Validation error"));
         } else {
             // Strip unwanted fields.
             let fields : validPostBody = {};
