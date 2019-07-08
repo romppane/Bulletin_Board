@@ -6,7 +6,7 @@ import Boom from '@hapi/boom';
 import { Reply } from '../entities/reply';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
-const validationError : Boom = new Boom("Validation error", {statusCode : 400});
+const validationError : Boom = Boom.badRequest("Validation error");
 
 // conditionalValidation = isOptional -> https://github.com/typestack/class-validator/issues/147
 // The validation still doesn't check what the user inputs very well.
@@ -73,7 +73,7 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-            next(Boom.badRequest("Validation error"));
+            next(validationError);
         } else {
             req.body = newpost;
             next();
@@ -106,7 +106,7 @@ interface validPostBody {
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            next(Boom.badRequest("Validation error"));
+            next(validationError);
         } else {
             // Strip unwanted fields.
             let fields : validPostBody = {};
@@ -151,7 +151,7 @@ export const validateParams = (req: Request, res: Response, next: NextFunction) 
     const valid : validParams = {id : parseInt(req.params.id)};
     validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {
-            next(new Boom("Invalid parameters", {statusCode: 400}))
+            next(Boom.badRequest("Invalid parameters"))
         } else {
             req.params = valid;
             next();
