@@ -67,7 +67,7 @@ app.use(morgan('outFormat', {skip: (req : express.Request, res : express.Respons
 app.use('/', root);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
-app.use('/posts/:user/comments', replyRoutes);
+app.use('/comments', replyRoutes);
 
 // Error handler
 app.use(handleErrors);
