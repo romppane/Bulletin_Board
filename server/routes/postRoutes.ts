@@ -8,7 +8,7 @@ import { getRepository } from 'typeorm';
 import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
 
-const notFound : Boom = new Boom("Post doesn't exist", {statusCode : 404});
+const notFound : Boom = Boom.notFound("Post doesn't exist");
 
 // Return all posts
 router.get('/', async (req, res, next) => {
@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
     let posts = await getRepository(Post).find();
     res.status(200).send(posts);
   } catch (error) {
-    next(Boom.boomify(error, {statusCode: 500}));
+    next(Boom.badImplementation());
   }
 })
 
@@ -32,7 +32,7 @@ try {
     next(notFound);
   }
 } catch (error) {
-  next(Boom.boomify(error, {statusCode: 500}));
+  next(Boom.badImplementation());
 }
 
 })
@@ -46,7 +46,7 @@ router.post('/:id', validateParams, validatePost, async (req, res, next) => {
     await getRepository(Post).save(post);
     res.status(201).send(post);
   } catch (error) {
-    next(Boom.boomify(error, {statusCode: 500}));
+    next(Boom.badImplementation());
   }
 })
 
@@ -61,7 +61,7 @@ router.delete('/:id', validateParams, async (req, res, next) => {
       next(notFound);
     }
   } catch (error) {
-    next(Boom.boomify(error, {statusCode: 500}));
+    next(Boom.badImplementation());
   }
 })
 
@@ -78,7 +78,7 @@ router.delete('/:id', validateParams, async (req, res, next) => {
        next(notFound);
      }
    } catch (error) {
-     next(Boom.boomify(error, {statusCode: 500}));
+     next(Boom.badImplementation());
    }
  })
 
