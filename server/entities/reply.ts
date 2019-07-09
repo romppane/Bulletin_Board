@@ -16,6 +16,9 @@ export class Reply {
   private user!: User;
 
   @Column({ nullable: false })
+  @Expose()
+  @IsInt()
+  @Min(1)
   private userId!: number;
 
   @ManyToOne(type => Post, post => post.replies)
@@ -24,6 +27,9 @@ export class Reply {
 
 
   @Column({ nullable: false })
+  @Expose()
+  @IsInt()
+  @Min(1)
   private postId!: number;
 
   
@@ -35,7 +41,7 @@ export class Reply {
   @OneToMany(type => Like, like => like.getPost)
   likes!: Like[]
 
-  public constructor(user: User, post: Post, message: string){
+  public constructor(user: User, post: Post, message: string, userId? : number, postId? : number){
     this.user = user;
     this.post = post;
     this.message = message;

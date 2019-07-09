@@ -41,9 +41,9 @@ try {
 
 // Create post
 // Now requires user id to make a post...
-router.post('/:id', validateParams, validatePost, async (req, res, next) => {
+router.post('/', validatePost, async (req, res, next) => {
   try {
-    const user : User = plainToClass(User, await getRepository(User).findOne(req.params.id));
+    const user : User = plainToClass(User, await getRepository(User).findOne(req.body.ownerId));
     if(user) {
       const post : Post = new Post(user, req.body.category, req.body.message);
       await getRepository(Post).save(post);

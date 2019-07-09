@@ -1,4 +1,4 @@
-import { Length, IsNotEmpty } from 'class-validator'
+import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
 import { Expose } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { User } from './user';
@@ -15,6 +15,9 @@ export class Post{
   private user: User;
 
   @Column({ nullable: false })
+  @Expose()
+  @IsInt()
+  @Min(1)
   private ownerId!: number;
 
   @Column()
@@ -38,7 +41,7 @@ export class Post{
   @OneToMany(type => Like, like => like.getPost)
   likes!: Like[]
 
-  public constructor(user: User, category: string, message: string){
+  public constructor(user: User, category: string, message: string, ownerId? : number){
     this.user = user;
     this.category = category;
     this.message = message;
