@@ -65,17 +65,6 @@ export const requestParamSchema : ValidationSchema = {
         }, {
             type: "min",
             constraints: [1]
-        }],
-        post: [{
-            type: 'conditionalValidation', constraints: [(object: any, value: any) => {
-                return object['message'] !== null && object['message'] !== undefined;
-            }]
-
-        }, {
-            type: "isInt"
-        }, {
-            type: "min",
-            constraints: [1]
         }]
     }
 }
@@ -156,14 +145,13 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
 }
 
 interface validParams {
-    id: number,
-    post: number
+    id: number
 }
 
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body);
-    const valid : validParams = {id : parseInt(req.params.id), post: parseInt(req.params.post)};
+    const valid : validParams = {id : parseInt(req.params.id)};
     validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {
             next(Boom.badRequest("Invalid parameters"))
