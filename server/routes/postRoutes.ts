@@ -8,6 +8,7 @@ import { getRepository } from 'typeorm';
 import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
 import { Like } from '../entities/like';
+import { Reply } from '../entities/reply';
 
 const notFound : Boom = Boom.notFound("Post doesn't exist");
 
@@ -88,39 +89,6 @@ router.delete('/:id', validateParams, async (req, res, next) => {
    }
  })
 
-
-// Like post
-// Fix routing, use body instead of params.
-router.post('/:user/:id', validateParams, async (req, res, next) => {
-  try {
-    const user = plainToClass(User, await getRepository(User).findOne(req.params.user));
-    if(user) {
-      const post = plainToClass(Post, await getRepository(Post).findOne(req.params.id));
-      if(post) {
-        const like : Like = new Like(user, post);
-        await getRepository(Like).save(like);
-        res.status(200).send(like);
-      }
-      else {
-        next(notFound);
-      }
-    }
-    else {
-      next(Boom.notFound("User doesn't exist"))
-    }
-  } catch (error) {
-    next(Boom.badImplementation());
-  }
-  
-})
-
-// Don't like
-/*
-router.delete('/:user/:id', (req, res) => {
-  let updated: Post = posts[req.params.id];
-  updated.unlikePost();
-  res.status(200).send(updated);
-})*/
 
 module.exports = router;
 
