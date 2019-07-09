@@ -9,6 +9,8 @@ jobs:
     branches:
       only:
         - circleTesting
+        docker:
+        - image circleci/node:10.15.3
 #jobs:
 #  build:
 #    docker:
