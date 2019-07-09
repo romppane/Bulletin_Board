@@ -37,10 +37,10 @@ router.get('/:id', validateParams, async (req, res, next) => {
 })
 
 // Experimental routing..
-router.post('/:user/:post', validateReply, async (req, res, next) => {
+router.post('/:id/:post', validateParams, validateReply, async (req, res, next) => {
   try {
     console.log(req.params)
-    const user = await getRepository(User).findOne(req.params.user);
+    const user = await getRepository(User).findOne(req.params.id);
     if(user) {
       const post = await getRepository(Post).findOne(req.params.post);
       if(post) {

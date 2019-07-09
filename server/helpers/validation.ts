@@ -54,7 +54,9 @@ export const replyPUTSchema: ValidationSchema = {
     }
 }
 
-// Once routing starts using more than params.id add the values here as optional
+
+// Optional parameters are not good approach as they just result in internal error and not validation error.
+// Have to play around with class-validation to see how foreign keys could be validated from the body.
 export const requestParamSchema : ValidationSchema = {
     name: "requestParamSchema",
     properties: {
@@ -62,7 +64,18 @@ export const requestParamSchema : ValidationSchema = {
             type: "isInt"
         }, {
             type: "min",
-            constraints: [0]
+            constraints: [1]
+        }],
+        post: [{
+            type: 'conditionalValidation', constraints: [(object: any, value: any) => {
+                return object['message'] !== null && object['message'] !== undefined;
+            }]
+
+        }, {
+            type: "isInt"
+        }, {
+            type: "min",
+            constraints: [1]
         }]
     }
 }
@@ -144,12 +157,13 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
 
 interface validParams {
     id: number,
-    user: number
+    post: number
 }
 
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
-    const valid : validParams = {id : parseInt(req.params.id), user: req.params.user};
+    console.log(req.body);
+    const valid : validParams = {id : parseInt(req.params.id), post: parseInt(req.params.post)};
     validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {
             next(Boom.badRequest("Invalid parameters"))
