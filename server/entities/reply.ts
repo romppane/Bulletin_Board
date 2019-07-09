@@ -1,8 +1,9 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IsInt, MaxLength, Min } from 'class-validator';
 import { Expose } from 'class-transformer';
 import { User } from './user';
 import { Post } from './post';
+import { Like } from './like';
 
 @Entity()
 export class Reply {
@@ -24,14 +25,15 @@ export class Reply {
 
   @Column({ nullable: false })
   private postId!: number;
-  
-  @Column({ default: 0 })
-  private likes!: number;
+
   
   @Column("text")
   @Expose()
   @MaxLength(500)
   private message: string;
+
+  @OneToMany(type => Like, like => like.getPost)
+  likes!: Like[]
 
   public constructor(user: User, post: Post, message: string){
     this.user = user;
@@ -57,18 +59,6 @@ export class Reply {
 
   public getPost_id() : number {
     return this.postId;
-  }
-
-  public likeReply() {
-    this.likes += 1;
-  }
-
-  public unlikeReply() {
-    this.likes -= 1;
-  }
-
-  public getLikes() : number {
-    return this.likes;
   }
 
   public setMessage(message: string) {

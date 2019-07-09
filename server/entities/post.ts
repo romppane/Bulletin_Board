@@ -1,8 +1,9 @@
-import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
+import { Length, IsNotEmpty } from 'class-validator'
 import { Expose } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, RelationId, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { User } from './user';
 import { Reply } from './reply';
+import { Like } from './like';
 
 @Entity()
 export class Post{
@@ -15,9 +16,6 @@ export class Post{
 
   @Column({ nullable: false })
   private ownerId!: number;
-
-  @Column({default : 0})
-  private likes!: number;
 
   @Column()
   @Expose()
@@ -36,6 +34,9 @@ export class Post{
 
   @OneToMany(type => Reply, reply => reply.getPost)
   replies!: Reply[]
+
+  @OneToMany(type => Like, like => like.getPost)
+  likes!: Like[]
 
   public constructor(user: User, category: string, message: string){
     this.user = user;
@@ -61,21 +62,6 @@ export class Post{
 
   public getViews() : number {
     return this.views;
-  }
-
-  // With this way of implementing likes, it's impossible to keep track of who likes the post or not.
-  // Correct way to do this is probably with an extra table, but if you want to be able to like comments too, it's going to be a hastle!
-  // Don't see the feature being the top priority now so I'll just let it be.
-  public likePost() {
-    this.likes += 1;
-  }
-
-  public unlikePost() {
-    this.likes -= 1;
-  }
-
-  public getLikes() : number {
-    return this.likes;
   }
 
   public setCategory(category:string) {
