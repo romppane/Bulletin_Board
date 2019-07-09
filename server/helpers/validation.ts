@@ -2,7 +2,7 @@ import { plainToClass } from 'class-transformer';
 import { validate, ValidationSchema } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
-
+import Boom from '@hapi/boom';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
 // conditionalValidation = isOptional -> https://github.com/typestack/class-validator/issues/147
@@ -14,7 +14,7 @@ export const postPUTSchema: ValidationSchema = {
             type: 'conditionalValidation', constraints: [(object: any, value: any) => {
                 return object['category'] !== null && object['category'] !== undefined;
             }]
-        },  {
+        }, {
             type: "minLength",
             constraints: [1]
         }, {
@@ -45,10 +45,8 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
     // See if the newly made Post is valid
     validate(newpost).then(errors => { // errors is an array of validation errors
         if (errors.length > 0) {
-            console.log("validation failed. errors: ", errors);
-            res.status(400).send(errors);
+            next(Boom.badRequest("Validation error"));
         } else {
-            console.log("validation succeed");
             req.body = newpost;
             next();
         }
@@ -60,10 +58,8 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
 export const validatePostPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("postPUTSchema", req.body).then(errors => {
         if (errors.length > 0) {
-            console.log("validation failed. errors: ", errors);
-            res.status(400).send(errors);
+            next(Boom.badRequest("Validation error"));
         } else {
-            console.log("validation succeed");
             next();
         }
 

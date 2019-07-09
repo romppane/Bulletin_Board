@@ -2,67 +2,64 @@ import express = require('express');
 const router = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
+import Boom = require('@hapi/boom');
+
+const notFound : Boom = Boom.notFound("User doesn't exist");
 
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const replies = await getRepository(Reply).find();
     res.status(200).send(replies);
   } catch (error) {
-    console.log(error);
-    // Internal error
-    res.status(500).send(error);
+    next(Boom.badImplementation());
   }
 
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const reply = await getRepository(Reply).findOne(req.params.id);
     if (reply) {
       res.status(200).send(reply);
     }
     else {
-      res.status(404).send({ message: "Comment not found!" })
+      next(notFound);
     }
   } catch (error) {
-    console.log(error);
     // in case of an internal error
-    res.status(500).send(error);
+    next(Boom.badImplementation());
   }
 
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const reply: Reply = new Reply(req.body.user_id, req.body.post_id, req.body.message);
     await getRepository(Reply).save(reply);
     res.status(201).send(reply);
   } catch (error) {
-    // Could be a user error or internal, find out the possibilities and design messages
-    console.log(error);
-    res.status(500).send(error);
+    next(Boom.badImplementation());
   }
 
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const deleted = await getRepository(Reply).delete(req.params.id);
     if (deleted.affected) {
       res.sendStatus(204);
     }
     else {
-      res.status(404).send({ Affected: deleted.affected });
+      next(notFound);
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    next(Boom.badImplementation());
   }
 
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields
@@ -73,14 +70,11 @@ router.put('/:id', async (req, res) => {
       res.status(200).send(updated);
     }
     else {
-      res.status(404).send({
-        message: "User not found"
-      })
+      next(notFound);
     }
 
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    next(Boom.badImplementation());
   }
 
 
