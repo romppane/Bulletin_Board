@@ -82,9 +82,9 @@ app.use('/like', likeRoutes);
 app.use(handleErrors);
 
 // Add exception handler
-createConnection().catch(err => console.log(err));
+createConnection().then(() => {
+  app.listen(3000, function () {
+    console.log('Bulletin board server listening on port 3000!');
+  });
+}).catch(err => console.log(err));
 
-// Should probably be configurable by config file
-app.listen(3000, function () {
-  console.log('Bulletin board server listening on port 3000!');
-});
