@@ -27,18 +27,18 @@ jobs:
             - node_modules
       - run:
         name: Test
-        command: npm test
-  test:
-    docker:
-      - image: circleci/node:10.15.3
+        command:  npm test
+  #test:
+  #  docker:
+  #    - image: circleci/node:10.15.3
     #  - image: mongo:3.4.4-jessie
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Test
-          command: npm test
+  #  steps:
+  #    - checkout
+  #    - restore_cache:
+  #        key: dependency-cache-{{ checksum "package.json" }}
+  #    - run:
+  #        name: Test
+  #        command: npm test
 #      - run:
 #          name: Generate code coverage
 #          command: './node_modules/.bin/nyc report --reporter=text-lcov'
