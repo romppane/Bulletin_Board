@@ -27,6 +27,7 @@ jobs:
             - node_modules
 
   test:
+    working_directory: ~/repo
     docker:
       - image: circleci/node:10.15.3
     #  - image: mongo:3.4.4-jessie
