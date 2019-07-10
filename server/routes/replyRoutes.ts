@@ -39,9 +39,9 @@ router.get('/:id', validateParams, async (req, res, next) => {
 router.post('/', validateReply, async (req, res, next) => {
   try {
     const user = await getRepository(User).findOne(req.body.userId);
-    if(user) {
+    if (user) {
       const post = await getRepository(Post).findOne(req.body.postId);
-      if(post) {
+      if (post) {
         const reply: Reply = new Reply(user, post, req.body.message);
         await getRepository(Reply).save(reply);
         res.status(201).send(reply);
@@ -74,7 +74,7 @@ router.delete('/:id', validateParams, async (req, res, next) => {
 
 })
 
-router.put('/:id', validateParams, validateReplyPUT ,async (req, res, next) => {
+router.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields

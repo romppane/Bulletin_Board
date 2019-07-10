@@ -46,7 +46,7 @@ export const replyPUTSchema: ValidationSchema = {
     name: "replyPUTSchema",
     properties: {
         message: [{
-            type : "maxLength",
+            type: "maxLength",
             constraints: [500]
         }, {
             type: "isString"
@@ -57,7 +57,7 @@ export const replyPUTSchema: ValidationSchema = {
 
 // Optional parameters are not good approach as they just result in internal error and not validation error.
 // Have to play around with class-validation to see how foreign keys could be validated from the body.
-export const requestParamSchema : ValidationSchema = {
+export const requestParamSchema: ValidationSchema = {
     name: "requestParamSchema",
     properties: {
         id: [{
@@ -111,11 +111,11 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
             next(validationError);
         } else {
             // Strip unwanted fields.
-            let fields : ValidPostBody = {};
-            if(req.body.message) {
+            let fields: ValidPostBody = {};
+            if (req.body.message) {
                 fields.message = req.body.message;
             }
-            if(req.body.category) {
+            if (req.body.category) {
                 fields.category = req.body.category;
             }
             req.body = fields;
@@ -126,15 +126,15 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
 }
 
 interface ValidReplyBody {
-    message : string
+    message: string
 }
 
 export const validateReplyPUT = (req: Request, res: Response, next: NextFunction) => {
     validate("replyPUTSchema", req.body).then(errors => {
-        if(errors.length > 0) {
+        if (errors.length > 0) {
             next(validationError);
         } else {
-            const valid : ValidReplyBody = {
+            const valid: ValidReplyBody = {
                 message: req.body.message
             }
             req.body = valid;
@@ -150,9 +150,9 @@ interface ValidParams {
 
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
-    const valid : ValidParams = {id : parseInt(req.params.id)};
+    const valid: ValidParams = { id: parseInt(req.params.id) };
     validate("requestParamSchema", valid).then(errors => {
-        if(errors.length > 0) {
+        if (errors.length > 0) {
             next(Boom.badRequest("Invalid parameters"))
         } else {
             req.params = valid;

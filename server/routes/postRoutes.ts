@@ -1,7 +1,7 @@
 import express = require('express');
 const router = express.Router();
-import {comparePosts, limitResponces, sortBy} from '../helpers/helpers';
-import {Post} from '../entities/post';
+import { comparePosts, limitResponces, sortBy } from '../helpers/helpers';
+import { Post } from '../entities/post';
 import { validatePost, validatePostPUT, validateParams } from '../helpers/validation';
 import Boom = require('@hapi/boom');
 import { getRepository } from 'typeorm';
@@ -24,18 +24,18 @@ router.get('/', async (req, res, next) => {
 
 
 router.get('/:id', validateParams, async (req, res, next) => {
-try {
-  // REMEMBER TO ADD VIEWS
-  const post = await getRepository(Post).findOne(req.params.id)
-  if(post) {
-    res.status(200).send(post);
+  try {
+    // REMEMBER TO ADD VIEWS
+    const post = await getRepository(Post).findOne(req.params.id)
+    if (post) {
+      res.status(200).send(post);
+    }
+    else {
+      next(notFound);
+    }
+  } catch (error) {
+    next(Boom.badImplementation());
   }
-  else {
-    next(notFound);
-  }
-} catch (error) {
-  next(Boom.badImplementation());
-}
 
 })
 
@@ -43,9 +43,9 @@ try {
 // Now requires user id to make a post...
 router.post('/', validatePost, async (req, res, next) => {
   try {
-    const user : User = plainToClass(User, await getRepository(User).findOne(req.body.ownerId));
-    if(user) {
-      const post : Post = new Post(user, req.body.category, req.body.message);
+    const user: User = plainToClass(User, await getRepository(User).findOne(req.body.ownerId));
+    if (user) {
+      const post: Post = new Post(user, req.body.category, req.body.message);
       await getRepository(Post).save(post);
       res.status(201).send(post);
     }
@@ -61,7 +61,7 @@ router.post('/', validatePost, async (req, res, next) => {
 router.delete('/:id', validateParams, async (req, res, next) => {
   try {
     const deleted = await getRepository(Post).delete(req.params.id);
-    if(deleted.affected) {
+    if (deleted.affected) {
       res.sendStatus(204);
     }
     else {
@@ -72,22 +72,22 @@ router.delete('/:id', validateParams, async (req, res, next) => {
   }
 })
 
- // Update post, change the tittle and/or the message
- // LETS CHANGE ID
- router.put('/:id', validateParams, validatePostPUT, async (req, res, next) => {
-   try {
-     await getRepository(Post).update(req.params.id, req.body);
-     const updated = await getRepository(Post).findOne(req.params.id);
-     if(updated) {
-       res.status(200).send(updated);
-     }
-     else {
-       next(notFound);
-     }
-   } catch (error) {
-     next(Boom.badImplementation());
-   }
- })
+// Update post, change the tittle and/or the message
+// LETS CHANGE ID
+router.put('/:id', validateParams, validatePostPUT, async (req, res, next) => {
+  try {
+    await getRepository(Post).update(req.params.id, req.body);
+    const updated = await getRepository(Post).findOne(req.params.id);
+    if (updated) {
+      res.status(200).send(updated);
+    }
+    else {
+      next(notFound);
+    }
+  } catch (error) {
+    next(Boom.badImplementation());
+  }
+})
 
 
 module.exports = router;

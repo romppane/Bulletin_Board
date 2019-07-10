@@ -23,7 +23,7 @@ export class Reply {
 
   @ManyToOne(type => Post, post => post.replies)
   @JoinColumn({ name: "postId" })
-  private post : Post;
+  private post: Post;
 
 
   @Column({ nullable: false })
@@ -32,7 +32,7 @@ export class Reply {
   @Min(1)
   private postId!: number;
 
-  
+
   @Column("text")
   @Expose()
   @MaxLength(500)
@@ -41,29 +41,29 @@ export class Reply {
   @OneToMany(type => Like, like => like.getPost)
   likes!: Like[]
 
-  public constructor(user: User, post: Post, message: string, userId? : number, postId? : number){
+  public constructor(user: User, post: Post, message: string, userId?: number, postId?: number) {
     this.user = user;
     this.post = post;
     this.message = message;
   }
 
-  public getOwner() : User {
+  public getOwner(): User {
     return this.user;
   }
 
-  public getPost() : Post {
+  public getPost(): Post {
     return this.post;
   }
 
-  public getId() : number {
+  public getId(): number {
     return this.id;
   }
 
-  public getUser_id() : number {
+  public getUser_id(): number {
     return this.userId;
   }
 
-  public getPost_id() : number {
+  public getPost_id(): number {
     return this.postId;
   }
 
@@ -71,7 +71,7 @@ export class Reply {
     this.message = message;
   }
 
-  public getMessage() : string {
+  public getMessage(): string {
     return this.message;
   }
 

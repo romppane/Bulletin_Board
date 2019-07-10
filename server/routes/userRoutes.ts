@@ -66,7 +66,7 @@ router.put('/:id', validateParams, async (req, res, next) => {
   try {
     // Bootleg validator as user has only few fields now and avatar is the only one you can change.
     // When user gets more advaced create proper validation to it! Class-validator can check Base64 encoding for the avatar.
-    req.body = {avatar : req.body.avatar};
+    req.body = { avatar: req.body.avatar };
     await getRepository(User).update(req.params.id, req.body);
     // Not class instance
     const updated = await getRepository(User).findOne(req.params.id);

@@ -21,19 +21,19 @@ export class User {
   @OneToMany(type => Like, like => like.getPost)
   likes!: Like[]
 
-  public constructor(avatar: string){
+  public constructor(avatar: string) {
     this.avatar = avatar;
   }
 
-  public getId() : number {
+  public getId(): number {
     return this.id;
   }
 
-  public setAvatar(avatar : string) {
+  public setAvatar(avatar: string) {
     this.avatar = avatar;
   }
 
-  public getAvatar() : string {
+  public getAvatar(): string {
     return this.avatar;
   }
 }

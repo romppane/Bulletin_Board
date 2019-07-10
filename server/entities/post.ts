@@ -6,7 +6,7 @@ import { Reply } from './reply';
 import { Like } from './like';
 
 @Entity()
-export class Post{
+export class Post {
   @PrimaryGeneratedColumn()
   private id!: number;
 
@@ -26,9 +26,9 @@ export class Post{
   @Length(1, 50)
   private category: string;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   private views!: number;
-  
+
   @Column("text")
   @Expose()
   @IsNotEmpty()
@@ -41,21 +41,21 @@ export class Post{
   @OneToMany(type => Like, like => like.getPost)
   likes!: Like[]
 
-  public constructor(user: User, category: string, message: string, ownerId? : number){
+  public constructor(user: User, category: string, message: string, ownerId?: number) {
     this.user = user;
     this.category = category;
     this.message = message;
   }
 
-  public getid() : number {
+  public getid(): number {
     return this.id;
   }
 
-  public getOwner() : User {
+  public getOwner(): User {
     return this.user;
   }
 
-  public getOwnerId() : number {
+  public getOwnerId(): number {
     return this.ownerId;
   }
 
@@ -63,23 +63,23 @@ export class Post{
     this.views += 1;
   }
 
-  public getViews() : number {
+  public getViews(): number {
     return this.views;
   }
 
-  public setCategory(category:string) {
+  public setCategory(category: string) {
     this.category = category
   }
 
-  public getCategory() : string {
+  public getCategory(): string {
     return this.category;
   }
 
-  public setMessage(message:string) {
+  public setMessage(message: string) {
     this.message = message;
   }
 
-  public getMessage() : string {
+  public getMessage(): string {
     return this.message;
   }
 
