@@ -36,23 +36,20 @@ router.get('/:id', validateParams, async (req, res, next) => {
 
 })
 
-router.post('/', validateReply, async (req, res, next) => {
-  try {
-    const user = await getRepository(User).findOne(req.body.userId);
-    const post = await getRepository(Post).findOne(req.body.postId);
-      if (user && post) {
-        const reply: Reply = new Reply(user, post, req.body.message);
-        await getRepository(Reply).save(reply);
+router.post('/', validateReply, (req, res, next) => {
+    Promise.all([getRepository(User).findOne(req.body.userId), getRepository(Post).findOne(req.body.postId)]).then(results => {
+      console.log(results);
+      if(typeof(results[0]) !== "undefined" && typeof(results[1]) !== "undefined"){
+        const reply : Reply = new Reply(results[0], results[1], req.body.message);
+        getRepository(Reply).save(reply);
         res.status(201).send(reply);
       }
       else {
-        next(Boom.notFound("Invalid parameters"))
+        next(Boom.notFound())
       }
-  } catch (error) {
-    next(Boom.badImplementation());
+    }).catch(error => next(Boom.badImplementation()))
   }
-
-})
+)
 
 router.delete('/:id', validateParams, async (req, res, next) => {
   try {
