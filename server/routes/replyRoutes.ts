@@ -87,19 +87,4 @@ router.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
 
 })
 
-// Putting the liking to freeze for now since a better sort kind of system is on the works in the background!
-//Add and delete likes
-/*
-router.patch('/:id/like', (req,res) => {
-  const updated : Reply = replies[req.params.id];
-  updated.likeReply();
-  res.status(200).send(updated);
-})
-
-router.delete('/:id/like', (req,res) => {
-  const updated : Reply = replies[req.params.id];
-  updated.unlikeReply();
-  res.status(200).send(updated);
-})
-*/
 module.exports = router;

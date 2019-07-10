@@ -1,5 +1,4 @@
 import express = require('express');
-import { validateParams } from '../helpers/validation';
 import { plainToClass } from 'class-transformer';
 import { getRepository } from 'typeorm';
 import { User } from '../entities/user';

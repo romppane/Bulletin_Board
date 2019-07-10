@@ -31,6 +31,4 @@ export function handleErrors(err: Boom, req: Request, res: Response, next: NextF
     }
 
   }
-
-  //res.send({message : "error"})
 }

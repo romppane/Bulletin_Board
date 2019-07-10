@@ -1,14 +1,11 @@
 import express = require('express');
 const router = express.Router();
-import { comparePosts, limitResponces, sortBy } from '../helpers/helpers';
 import { Post } from '../entities/post';
 import { validatePost, validatePostPUT, validateParams } from '../helpers/validation';
 import Boom = require('@hapi/boom');
 import { getRepository } from 'typeorm';
 import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
-import { Like } from '../entities/like';
-import { Reply } from '../entities/reply';
 
 const notFound = Boom.notFound("Post doesn't exist");
 
@@ -91,17 +88,3 @@ router.put('/:id', validateParams, validatePostPUT, async (req, res, next) => {
 
 
 module.exports = router;
-
-
-/*
-  Skeleton of old sorting, f
-let responce = posts;
-  // parseInt to check if req.query.limit starts with a number
-  // Should probably come up with a better way to see what parameters have been set and do the parsing elsewhere?
-  if(parseInt(req.query.limit)) {
-    responce = limitResponces(responce, parseInt(req.query.limit));
-  }
-  if(req.query.sort && req.query.field) {
-    responce = sortBy(responce, req.query.field.toLowerCase(), req.query.sort.toLowerCase());
-  }
-  */
