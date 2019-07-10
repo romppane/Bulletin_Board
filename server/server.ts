@@ -78,6 +78,7 @@ app.use('/comments', replyRoutes);
 app.use(handleErrors);
 
 // Add exception handler
+// Start server only if connection established.
 createConnection().then(() => {
   app.listen(3000, function () {
     console.log('Bulletin board server listening on port 3000!');
