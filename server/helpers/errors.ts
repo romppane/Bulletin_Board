@@ -18,7 +18,6 @@ export function handleErrors(err: Boom, req: Request, res: Response, next: NextF
       break;
     }
     case 400: {
-      console.log(err.output.payload);
       res.status(err.output.statusCode).send({
         Error : err.message
       })
@@ -26,7 +25,6 @@ export function handleErrors(err: Boom, req: Request, res: Response, next: NextF
       break;
     }
     default: {
-      console.log(err)
       res.status(err.output.statusCode).send("Something terrible has happened");
       // Something very unexpected, handle as 500
       break;

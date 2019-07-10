@@ -38,7 +38,6 @@ router.get('/:id', validateParams, async (req, res, next) => {
 
 router.post('/', validateReply, async (req, res, next) => {
   try {
-    console.log(req.params)
     const user = await getRepository(User).findOne(req.body.userId);
     if(user) {
       const post = await getRepository(Post).findOne(req.body.postId);

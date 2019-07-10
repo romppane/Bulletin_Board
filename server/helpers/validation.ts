@@ -150,7 +150,6 @@ interface ValidParams {
 
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     const valid : ValidParams = {id : parseInt(req.params.id)};
     validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {

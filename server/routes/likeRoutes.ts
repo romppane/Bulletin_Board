@@ -66,7 +66,6 @@ router.delete('/:user/:post/', async (req, res, next) => {
             next(Boom.notFound());
         }
     } catch (error) {
-        console.log(error);
         next(Boom.badImplementation());
     }
         
