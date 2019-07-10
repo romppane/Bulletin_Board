@@ -7,7 +7,7 @@ import { validateReply, validateReplyPUT, validateParams } from '../helpers/vali
 import { User } from '../entities/user';
 import { Post } from '../entities/post';
 
-const notFound = Boom.notFound("User doesn't exist");
+const notFound = Boom.notFound("Comment doesn't exist");
 
 
 router.get('/', async (req, res, next) => {
