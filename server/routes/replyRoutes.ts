@@ -38,7 +38,6 @@ router.get('/:id', validateParams, async (req, res, next) => {
 
 router.post('/', validateReply, (req, res, next) => {
     Promise.all([getRepository(User).findOne(req.body.userId), getRepository(Post).findOne(req.body.postId)]).then(results => {
-      console.log(results);
       if(typeof(results[0]) !== "undefined" && typeof(results[1]) !== "undefined"){
         const reply : Reply = new Reply(results[0], results[1], req.body.message);
         getRepository(Reply).save(reply);
