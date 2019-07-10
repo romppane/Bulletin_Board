@@ -98,7 +98,7 @@ export const validateReply = (req: Request, res: Response, next: NextFunction) =
 }
 
 
-interface validPostBody {
+interface ValidPostBody {
     message?: string,
     category?: string
 }
@@ -111,7 +111,7 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
             next(validationError);
         } else {
             // Strip unwanted fields.
-            let fields : validPostBody = {};
+            let fields : ValidPostBody = {};
             if(req.body.message) {
                 fields.message = req.body.message;
             }
@@ -125,7 +125,7 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
     });
 }
 
-interface validReplyBody {
+interface ValidReplyBody {
     message : string
 }
 
@@ -134,7 +134,7 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
         if(errors.length > 0) {
             next(validationError);
         } else {
-            const valid : validReplyBody = {
+            const valid : ValidReplyBody = {
                 message: req.body.message
             }
             req.body = valid;
@@ -144,14 +144,14 @@ export const validateReplyPUT = (req: Request, res: Response, next: NextFunction
     });
 }
 
-interface validParams {
+interface ValidParams {
     id: number
 }
 
 // ID VALUES ARE STRING... Figure out how to convert, then test
 export const validateParams = (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body);
-    const valid : validParams = {id : parseInt(req.params.id)};
+    const valid : ValidParams = {id : parseInt(req.params.id)};
     validate("requestParamSchema", valid).then(errors => {
         if(errors.length > 0) {
             next(Boom.badRequest("Invalid parameters"))
