@@ -10,7 +10,7 @@ import { plainToClass } from 'class-transformer';
 import { Like } from '../entities/like';
 import { Reply } from '../entities/reply';
 
-const notFound : Boom = Boom.notFound("Post doesn't exist");
+const notFound = Boom.notFound("Post doesn't exist");
 
 // Return all posts
 router.get('/', async (req, res, next) => {

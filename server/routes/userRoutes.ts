@@ -5,7 +5,7 @@ import { getRepository } from 'typeorm';
 import Boom from '@hapi/boom';
 import { validateParams } from '../helpers/validation';
 
-const notFound: Boom = Boom.notFound("User doesn't exist");
+const notFound = Boom.notFound("User doesn't exist");
 
 router.get('/', async (req, res, next) => {
   try {

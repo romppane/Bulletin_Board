@@ -6,7 +6,7 @@ import Boom from '@hapi/boom';
 import { Reply } from '../entities/reply';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
-const validationError : Boom = Boom.badRequest("Validation error");
+const validationError = Boom.badRequest("Validation error");
 
 // conditionalValidation = isOptional -> https://github.com/typestack/class-validator/issues/147
 // The validation still doesn't check what the user inputs very well.
