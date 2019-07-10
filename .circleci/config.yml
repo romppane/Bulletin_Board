@@ -56,6 +56,6 @@ workflows:
       - test:
           requires:
             - build
-          filters:
-            branches:
-              only: circleTesting
+#          filters:
+#            branches:
+#              only: circleTesting
