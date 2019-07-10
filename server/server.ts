@@ -23,8 +23,6 @@ const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
 const replyRoutes = require('./routes/replyRoutes');
 
-// Problem with the table as expected, @Unique not working like intended because of having to set some fields as primary..
-const likeRoutes = require('./routes/likeRoutes');
 
 morgan.token('date', (req: Request, res: Response, zone: string) => {
 
@@ -76,8 +74,6 @@ app.use('/', root);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 app.use('/comments', replyRoutes);
-app.use('/like', likeRoutes);
-
 // Error handler
 app.use(handleErrors);
 

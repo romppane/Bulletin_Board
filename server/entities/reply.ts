@@ -3,7 +3,6 @@ import { IsInt, MaxLength, Min } from 'class-validator';
 import { Expose } from 'class-transformer';
 import { User } from './user';
 import { Post } from './post';
-import { Like } from './like';
 
 @Entity()
 export class Reply {
@@ -38,8 +37,6 @@ export class Reply {
   @MaxLength(500)
   private message: string;
 
-  @OneToMany(type => Like, like => like.getPost)
-  likes!: Like[]
 
   public constructor(user: User, post: Post, message: string, userId?: number, postId?: number) {
     this.user = user;

@@ -3,7 +3,6 @@ import { Expose } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { User } from './user';
 import { Reply } from './reply';
-import { Like } from './like';
 
 @Entity()
 export class Post {
@@ -38,8 +37,6 @@ export class Post {
   @OneToMany(type => Reply, reply => reply.getPost)
   replies!: Reply[]
 
-  @OneToMany(type => Like, like => like.getPost)
-  likes!: Like[]
 
   public constructor(user: User, category: string, message: string, ownerId?: number) {
     this.user = user;
