@@ -153,7 +153,7 @@ export const validateParams = (req: Request, res: Response, next: NextFunction) 
     const valid: ValidParams = { id: parseInt(req.params.id) };
     validate("requestParamSchema", valid).then(errors => {
         if (errors.length > 0) {
-            next(Boom.badRequest("Invalid parameters"))
+            next(validationError);
         } else {
             req.params = valid;
             next();

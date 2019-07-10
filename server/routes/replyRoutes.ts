@@ -39,20 +39,15 @@ router.get('/:id', validateParams, async (req, res, next) => {
 router.post('/', validateReply, async (req, res, next) => {
   try {
     const user = await getRepository(User).findOne(req.body.userId);
-    if (user) {
-      const post = await getRepository(Post).findOne(req.body.postId);
-      if (post) {
+    const post = await getRepository(Post).findOne(req.body.postId);
+      if (user && post) {
         const reply: Reply = new Reply(user, post, req.body.message);
         await getRepository(Reply).save(reply);
         res.status(201).send(reply);
       }
       else {
-        next(Boom.notFound("Post doesn't exist"))
+        next(Boom.notFound("Invalid parameters"))
       }
-    }
-    else {
-      next(Boom.notFound("User doesn't exist"))
-    }
   } catch (error) {
     next(Boom.badImplementation());
   }
