@@ -57,7 +57,11 @@ router.post('/:user/:post/', async (req, res, next) => {
 // Fix routing, use body instead of params.
 router.delete('/:user/:post/', async (req, res, next) => {
     try {
-        const deleted = await getRepository(Like).createQueryBuilder().delete().where({ userId: req.params.user, postId: req.params.post, replyId: null }).execute();
+        const deleted = await getRepository(Like)
+        .createQueryBuilder()
+        .delete()
+        .where({ userId: req.params.user, postId: req.params.post, replyId: null })
+        .execute();
         if (deleted.affected) {
             res.sendStatus(204);
         }
@@ -76,7 +80,10 @@ router.delete('/:user/:post/', async (req, res, next) => {
 // Fix routing, use body instead of params.
 router.delete('/:user/:post/:comment', async (req, res, next) => {
     try {
-        const deleted = await getRepository(Like).createQueryBuilder().delete().where("userId = :user, postId = :post, replyId = :comment", { user: req.params.user, post: req.params.post, comment: req.params.comment }).execute();
+        const deleted = await getRepository(Like).createQueryBuilder()
+        .delete()
+        .where("userId = :user, postId = :post, replyId = :comment", { user: req.params.user, post: req.params.post, comment: req.params.comment })
+        .execute();
         if (deleted.affected) {
             res.sendStatus(204);
         }
