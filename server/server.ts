@@ -8,8 +8,8 @@ import { createConnection } from 'typeorm';
 import { registerSchema } from 'class-validator';
 import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/validation';
 import { handleErrors } from './helpers/errors';
-import replyRoutes from './routes/replyRoutes'
-import {PostRouter } from './routes/postRoutes'
+import replyRoutes from './routes/replyRoutes';
+import { PostRouter } from './routes/postRoutes';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
@@ -23,18 +23,21 @@ const moment = require('moment-timezone');
 const root = require('./routes/root');
 const userRoutes = require('./routes/userRoutes');
 
-
-
-class Server {
+export class Server {
   // Create a new express application instance
   app: express.Application;
   constructor() {
+    this.app = express();
+  }
+
+  start() {
+    console.log("start")
     morgan.token('date', (req: Request, res: Response, zone: string) => {
       return moment()
         .tz(zone)
         .format();
     });
-    
+
     // :remote-addr - :remote-user , possibly later
     morgan.format(
       'outFormat',
@@ -44,14 +47,16 @@ class Server {
       'incFormat',
       ':remote-addr [:date[Europe/Helsinki]] :method [:url] HTTP/:http-version [:user-agent]'
     );
-    
+
     const infoLogStream = fs.createWriteStream(path.join('.', 'logs', 'info.log'), {
       flags: 'a'
     });
 
-    const errorLogStream = fs.createWriteStream(path.join('.', 'logs', 'error.log'), { flags: 'a' });
+    const errorLogStream = fs.createWriteStream(path.join('.', 'logs', 'error.log'), {
+      flags: 'a'
+    });
 
-    this.app = express();
+    
 
     this.app.use(bodyparser.json());
 
@@ -83,7 +88,6 @@ class Server {
       })
     );
 
-
     // Routing
     this.app.use('/', root);
     this.app.use('/posts', new PostRouter().router);
@@ -91,17 +95,8 @@ class Server {
     this.app.use('/comments', replyRoutes);
     // Error handler
     this.app.use(handleErrors);
-
-    // Add exception handler
-    // Start server only if connection established.
-    createConnection()
-      .then(() => {
-        this.app.listen(3000, function() {
-          console.log('Bulletin board server listening on port 3000!');
-        });
-      })
-      .catch(err => console.log(err));
+    this.app.listen(3000, () => {
+      console.log("Server listening on 3000")
+    });
   }
 }
-
-const main = new Server();
