@@ -1,5 +1,5 @@
 import express = require('express');
-const router = express.Router();
+const replyRouter = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
@@ -10,7 +10,7 @@ import { Post } from '../entities/post';
 const notFound = Boom.notFound("Comment doesn't exist");
 
 
-router.get('/', async (req, res, next) => {
+replyRouter.get('/', async (req, res, next) => {
   try {
     const replies = await getRepository(Reply).find();
     res.status(200).send(replies);
@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 })
 
-router.get('/:id', validateParams, async (req, res, next) => {
+replyRouter.get('/:id', validateParams, async (req, res, next) => {
   try {
     const reply = await getRepository(Reply).findOne(req.params.id);
     if (reply) {
@@ -36,7 +36,7 @@ router.get('/:id', validateParams, async (req, res, next) => {
 
 })
 
-router.post('/', validateReply, (req, res, next) => {
+replyRouter.post('/', validateReply, (req, res, next) => {
   Promise.all([getRepository(User).findOne(req.body.userId), getRepository(Post).findOne(req.body.postId)]).then(results => {
     if (typeof (results[0]) !== "undefined" && typeof (results[1]) !== "undefined") {
       const reply: Reply = new Reply(results[0], results[1], req.body.message);
@@ -50,7 +50,7 @@ router.post('/', validateReply, (req, res, next) => {
 }
 )
 
-router.delete('/:id', validateParams, async (req, res, next) => {
+replyRouter.delete('/:id', validateParams, async (req, res, next) => {
   try {
     const deleted = await getRepository(Reply).delete(req.params.id);
     if (deleted.affected) {
@@ -65,7 +65,7 @@ router.delete('/:id', validateParams, async (req, res, next) => {
 
 })
 
-router.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
+replyRouter.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields
@@ -87,4 +87,4 @@ router.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
 
 })
 
-module.exports = router;
+export default replyRouter;
