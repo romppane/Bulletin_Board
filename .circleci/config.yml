@@ -33,8 +33,8 @@ jobs:
     #  - image: mongo:3.4.4-jessie
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+    #  - restore_cache:
+    #      key: dependency-cache-{{ checksum "package.json" }}
       - run: npm test
   #        name: Test
   #        command: npm test
