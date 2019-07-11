@@ -7,6 +7,9 @@ import { validateParams } from '../helpers/validation';
 
 const notFound = Boom.notFound("User doesn't exist");
 
+// Use awilix to make user-service and repo
+
+
 router.get('/', async (req, res, next) => {
   try {
     const dbusers = await getRepository(User).find();
