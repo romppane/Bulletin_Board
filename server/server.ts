@@ -5,12 +5,12 @@ import express = require('express');
 import { Request, Response } from 'express';
 import bodyparser = require('body-parser');
 import { registerSchema } from 'class-validator';
-import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/validation';
-import { handleErrors } from './helpers/errors';
-import { PostRouter } from './routes/postRoutes';
+import { postPUTSchema, replyPUTSchema, requestParamSchema } from './middleware/validation';
+import { handleErrors } from './middleware/errors';
+import { PostRouter } from './routes/post-router';
 import { Dependencies } from './types';
-import { UserRouter } from './routes/userRoutes';
-import { ReplyRouter } from './routes/replyRoutes';
+import { UserRouter } from './routes/user-router';
+import { ReplyRouter } from './routes/reply-router';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);

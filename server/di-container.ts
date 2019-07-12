@@ -1,12 +1,12 @@
 import * as awilix from 'awilix';
-import { PostRouter } from './routes/postRoutes';
+import { PostRouter } from './routes/post-router';
 import { createConnection, getRepository } from 'typeorm';
 import { Post } from './entities/post';
 import { Server } from './server';
 import { User } from './entities/user';
-import { UserRouter } from './routes/userRoutes';
+import { UserRouter } from './routes/user-router';
 import { Reply } from './entities/reply';
-import { ReplyRouter } from './routes/replyRoutes';
+import { ReplyRouter } from './routes/reply-router';
 
 const container = awilix.createContainer({
     injectionMode: awilix.InjectionMode.PROXY

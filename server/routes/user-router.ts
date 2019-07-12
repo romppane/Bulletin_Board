@@ -2,7 +2,7 @@ import express = require('express');
 import { User } from '../entities/user';
 import { Repository } from 'typeorm';
 import Boom from '@hapi/boom';
-import { validateParams } from '../helpers/validation';
+import { validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
 
 export class UserRouter {

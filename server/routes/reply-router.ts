@@ -2,7 +2,7 @@ import express = require('express');
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
-import { validateReply, validateReplyPUT, validateParams } from '../helpers/validation';
+import { validateReply, validateReplyPUT, validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
 
 export class ReplyRouter {

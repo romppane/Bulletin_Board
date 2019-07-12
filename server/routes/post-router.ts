@@ -1,6 +1,6 @@
 import express = require('express');
 import { Post } from '../entities/post';
-import { validatePost, validatePostPUT, validateParams } from '../helpers/validation';
+import { validatePost, validatePostPUT, validateParams } from '../middleware/validation';
 import Boom = require('@hapi/boom');
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../entities/user';
