@@ -35,8 +35,15 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
-      - run: ls -a
       - run: npm test
+
+  compile:
+    executor: my-executor
+    steps:
+      - checkout
+      - attach_workspace:
+        at: ~/repo
+      - run: npm run tsc
 
 workflows:
   version: 2
@@ -47,3 +54,7 @@ workflows:
       - test:
           requires:
             - build
+      - compile:
+          requires:
+            - build
+            - test
