@@ -7,10 +7,10 @@ import bodyparser = require('body-parser');
 import { registerSchema } from 'class-validator';
 import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/validation';
 import { handleErrors } from './helpers/errors';
-import replyRoutes from './routes/replyRoutes';
 import { PostRouter } from './routes/postRoutes';
 import { Dependencies } from './types';
 import { UserRouter } from './routes/userRoutes';
+import { ReplyRouter } from './routes/replyRoutes';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
@@ -22,17 +22,18 @@ const morgan = require('morgan');
 const moment = require('moment-timezone');
 // Construct routes
 const root = require('./routes/root');
-const userRoutes = require('./routes/userRoutes');
 
 export class Server {
   // Create a new express application instance
   app: express.Application;
   postRouter : PostRouter;
   userRouter : UserRouter;
+  replyRouter : ReplyRouter;
   constructor( options : Dependencies ) {
     this.app = express();
     this.postRouter = options.postRouter;
     this.userRouter = options.userRouter;
+    this.replyRouter = options.replyRouter;
   }
 
   start() {
@@ -97,7 +98,7 @@ export class Server {
     this.app.use('/', root);
     this.app.use('/posts', this.postRouter.router);
     this.app.use('/users', this.userRouter.router);
-    this.app.use('/comments', replyRoutes);
+    this.app.use('/comments', this.replyRouter.router);
     // Error handler
     this.app.use(handleErrors);
     this.app.listen(3000, () => {

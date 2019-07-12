@@ -1,90 +1,91 @@
 import express = require('express');
-const replyRouter = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
 import { validateReply, validateReplyPUT, validateParams } from '../helpers/validation';
-import { User } from '../entities/user';
-import { Post } from '../entities/post';
+import { Dependencies } from '../types';
 
-const notFound = Boom.notFound("Comment doesn't exist");
+export class ReplyRouter {
+  notFound: Boom;
+  router: express.Router;
+  // How do I make array of Repositories? : Repository<Entity> is not allowed :D
+  repositories: any;
 
+  constructor(options: Dependencies) {
+    this.notFound = Boom.notFound("Comment doesn't exist");
+    this.router = express.Router();
+    this.repositories = {
+      reply: options.replyRepository,
+      post: options.postRepository,
+      user: options.userRepository
+    };
 
-replyRouter.get('/', async (req, res, next) => {
-  try {
-    const replies = await getRepository(Reply).find();
-    res.status(200).send(replies);
-  } catch (error) {
-    next(Boom.badImplementation());
+    this.router.get('/', async (req, res, next) => {
+      try {
+        const replies = await this.repositories.reply.find();
+        res.status(200).send(replies);
+      } catch (error) {
+        next(Boom.badImplementation());
+      }
+    });
+
+    this.router.get('/:id', validateParams, async (req, res, next) => {
+      try {
+        const reply = await this.repositories.reply.findOne(req.params.id);
+        if (reply) {
+          res.status(200).send(reply);
+        } else {
+          next(this.notFound);
+        }
+      } catch (error) {
+        // in case of an internal error
+        next(Boom.badImplementation());
+      }
+    });
+
+    this.router.post('/', validateReply, (req, res, next) => {
+      Promise.all([
+        this.repositories.user.findOne(req.body.userId),
+        this.repositories.post.findOne(req.body.postId)
+      ])
+        .then(([user, post]) => {
+          if (user && post) {
+            const reply: Reply = new Reply(user, post, req.body.message);
+            getRepository(Reply).save(reply);
+            res.status(201).send(reply);
+          } else {
+            next(Boom.notFound());
+          }
+        })
+        .catch(error => next(Boom.badImplementation()));
+    });
+
+    this.router.delete('/:id', validateParams, async (req, res, next) => {
+      try {
+        const deleted = await this.repositories.reply.delete(req.params.id);
+        if (deleted.affected) {
+          res.sendStatus(204);
+        } else {
+          next(this.notFound);
+        }
+      } catch (error) {
+        next(Boom.badImplementation());
+      }
+    });
+
+    this.router.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
+      try {
+        // Validate out any unnecessary fields
+        await getRepository(Reply).update(req.params.id, req.body);
+        const updated = await this.repositories.reply.findOne(req.params.id);
+        if (updated) {
+          res.status(200).send(updated);
+        } else {
+          next(this.notFound);
+        }
+      } catch (error) {
+        next(Boom.badImplementation());
+      }
+    });
   }
-
-})
-
-replyRouter.get('/:id', validateParams, async (req, res, next) => {
-  try {
-    const reply = await getRepository(Reply).findOne(req.params.id);
-    if (reply) {
-      res.status(200).send(reply);
-    }
-    else {
-      next(notFound);
-    }
-  } catch (error) {
-    // in case of an internal error
-    next(Boom.badImplementation());
-  }
-
-})
-
-replyRouter.post('/', validateReply, (req, res, next) => {
-  Promise.all([getRepository(User).findOne(req.body.userId), getRepository(Post).findOne(req.body.postId)]).then(results => {
-    if (typeof (results[0]) !== "undefined" && typeof (results[1]) !== "undefined") {
-      const reply: Reply = new Reply(results[0], results[1], req.body.message);
-      getRepository(Reply).save(reply);
-      res.status(201).send(reply);
-    }
-    else {
-      next(Boom.notFound())
-    }
-  }).catch(error => next(Boom.badImplementation()))
 }
-)
-
-replyRouter.delete('/:id', validateParams, async (req, res, next) => {
-  try {
-    const deleted = await getRepository(Reply).delete(req.params.id);
-    if (deleted.affected) {
-      res.sendStatus(204);
-    }
-    else {
-      next(notFound);
-    }
-  } catch (error) {
-    next(Boom.badImplementation());
-  }
-
-})
-
-replyRouter.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
-
-  try {
-    // Validate out any unnecessary fields
-    await getRepository(Reply).update(req.params.id, req.body);
-    const updated = await getRepository(Reply).findOne(req.params.id);
-    if (updated) {
-
-      res.status(200).send(updated);
-    }
-    else {
-      next(notFound);
-    }
-
-  } catch (error) {
-    next(Boom.badImplementation());
-  }
-
-
-
-})
-
-export default replyRouter;
