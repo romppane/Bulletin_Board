@@ -42,7 +42,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-        at: ~/repo
+          at: ~/repo
       - run: npm run tsc
 
 workflows:
