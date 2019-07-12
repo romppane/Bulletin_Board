@@ -34,8 +34,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo/node_modules
-
-      - checkout
       - run: npm test
 
 workflows:
