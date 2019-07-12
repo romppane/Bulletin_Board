@@ -33,7 +33,7 @@ jobs:
     executor: my-executor
     steps:
       - attach_workspace:
-          at: ~/repo/node_modules
+          at: ~/repo
       - run: npm test
 
 workflows:
