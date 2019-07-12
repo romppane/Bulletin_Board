@@ -4,12 +4,13 @@ import * as path from 'path';
 import express = require('express');
 import { Request, Response } from 'express';
 import bodyparser = require('body-parser');
-import { createConnection } from 'typeorm';
 import { registerSchema } from 'class-validator';
 import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/validation';
 import { handleErrors } from './helpers/errors';
 import replyRoutes from './routes/replyRoutes';
 import { PostRouter } from './routes/postRoutes';
+import { Repository } from 'typeorm';
+import { Post } from './entities/post';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
@@ -22,12 +23,17 @@ const moment = require('moment-timezone');
 // Construct routes
 const root = require('./routes/root');
 const userRoutes = require('./routes/userRoutes');
-
+export type Dependencies = {
+  postRouter : PostRouter,
+  postRepository : Repository<Post>
+}
 export class Server {
   // Create a new express application instance
   app: express.Application;
-  constructor() {
+  postRouter : PostRouter;
+  constructor( options : Dependencies ) {
     this.app = express();
+    this.postRouter = options.postRouter;
   }
 
   start() {
@@ -90,7 +96,7 @@ export class Server {
 
     // Routing
     this.app.use('/', root);
-    this.app.use('/posts', new PostRouter().router);
+    this.app.use('/posts', this.postRouter.router);
     this.app.use('/users', userRoutes);
     this.app.use('/comments', replyRoutes);
     // Error handler
