@@ -3,8 +3,11 @@ const router = express.Router();
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
 import Boom = require('@hapi/boom');
+import { validateReply, validateReplyPUT, validateParams } from '../helpers/validation';
+import { User } from '../entities/user';
+import { Post } from '../entities/post';
 
-const notFound : Boom = Boom.notFound("User doesn't exist");
+const notFound = Boom.notFound("Comment doesn't exist");
 
 
 router.get('/', async (req, res, next) => {
@@ -17,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', validateParams, async (req, res, next) => {
   try {
     const reply = await getRepository(Reply).findOne(req.params.id);
     if (reply) {
@@ -33,18 +36,21 @@ router.get('/:id', async (req, res, next) => {
 
 })
 
-router.post('/', async (req, res, next) => {
-  try {
-    const reply: Reply = new Reply(req.body.user_id, req.body.post_id, req.body.message);
-    await getRepository(Reply).save(reply);
-    res.status(201).send(reply);
-  } catch (error) {
-    next(Boom.badImplementation());
-  }
+router.post('/', validateReply, (req, res, next) => {
+  Promise.all([getRepository(User).findOne(req.body.userId), getRepository(Post).findOne(req.body.postId)]).then(([user, post]) => {
+    if (user && post) {
+      const reply: Reply = new Reply(user, post, req.body.message);
+      getRepository(Reply).save(reply);
+      res.status(201).send(reply);
+    }
+    else {
+      next(Boom.notFound())
+    }
+  }).catch(error => next(Boom.badImplementation()))
+}
+)
 
-})
-
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateParams, async (req, res, next) => {
   try {
     const deleted = await getRepository(Reply).delete(req.params.id);
     if (deleted.affected) {
@@ -59,7 +65,7 @@ router.delete('/:id', async (req, res, next) => {
 
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', validateParams, validateReplyPUT, async (req, res, next) => {
 
   try {
     // Validate out any unnecessary fields
@@ -81,19 +87,4 @@ router.put('/:id', async (req, res, next) => {
 
 })
 
-// Putting the liking to freeze for now since a better sort kind of system is on the works in the background!
-//Add and delete likes
-/*
-router.patch('/:id/like', (req,res) => {
-  const updated : Reply = replies[req.params.id];
-  updated.likeReply();
-  res.status(200).send(updated);
-})
-
-router.delete('/:id/like', (req,res) => {
-  const updated : Reply = replies[req.params.id];
-  updated.unlikeReply();
-  res.status(200).send(updated);
-})
-*/
 module.exports = router;

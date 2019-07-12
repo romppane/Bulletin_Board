@@ -1,82 +1,82 @@
-import { Length, IsNotEmpty, IsInt } from 'class-validator'
+import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
 import { Expose } from "class-transformer";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { User } from './user';
+import { Reply } from './reply';
 
+@Entity()
+export class Post {
+  @PrimaryGeneratedColumn()
+  private id!: number;
 
-export class Post{
-  @Expose()
-  private id: number;
+  @ManyToOne(type => User, user => user.posts)
+  @JoinColumn({ name: "ownerId" })
+  private user: User;
 
+  @Column({ nullable: false })
   @Expose()
   @IsInt()
-  private owner_id: number;
+  @Min(1)
+  private ownerId!: number;
 
-  private likes: number;
-
+  @Column()
   @Expose()
   @IsNotEmpty()
   @Length(1, 50)
   private category: string;
 
-  private views: number;
-  
+  @Column({ default: 0 })
+  private views!: number;
+
+  @Column("text")
   @Expose()
+  @IsNotEmpty()
   @Length(1, 1000)
   private message: string;
 
-  public constructor(id: number, owner_id: number, category: string, message: string){
-    // Autogeneration will replace
-    this.id = id;
-    this.owner_id = owner_id;
-    this.likes = 0;
+  @OneToMany(type => Reply, reply => reply.getPost)
+  replies!: Reply[]
+
+
+  public constructor(user: User, category: string, message: string, ownerId?: number) {
+    this.user = user;
     this.category = category;
-    this.views = 0;
     this.message = message;
   }
 
-  public getId() : number {
+  public getid(): number {
     return this.id;
   }
 
-  public getOwner_id() : number {
-    return this.owner_id;
+  public getOwner(): User {
+    return this.user;
+  }
+
+  public getOwnerId(): number {
+    return this.ownerId;
   }
 
   public addView() {
     this.views += 1;
   }
 
-  public getViews() : number {
+  public getViews(): number {
     return this.views;
   }
 
-  // With this way of implementing likes, it's impossible to keep track of who likes the post or not.
-  // Correct way to do this is probably with an extra table, but if you want to be able to like comments too, it's going to be a hastle!
-  // Don't see the feature being the top priority now so I'll just let it be.
-  public likePost() {
-    this.likes += 1;
-  }
-
-  public unlikePost() {
-    this.likes -= 1;
-  }
-
-  public getLikes() : number {
-    return this.likes;
-  }
-
-  public setCategory(category:string) {
+  public setCategory(category: string) {
     this.category = category
   }
 
-  public getCategory() : string {
+  public getCategory(): string {
     return this.category;
   }
 
-  public setMessage(message:string) {
+  public setMessage(message: string) {
     this.message = message;
   }
 
-  public getMessage() : string {
+  public getMessage(): string {
     return this.message;
   }
 

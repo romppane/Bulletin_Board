@@ -3,8 +3,9 @@ const router = express.Router();
 import { User } from '../entities/user';
 import { getRepository } from 'typeorm';
 import Boom from '@hapi/boom';
+import { validateParams } from '../helpers/validation';
 
-const notFound: Boom = Boom.notFound("User doesn't exist");
+const notFound = Boom.notFound("User doesn't exist");
 
 router.get('/', async (req, res, next) => {
   try {
@@ -16,7 +17,7 @@ router.get('/', async (req, res, next) => {
 
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', validateParams, async (req, res, next) => {
   try {
     const responce = await getRepository(User).findOne(req.params.id);
     if (responce) {
@@ -42,7 +43,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateParams, async (req, res, next) => {
   try {
     const deleted = await getRepository(User).delete(req.params.id);
     if (deleted.affected) {
@@ -61,9 +62,11 @@ router.delete('/:id', async (req, res, next) => {
 // With the limited attributes given to user, only thing they're allowed to change is avatar picture
 // Have to explore how sending pictures in url parameters works, but I'm guessing this is a spot where
 // picture to base64 needs to be run?
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', validateParams, async (req, res, next) => {
   try {
-    // Make validation that prevents the changing of id.
+    // Bootleg validator as user has only few fields now and avatar is the only one you can change.
+    // When user gets more advaced create proper validation to it! Class-validator can check Base64 encoding for the avatar.
+    req.body = { avatar: req.body.avatar };
     await getRepository(User).update(req.params.id, req.body);
     // Not class instance
     const updated = await getRepository(User).findOne(req.params.id);

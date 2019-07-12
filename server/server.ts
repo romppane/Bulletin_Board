@@ -2,27 +2,30 @@ import "reflect-metadata";
 import * as fs from "fs";
 import * as path from "path";
 import express = require('express');
-import {Request, Response} from 'express'
-import bodyparser = require ('body-parser');
+import { Request, Response } from 'express'
+import bodyparser = require('body-parser');
 import { createConnection } from "typeorm";
 import { registerSchema } from "class-validator";
-import { postPUTSchema } from './helpers/validation';
+import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/validation';
 import { handleErrors } from './helpers/errors';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
+registerSchema(replyPUTSchema);
+registerSchema(requestParamSchema);
 
 // Construct morgan
-const morgan = require ("morgan");
-const moment = require ("moment-timezone");
+const morgan = require("morgan");
+const moment = require("moment-timezone");
 // Construct routes
 const root = require('./routes/root');
-const postRoutes = require ('./routes/postRoutes');
-const userRoutes = require ('./routes/userRoutes');
-const replyRoutes = require ('./routes/replyRoutes');
+const postRoutes = require('./routes/postRoutes');
+const userRoutes = require('./routes/userRoutes');
+const replyRoutes = require('./routes/replyRoutes');
 
-morgan.token('date', (req : Request, res : Response, zone : string) => {
-  
+
+morgan.token('date', (req: Request, res: Response, zone: string) => {
+
   return moment().tz(zone).format();
 })
 
@@ -37,7 +40,7 @@ const infoLogStream = fs.createWriteStream(
 
 const errorLogStream = fs.createWriteStream(
   path.join('.', 'logs', 'error.log'),
-  { flags: 'a'}
+  { flags: 'a' }
 );
 
 
@@ -48,31 +51,37 @@ app.use(bodyparser.json());
 // Log incoming requests
 app.use(morgan('incFormat', {
   immediate: true,
-  stream: infoLogStream}))
+  stream: infoLogStream
+}))
 
 // Log successfull responces
-app.use(morgan('outFormat', {skip: (req : express.Request, res : express.Response) => {
-  return res.statusCode >= 399
-}, stream : infoLogStream}))
+app.use(morgan('outFormat', {
+  skip: (req: express.Request, res: express.Response) => {
+    return res.statusCode >= 399
+  }, stream: infoLogStream
+}))
 
 // Logs error responces
-app.use(morgan('outFormat', {skip: (req : express.Request, res : express.Response) => {
-  return res.statusCode < 400
-}, stream : errorLogStream}))
+app.use(morgan('outFormat', {
+  skip: (req: express.Request, res: express.Response) => {
+    return res.statusCode < 400
+  }, stream: errorLogStream
+}))
 
 
 // Routing
 app.use('/', root);
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
-app.use('/posts/:id/comments', replyRoutes);
-
+app.use('/comments', replyRoutes);
 // Error handler
 app.use(handleErrors);
 
-const connection = createConnection();
+// Add exception handler
+// Start server only if connection established.
+createConnection().then(() => {
+  app.listen(3000, function () {
+    console.log('Bulletin board server listening on port 3000!');
+  });
+}).catch(err => console.log(err));
 
-// Should probably be configurable by config file
-app.listen(3000, function () {
-  console.log('Bulletin board server listening on port 3000!');
-});
