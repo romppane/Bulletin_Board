@@ -14,7 +14,6 @@ jobs:
   build:
     executor: my-executor
     steps:
-      - run: mkdir -p workspace
       - checkout
       # Update npm to the latest
       - run:
@@ -25,16 +24,26 @@ jobs:
           name: Install npm wee
           command: npm install
       - persist_to_workspace:
-          root: workspace
+          root: ~/repo
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
 
   test:
     executor: my-executor
     steps:
-      - attach_workspace:
-          at: ~/repo/workspace
-
       - checkout
+      - attach_workspace:
+          at: ~/repo
       - run: npm test
+
+  compile:
+    executor: my-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run: npm run tsc
 
 workflows:
   version: 2
@@ -45,3 +54,7 @@ workflows:
       - test:
           requires:
             - build
+      - compile:
+          requires:
+            - build
+            - test
