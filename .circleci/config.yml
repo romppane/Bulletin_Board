@@ -14,7 +14,6 @@ jobs:
   build:
     executor: my-executor
     steps:
-      - run: mkdir -p workspace
       - checkout
       # Update npm to the latest
       - run:
@@ -25,7 +24,6 @@ jobs:
           name: Install npm wee
           command: npm install
       - persist_to_workspace:
-          root: workspace
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
@@ -34,7 +32,7 @@ jobs:
     executor: my-executor
     steps:
       - attach_workspace:
-          at: ~/repo/workspace/node_modules
+          at: ~/repo/node_modules
 
       - checkout
       - run: npm test
