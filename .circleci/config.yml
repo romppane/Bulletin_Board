@@ -24,6 +24,7 @@ jobs:
           name: Install npm wee
           command: npm install
       - persist_to_workspace:
+          root: ~/repo
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
