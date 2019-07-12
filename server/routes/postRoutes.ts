@@ -6,7 +6,7 @@ import { getRepository, Repository } from 'typeorm';
 import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
-import { Dependencies } from '../server';
+import { Dependencies } from '../types';
 
 export class PostRouter {
   notFound: Boom;

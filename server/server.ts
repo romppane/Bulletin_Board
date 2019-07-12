@@ -9,8 +9,8 @@ import { postPUTSchema, replyPUTSchema, requestParamSchema } from './helpers/val
 import { handleErrors } from './helpers/errors';
 import replyRoutes from './routes/replyRoutes';
 import { PostRouter } from './routes/postRoutes';
-import { Repository } from 'typeorm';
-import { Post } from './entities/post';
+import { Dependencies } from './types';
+import { UserRouter } from './routes/userRoutes';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);
@@ -23,17 +23,16 @@ const moment = require('moment-timezone');
 // Construct routes
 const root = require('./routes/root');
 const userRoutes = require('./routes/userRoutes');
-export type Dependencies = {
-  postRouter : PostRouter,
-  postRepository : Repository<Post>
-}
+
 export class Server {
   // Create a new express application instance
   app: express.Application;
   postRouter : PostRouter;
+  userRouter : UserRouter;
   constructor( options : Dependencies ) {
     this.app = express();
     this.postRouter = options.postRouter;
+    this.userRouter = options.userRouter;
   }
 
   start() {
@@ -97,7 +96,7 @@ export class Server {
     // Routing
     this.app.use('/', root);
     this.app.use('/posts', this.postRouter.router);
-    this.app.use('/users', userRoutes);
+    this.app.use('/users', this.userRouter.router);
     this.app.use('/comments', replyRoutes);
     // Error handler
     this.app.use(handleErrors);
