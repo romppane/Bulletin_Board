@@ -34,6 +34,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - run: ls -a
       - run: npm test
 
 workflows:
