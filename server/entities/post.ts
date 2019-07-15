@@ -1,6 +1,6 @@
-import { Length, IsNotEmpty, IsInt, Min } from 'class-validator'
-import { Expose } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Length, IsNotEmpty, IsInt, Min } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { User } from './user';
 import { Reply } from './reply';
 
@@ -10,7 +10,7 @@ export class Post {
   private id!: number;
 
   @ManyToOne(type => User, user => user.posts)
-  @JoinColumn({ name: "ownerId" })
+  @JoinColumn({ name: 'ownerId' })
   private user: User;
 
   @Column({ nullable: false })
@@ -28,15 +28,14 @@ export class Post {
   @Column({ default: 0 })
   private views!: number;
 
-  @Column("text")
+  @Column('text')
   @Expose()
   @IsNotEmpty()
   @Length(1, 1000)
   private message: string;
 
   @OneToMany(type => Reply, reply => reply.getPost)
-  replies!: Reply[]
-
+  replies!: Reply[];
 
   public constructor(user: User, category: string, message: string, ownerId?: number) {
     this.user = user;
@@ -65,7 +64,7 @@ export class Post {
   }
 
   public setCategory(category: string) {
-    this.category = category
+    this.category = category;
   }
 
   public getCategory(): string {
@@ -79,6 +78,4 @@ export class Post {
   public getMessage(): string {
     return this.message;
   }
-
-
 }

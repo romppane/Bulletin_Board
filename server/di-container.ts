@@ -8,28 +8,26 @@ import { UserRouter } from './routes/user-router';
 import { Reply } from './entities/reply';
 import { ReplyRouter } from './routes/reply-router';
 import { PostService } from './service/post-service';
+import { UserService } from './service/user-service';
 
 const container = awilix.createContainer({
-    injectionMode: awilix.InjectionMode.PROXY
-})
+  injectionMode: awilix.InjectionMode.PROXY
+});
 
 export function configureContainer() {
-    
-    // Add exception handler
-    // Start server only if connection established.
-    return createConnection()
-      .then(() => {
-        return container.register({
-            postRouter: awilix.asClass(PostRouter),
-            postRepository: awilix.asValue(getRepository(Post)),
-            postService: awilix.asClass(PostService),
-            userRouter: awilix.asClass(UserRouter),
-            userRepository: awilix.asValue(getRepository(User)),
-            replyRouter: awilix.asClass(ReplyRouter),
-            replyRepository: awilix.asValue(getRepository(Reply)),
-            app: awilix.asClass(Server)
-        })
-      })
-  }
-
-
+  // Add exception handler
+  // Start server only if connection established.
+  return createConnection().then(() => {
+    return container.register({
+      postRouter: awilix.asClass(PostRouter),
+      postRepository: awilix.asValue(getRepository(Post)),
+      postService: awilix.asClass(PostService),
+      userRouter: awilix.asClass(UserRouter),
+      userRepository: awilix.asValue(getRepository(User)),
+      userService: awilix.asClass(UserService),
+      replyRouter: awilix.asClass(ReplyRouter),
+      replyRepository: awilix.asValue(getRepository(Reply)),
+      app: awilix.asClass(Server)
+    });
+  });
+}

@@ -26,10 +26,10 @@ const root = require('./routes/root');
 export class Server {
   // Create a new express application instance
   app: express.Application;
-  postRouter : PostRouter;
-  userRouter : UserRouter;
-  replyRouter : ReplyRouter;
-  constructor( options : Dependencies ) {
+  postRouter: PostRouter;
+  userRouter: UserRouter;
+  replyRouter: ReplyRouter;
+  constructor(options: Dependencies) {
     this.app = express();
     this.postRouter = options.postRouter;
     this.userRouter = options.userRouter;
@@ -37,7 +37,6 @@ export class Server {
   }
 
   start() {
-    console.log("start")
     morgan.token('date', (req: Request, res: Response, zone: string) => {
       return moment()
         .tz(zone)
@@ -61,8 +60,6 @@ export class Server {
     const errorLogStream = fs.createWriteStream(path.join('.', 'logs', 'error.log'), {
       flags: 'a'
     });
-
-    
 
     this.app.use(bodyparser.json());
 
@@ -102,7 +99,7 @@ export class Server {
     // Error handler
     this.app.use(handleErrors);
     this.app.listen(3000, () => {
-      console.log("Server listening on 3000")
+      console.log('Server listening on 3000');
     });
   }
 }

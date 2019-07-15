@@ -1,23 +1,21 @@
 import express = require('express');
 import { User } from '../entities/user';
-import { Repository } from 'typeorm';
 import Boom from '@hapi/boom';
 import { validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
+import { UserService } from '../service/user-service';
 
 export class UserRouter {
   notFound: Boom;
   router: express.Router;
-  repository: Repository<User>;
+  userService: UserService;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("User doesn't exist");
-    this.repository = options.userRepository;
+    this.userService = options.userService;
 
     this.initializeRoutes();
-
-    // Use awilix to make user-service and repo
   }
 
   initializeRoutes() {
@@ -30,7 +28,7 @@ export class UserRouter {
 
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await this.repository.find();
+      const users = await this.userService.find();
       res.status(200).send(users);
     } catch (error) {
       next(Boom.badImplementation());
@@ -39,7 +37,7 @@ export class UserRouter {
 
   async getOne(req: Request, res: Response, next: NextFunction) {
     try {
-      const responce = await this.repository.findOne(req.params.id);
+      const responce = await this.userService.findOne(req.params.id);
       if (responce) {
         res.status(200).send(responce);
       } else {
@@ -55,7 +53,7 @@ export class UserRouter {
     // Using the constructors for now instead of repository.create()
     try {
       const user: User = new User(req.body.avatar);
-      await this.repository.save(user);
+      await this.userService.save(user);
       res.status(201).send(user);
     } catch (error) {
       next(Boom.badImplementation());
@@ -64,7 +62,7 @@ export class UserRouter {
 
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      const deleted = await this.repository.delete(req.params.id);
+      const deleted = await this.userService.delete(req.params.id);
       if (deleted.affected) {
         res.sendStatus(204);
       } else {
@@ -83,9 +81,9 @@ export class UserRouter {
       // Bootleg validator as user has only few fields now and avatar is the only one you can change.
       // When user gets more advaced create proper validation to it! Class-validator can check Base64 encoding for the avatar.
       req.body = { avatar: req.body.avatar };
-      await this.repository.update(req.params.id, req.body);
+      await this.userService.update(req.params.id, req.body);
       // Not class instance
-      const updated = await this.repository.findOne(req.params.id);
+      const updated = await this.userService.findOne(req.params.id);
       if (updated) {
         res.status(200).send(updated);
       } else {

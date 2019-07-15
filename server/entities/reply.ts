@@ -6,12 +6,11 @@ import { Post } from './post';
 
 @Entity()
 export class Reply {
-
   @PrimaryGeneratedColumn()
   private id!: number;
 
   @ManyToOne(type => User, user => user.replies)
-  @JoinColumn({ name: "userId" })
+  @JoinColumn({ name: 'userId' })
   private user!: User;
 
   @Column({ nullable: false })
@@ -21,9 +20,8 @@ export class Reply {
   private userId!: number;
 
   @ManyToOne(type => Post, post => post.replies)
-  @JoinColumn({ name: "postId" })
+  @JoinColumn({ name: 'postId' })
   private post: Post;
-
 
   @Column({ nullable: false })
   @Expose()
@@ -31,12 +29,10 @@ export class Reply {
   @Min(1)
   private postId!: number;
 
-
-  @Column("text")
+  @Column('text')
   @Expose()
   @MaxLength(500)
   private message: string;
-
 
   public constructor(user: User, post: Post, message: string, userId?: number, postId?: number) {
     this.user = user;
@@ -71,6 +67,4 @@ export class Reply {
   public getMessage(): string {
     return this.message;
   }
-
-
 }

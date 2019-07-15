@@ -1,10 +1,6 @@
 import express = require('express');
-import { Post } from '../entities/post';
 import { validatePost, validatePostPUT, validateParams } from '../middleware/validation';
 import Boom = require('@hapi/boom');
-import { getRepository, Repository } from 'typeorm';
-import { User } from '../entities/user';
-import { plainToClass } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
@@ -12,12 +8,10 @@ import { PostService } from '../service/post-service';
 export class PostRouter {
   notFound: Boom;
   router: express.Router;
-  postRepository: Repository<Post>;
   postService: PostService;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
-    this.postRepository = options.postRepository;
     this.postService = options.postService;
     this.initializeRoutes();
   }
@@ -35,7 +29,6 @@ export class PostRouter {
       const posts = await this.postService.find();
       res.status(200).send(posts);
     } catch (error) {
-      console.log(error);
       next(Boom.badImplementation());
     }
   }
@@ -55,17 +48,23 @@ export class PostRouter {
 
   // Create post
   async post(req: Request, res: Response, next: NextFunction) {
-    try {
-      const user: User = plainToClass(User, await getRepository(User).findOne(req.body.ownerId));
-      if (user) {
-        const post: Post = new Post(user, req.body.category, req.body.message);
-        await this.postService.save(post);
-        res.status(201).send(post);
-      } else {
-        next(Boom.notFound("User doesn't exist"));
+    const success = await this.postService.save(
+      req.body.ownerId,
+      req.body.category,
+      req.body.message
+    );
+    switch (success) {
+      case 'success': {
+        res.status(201).send(success);
+        break;
       }
-    } catch (error) {
-      next(Boom.badImplementation());
+      case 'not found': {
+        next(Boom.notFound("User doesn't exist"));
+        break;
+      }
+      default: {
+        next(Boom.badImplementation());
+      }
     }
   }
 
