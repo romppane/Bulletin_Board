@@ -30,13 +30,13 @@
       "class-transformer": "^0.2.3",
       "class-validator": "^0.9.1",
       "express": "^4.17.1",
-      "moment-timezone": "^0.5.25",
+      "moment-timezone": "^0.5.26",
       "morgan": "^1.9.1",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
       "ts-node-dev": "^1.0.0-pre.40",
       "typeorm": "^0.2.18",
-      "typescript": "^3.5.2"
+      "typescript": "^3.5.3"
    },
    "devDependencies": {
       "@types/body-parser": "^1.17.0",
@@ -46,7 +46,7 @@
       "@types/jest": "^24.0.15",
       "@types/moment-timezone": "^0.5.12",
       "@types/morgan": "^1.7.35",
-      "@types/node": "^8.0.29",
+      "@types/node": "^8.10.50",
       "jest": "^24.8.0",
       "ts-jest": "^24.0.2",
       "ts-node": "3.3.0"
