@@ -7,6 +7,7 @@ import { User } from './entities/user';
 import { UserRouter } from './routes/user-router';
 import { Reply } from './entities/reply';
 import { ReplyRouter } from './routes/reply-router';
+import { PostService } from './service/post-service';
 
 const container = awilix.createContainer({
     injectionMode: awilix.InjectionMode.PROXY
@@ -21,6 +22,7 @@ export function configureContainer() {
         return container.register({
             postRouter: awilix.asClass(PostRouter),
             postRepository: awilix.asValue(getRepository(Post)),
+            postService: awilix.asClass(PostService),
             userRouter: awilix.asClass(UserRouter),
             userRepository: awilix.asValue(getRepository(User)),
             replyRouter: awilix.asClass(ReplyRouter),

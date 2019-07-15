@@ -7,51 +7,66 @@ import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { Dependencies } from '../types';
+import { PostService } from '../service/post-service';
 
 export class PostRouter {
   notFound: Boom;
   router: express.Router;
   postRepository: Repository<Post>
+  postService: PostService;
   constructor(options : Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
-    this.postRepository = options.postRepository
-    // Return all posts
-    this.router.get('/', async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        let posts = await this.postRepository.find();
-        res.status(200).send(posts);
-      } catch (error) {
-        next(Boom.badImplementation());
-      }
-    });
+    this.postRepository = options.postRepository;
+    this.postService = options.postService;
+    this.initializeRoutes();
 
-    this.router.get(
-      '/:id',
-      validateParams,
-      async (req: Request, res: Response, next: NextFunction) => {
-        try {
-          // REMEMBER TO ADD VIEWS
-          const post = await this.postRepository.findOne(req.params.id);
-          if (post) {
-            res.status(200).send(post);
-          } else {
-            next(this.notFound);
-          }
-        } catch (error) {
-          next(Boom.badImplementation());
-        }
-      }
-    );
+    
+  }
 
-    // Create post
-    // Now requires user id to make a post...
-    this.router.post('/', validatePost, async (req: Request, res: Response, next: NextFunction) => {
+  initializeRoutes() {
+    this.router.get('/', this.getAll.bind(this));
+    this.router.get('/:id', validateParams, this.getOne.bind(this));
+    this.router.post('/', validatePost, this.post.bind(this));
+    this.router.delete('/:id', validateParams, this.delete.bind(this));
+    this.router.put('/:id', validateParams, validatePostPUT, this.update.bind(this));
+  }
+
+
+
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const posts = await this.postService.find();
+      res.status(200).send(posts);
+    } catch (error) {
+      console.log(error);
+      next(Boom.badImplementation());
+    }
+    
+  }
+
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    try {
+      const post = await this.postService.findOne(req.params.id)
+    if(post) {
+      res.status(200).send(post);
+    }
+    else {
+      next(this.notFound);
+    }
+    } catch (error) {
+      next(Boom.badImplementation());
+    }
+    
+  }
+
+  // Create post
+    async post(req: Request, res: Response, next: NextFunction) {
       try {
         const user: User = plainToClass(User, await getRepository(User).findOne(req.body.ownerId));
         if (user) {
           const post: Post = new Post(user, req.body.category, req.body.message);
-          await this.postRepository.save(post);
+          await this.postService.save(post);
           res.status(201).send(post);
         } else {
           next(Boom.notFound("User doesn't exist"));
@@ -59,15 +74,12 @@ export class PostRouter {
       } catch (error) {
         next(Boom.badImplementation());
       }
-    });
+}
 
+async delete(req: Request, res: Response, next: NextFunction) {
     // Delete post
-    this.router.delete(
-      '/:id',
-      validateParams,
-      async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const deleted = await this.postRepository.delete(req.params.id);
+          const deleted = await this.postService.delete(req.params.id);
           if (deleted.affected) {
             res.sendStatus(204);
           } else {
@@ -76,19 +88,13 @@ export class PostRouter {
         } catch (error) {
           next(Boom.badImplementation());
         }
-      }
-    );
-
+}
     // Update post, change the tittle and/or the message
     // LETS CHANGE ID
-    this.router.put(
-      '/:id',
-      validateParams,
-      validatePostPUT,
-      async (req: Request, res: Response, next: NextFunction) => {
+    async update(req: Request, res: Response, next: NextFunction){
         try {
-          await this.postRepository.update(req.params.id, req.body);
-          const updated = await this.postRepository.findOne(req.params.id);
+          await this.postService.update(req.params.id, req.body);
+          const updated = await this.postService.findOne(req.params.id);
           if (updated) {
             res.status(200).send(updated);
           } else {
@@ -97,7 +103,7 @@ export class PostRouter {
         } catch (error) {
           next(Boom.badImplementation());
         }
-      }
-    );
-  }
+}
+
+
 }

@@ -1,4 +1,4 @@
-import { limitResponces, sortBy } from '../helpers/helpers';
+import { limitResponces, sortBy } from '../middleware/helpers';
 import { User } from '../entities/user';
 
 const objectList: User[] = [new User("Zed"), new User("Bertta"), new User("Azim")];
