@@ -20,8 +20,6 @@ registerSchema(requestParamSchema);
 // Construct morgan
 const morgan = require('morgan');
 const moment = require('moment-timezone');
-// Construct routes
-const root = require('./routes/root');
 
 export class Server {
   // Create a new express application instance
@@ -92,7 +90,6 @@ export class Server {
     );
 
     // Routing
-    this.app.use('/', root);
     this.app.use('/posts', this.postRouter.router);
     this.app.use('/users', this.userRouter.router);
     this.app.use('/comments', this.replyRouter.router);
