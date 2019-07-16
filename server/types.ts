@@ -7,6 +7,7 @@ import { Reply } from './entities/reply';
 import { ReplyRouter } from './routes/reply-router';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
+import { ErrorRequestHandler } from 'express-serve-static-core';
 
 export type Dependencies = {
   postRouter: PostRouter;
@@ -17,4 +18,5 @@ export type Dependencies = {
   userService: UserService;
   replyRouter: ReplyRouter;
   replyRepository: Repository<Reply>;
+  errorHandler: ErrorRequestHandler;
 };

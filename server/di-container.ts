@@ -9,6 +9,7 @@ import { Reply } from './entities/reply';
 import { ReplyRouter } from './routes/reply-router';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
+import { handleErrors } from './middleware/errors';
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
@@ -19,6 +20,7 @@ export function configureContainer() {
   // Start server only if connection established.
   return createConnection().then(() => {
     return container.register({
+      errorHandler: awilix.asValue(handleErrors),
       postRouter: awilix.asClass(PostRouter),
       postRepository: awilix.asValue(getRepository(Post)),
       postService: awilix.asClass(PostService),

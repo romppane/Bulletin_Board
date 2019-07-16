@@ -1,4 +1,4 @@
-import express = require('express');
+import express from 'express';
 import { User } from '../entities/user';
 import Boom from '@hapi/boom';
 import { validateParams } from '../middleware/validation';

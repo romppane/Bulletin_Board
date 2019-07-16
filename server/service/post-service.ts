@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { Post } from '../entities/post';
 import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 // Just a middleman currently?
 export class PostService {
   repository: Repository<Post>;
@@ -40,7 +41,7 @@ export class PostService {
     return this.repository.delete(id);
   }
 
-  update(id: number, obj: Object) {
+  update(id: number, obj: QueryDeepPartialEntity<Post>) {
     return this.repository.update(id, obj);
   }
 }

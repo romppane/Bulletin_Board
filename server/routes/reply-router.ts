@@ -1,7 +1,7 @@
-import express = require('express');
+import express from 'express';
 import { Reply } from '../entities/reply';
 import { getRepository } from 'typeorm';
-import Boom = require('@hapi/boom');
+import Boom from '@hapi/boom';
 import { validateReply, validateReplyPUT, validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
