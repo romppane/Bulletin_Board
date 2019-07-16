@@ -1,12 +1,12 @@
 import * as awilix from 'awilix';
-import { PostRouter } from './routes/post-router';
+import { PostController } from './controllers/post-controller';
 import { createConnection, getRepository } from 'typeorm';
 import { Post } from './entities/post';
 import { Server } from './server';
 import { User } from './entities/user';
-import { UserRouter } from './routes/user-router';
+import { UserController } from './controllers/user-controller';
 import { Reply } from './entities/reply';
-import { ReplyRouter } from './routes/reply-router';
+import { ReplyController } from './controllers/reply-controller';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
 import { handleErrors } from './middleware/errors';
@@ -22,13 +22,13 @@ export function configureContainer() {
   return createConnection().then(() => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
-      postRouter: awilix.asClass(PostRouter),
+      postRouter: awilix.asClass(PostController),
       postRepository: awilix.asValue(getRepository(Post)),
       postService: awilix.asClass(PostService),
-      userRouter: awilix.asClass(UserRouter),
+      userRouter: awilix.asClass(UserController),
       userRepository: awilix.asValue(getRepository(User)),
       userService: awilix.asClass(UserService),
-      replyRouter: awilix.asClass(ReplyRouter),
+      replyRouter: awilix.asClass(ReplyController),
       replyRepository: awilix.asValue(getRepository(Reply)),
       logger: awilix.asClass(Logger),
       app: awilix.asClass(Server)

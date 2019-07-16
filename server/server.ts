@@ -2,10 +2,10 @@ import 'reflect-metadata';
 import express from 'express';
 import { registerSchema } from 'class-validator';
 import { postPUTSchema, replyPUTSchema, requestParamSchema } from './middleware/validation';
-import { PostRouter } from './routes/post-router';
+import { PostController } from './controllers/post-controller';
 import { Dependencies } from './types';
-import { UserRouter } from './routes/user-router';
-import { ReplyRouter } from './routes/reply-router';
+import { UserController } from './controllers/user-controller';
+import { ReplyController } from './controllers/reply-controller';
 import { Logger } from './middleware/logger';
 import { ErrorRequestHandler } from 'express-serve-static-core';
 
@@ -18,9 +18,9 @@ export class Server {
   // Create a new express application instance
   app: express.Application;
   errorHandler: ErrorRequestHandler;
-  postRouter: PostRouter;
-  userRouter: UserRouter;
-  replyRouter: ReplyRouter;
+  postRouter: PostController;
+  userRouter: UserController;
+  replyRouter: ReplyController;
   logger: Logger;
   constructor(options: Dependencies) {
     this.app = express();

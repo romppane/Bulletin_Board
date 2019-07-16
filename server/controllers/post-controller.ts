@@ -4,34 +4,37 @@ import Boom from '@hapi/boom';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
+import { UserService } from '../service/user-service';
 
-export class PostRouter {
+export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
+  userService: UserService;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
+    this.userService = options.userService;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
-    this.router.get('/', this.getAll.bind(this));
+    this.router.get('/', this.getAll);
     this.router.get('/:id', validateParams, this.getOne.bind(this));
     this.router.post('/', validatePost, this.post.bind(this));
     this.router.delete('/:id', validateParams, this.delete.bind(this));
     this.router.put('/:id', validateParams, validatePostPUT, this.update.bind(this));
   }
 
-  async getAll(req: Request, res: Response, next: NextFunction) {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const posts = await this.postService.find();
       res.status(200).send(posts);
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 
   async getOne(req: Request, res: Response, next: NextFunction) {
     try {
@@ -48,23 +51,20 @@ export class PostRouter {
 
   // Create post
   async post(req: Request, res: Response, next: NextFunction) {
-    const success = await this.postService.save(
-      req.body.ownerId,
-      req.body.category,
-      req.body.message
-    );
-    switch (success) {
-      case 'success': {
-        res.status(201).send(success);
-        break;
-      }
-      case 'not found': {
+    try {
+      const post = await this.postService.save(
+        req.body.ownerId,
+        req.body.category,
+        req.body.message,
+        this.userService
+      );
+      if (post) {
+        res.status(201).send(post);
+      } else {
         next(Boom.notFound("User doesn't exist"));
-        break;
       }
-      default: {
-        next(Boom.badImplementation());
-      }
+    } catch (error) {
+      next(Boom.badImplementation());
     }
   }
 

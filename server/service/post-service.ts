@@ -4,6 +4,7 @@ import { Post } from '../entities/post';
 import { User } from '../entities/user';
 import { plainToClass } from 'class-transformer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { UserService } from './user-service';
 // Just a middleman currently?
 export class PostService {
   repository: Repository<Post>;
@@ -22,19 +23,17 @@ export class PostService {
     return this.repository.findOne(id);
   }
 
-  async save(ownerId: number, category: string, message: string) {
-    try {
-      const user: User = plainToClass(User, await this.userRepository.findOne(ownerId));
+  save(ownerId: number, category: string, message: string, userService: UserService) {
+    return userService.findOne(ownerId).then(result => {
+      const user = plainToClass(User, result);
       if (user) {
         const post: Post = new Post(user, category, message);
         this.repository.save(post);
-        return 'success';
+        return post;
       } else {
-        return 'not found';
+        return undefined;
       }
-    } catch (error) {
-      return 'error';
-    }
+    });
   }
 
   delete(id: number) {

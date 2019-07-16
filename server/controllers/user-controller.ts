@@ -6,7 +6,7 @@ import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { UserService } from '../service/user-service';
 
-export class UserRouter {
+export class UserController {
   notFound: Boom;
   router: express.Router;
   userService: UserService;

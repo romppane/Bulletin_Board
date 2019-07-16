@@ -6,7 +6,7 @@ import { validateReply, validateReplyPUT, validateParams } from '../middleware/v
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 
-export class ReplyRouter {
+export class ReplyController {
   notFound: Boom;
   router: express.Router;
   // How do I make array of Repositories? : Repository<Entity> is not allowed :D
