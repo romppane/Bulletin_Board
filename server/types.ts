@@ -8,6 +8,7 @@ import { ReplyRouter } from './routes/reply-router';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
 import { ErrorRequestHandler } from 'express-serve-static-core';
+import { Logger } from './middleware/logger';
 
 export type Dependencies = {
   postRouter: PostRouter;
@@ -19,4 +20,5 @@ export type Dependencies = {
   replyRouter: ReplyRouter;
   replyRepository: Repository<Reply>;
   errorHandler: ErrorRequestHandler;
+  logger: Logger;
 };

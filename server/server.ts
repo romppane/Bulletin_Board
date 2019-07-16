@@ -27,12 +27,16 @@ export class Server {
     this.postRouter = options.postRouter;
     this.userRouter = options.userRouter;
     this.replyRouter = options.replyRouter;
-    this.logger = new Logger(this.app);
+    this.logger = options.logger;
     this.errorHandler = options.errorHandler;
   }
 
   start() {
     this.app.use(express.json());
+    this.app.use(this.logger.incomingRequests());
+    this.app.use(this.logger.successfulResponces());
+    this.app.use(this.logger.errorResponces());
+
     // Routing
     this.app.use('/posts', this.postRouter.router);
     this.app.use('/users', this.userRouter.router);

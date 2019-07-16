@@ -7,9 +7,7 @@ import express from 'express';
 export class Logger {
   infoLogStream: fs.WriteStream;
   errorLogStream: fs.WriteStream;
-  app: express.Application;
-  constructor(app: express.Application) {
-    this.app = app;
+  constructor() {
     this.infoLogStream = fs.createWriteStream(path.join('.', 'logs', 'info.log'), {
       flags: 'a'
     });
@@ -30,33 +28,30 @@ export class Logger {
       'incFormat',
       ':remote-addr [:date] :method [:url] HTTP/:http-version [:user-agent]'
     );
+  }
 
-    // Log incoming requests
-    this.app.use(
-      morgan('incFormat', {
-        immediate: true,
-        stream: this.infoLogStream
-      })
-    );
+  incomingRequests() {
+    return morgan('incFormat', {
+      immediate: true,
+      stream: this.infoLogStream
+    });
+  }
 
-    // Log successfull responces
-    this.app.use(
-      morgan('outFormat', {
-        skip: (req: express.Request, res: express.Response) => {
-          return res.statusCode >= 399;
-        },
-        stream: this.infoLogStream
-      })
-    );
+  successfulResponces() {
+    return morgan('outFormat', {
+      skip: (req: express.Request, res: express.Response) => {
+        return res.statusCode >= 399;
+      },
+      stream: this.infoLogStream
+    });
+  }
 
-    // Logs error responces
-    this.app.use(
-      morgan('outFormat', {
-        skip: (req: express.Request, res: express.Response) => {
-          return res.statusCode < 400;
-        },
-        stream: this.errorLogStream
-      })
-    );
+  errorResponces() {
+    return morgan('outFormat', {
+      skip: (req: express.Request, res: express.Response) => {
+        return res.statusCode < 400;
+      },
+      stream: this.errorLogStream
+    });
   }
 }
