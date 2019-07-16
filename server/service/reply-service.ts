@@ -1,13 +1,12 @@
-import { Dependencies } from '../types';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user';
+import { Reply } from '../entities/reply';
+import { Dependencies } from '../types';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-// Just a middleman currently?
-export class UserService {
-  repository: Repository<User>;
 
+export class ReplyService {
+  repository: Repository<Reply>;
   constructor(options: Dependencies) {
-    this.repository = options.userRepository;
+    this.repository = options.replyRepository;
   }
 
   find() {
@@ -18,16 +17,13 @@ export class UserService {
     return this.repository.findOne(id);
   }
 
-  save(user: User) {
-    return this.repository.save(user);
-  }
+  save() {}
 
   delete(id: number) {
     return this.repository.delete(id);
   }
 
-  // Create interface to replace generic object?
-  update(id: number, obj: QueryDeepPartialEntity<User>) {
+  update(id: number, obj: QueryDeepPartialEntity<Reply>) {
     return this.repository.update(id, obj);
   }
 }
