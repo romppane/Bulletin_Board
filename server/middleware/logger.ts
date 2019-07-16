@@ -1,8 +1,8 @@
-import morgan = require('morgan');
+import morgan from 'morgan';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as moment from 'moment-timezone';
-import express = require('express');
+import express from 'express';
 
 export class Logger {
   infoLogStream: fs.WriteStream;

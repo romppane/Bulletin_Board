@@ -1,6 +1,6 @@
-import express = require('express');
+import express from 'express';
 import { validatePost, validatePostPUT, validateParams } from '../middleware/validation';
-import Boom = require('@hapi/boom');
+import Boom from '@hapi/boom';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
