@@ -1,9 +1,6 @@
 import 'reflect-metadata';
-import * as fs from 'fs';
-import * as path from 'path';
-import express = require('express');
-import { Request, Response } from 'express';
-import bodyparser = require('body-parser');
+import express from 'express';
+import bodyparser from 'body-parser';
 import { registerSchema } from 'class-validator';
 import { postPUTSchema, replyPUTSchema, requestParamSchema } from './middleware/validation';
 import { handleErrors } from './middleware/errors';
