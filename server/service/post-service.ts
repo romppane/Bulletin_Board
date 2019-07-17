@@ -8,11 +8,9 @@ import { UserService } from './user-service';
 // Just a middleman currently?
 export class PostService {
   repository: Repository<Post>;
-  userRepository: Repository<User>;
 
   constructor(options: Dependencies) {
     this.repository = options.postRepository;
-    this.userRepository = options.userRepository;
   }
 
   find() {
@@ -23,6 +21,7 @@ export class PostService {
     return this.repository.findOne(id);
   }
 
+  // Should this get access to service from upperlayer or have access to user repo on its own?
   async save(ownerId: number, category: string, message: string, userService: UserService) {
     try {
       const temp = await userService.findOne(ownerId);

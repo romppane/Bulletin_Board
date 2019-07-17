@@ -8,7 +8,6 @@ import { ReplyService } from '../service/reply-service';
 export class ReplyController {
   notFound: Boom;
   router: express.Router;
-  // How do I make array of Repositories? : Repository<Entity> is not allowed :D
   replyService: ReplyService;
 
   constructor(options: Dependencies) {

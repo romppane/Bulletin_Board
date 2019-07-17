@@ -3,6 +3,8 @@ import { Dependencies } from '../types';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class ReplyService {
+  // Can't use Repository<Entity>, needs specific?
+  // Should the service know all the repositories or get access to services via parameters from controllers?
   repositories: any;
   constructor(options: Dependencies) {
     this.repositories = {
@@ -20,6 +22,7 @@ export class ReplyService {
     return this.repositories.reply.findOne(id);
   }
 
+  // Fetch user and post first, return the saved reply
   save(userId: number, postId: number, message: string) {
     return Promise.all([
       this.repositories.user.findOne(userId),

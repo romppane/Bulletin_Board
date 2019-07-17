@@ -20,21 +20,21 @@ export class PostController {
   }
 
   initializeRoutes() {
-    this.router.get('/', this.getAll);
+    this.router.get('/', this.getAll.bind(this));
     this.router.get('/:id', validateParams, this.getOne.bind(this));
     this.router.post('/', validatePost, this.post.bind(this));
     this.router.delete('/:id', validateParams, this.delete.bind(this));
     this.router.put('/:id', validateParams, validatePostPUT, this.update.bind(this));
   }
 
-  getAll = async (req: Request, res: Response, next: NextFunction) => {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     try {
       const posts = await this.postService.find();
       res.status(200).send(posts);
     } catch (error) {
       next(Boom.badImplementation());
     }
-  };
+  }
 
   async getOne(req: Request, res: Response, next: NextFunction) {
     try {
