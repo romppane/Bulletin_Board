@@ -1,47 +1,42 @@
 import express from 'express';
-import { Reply } from '../entities/reply';
-import { getRepository } from 'typeorm';
 import Boom from '@hapi/boom';
 import { validateReply, validateReplyPUT, validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
+import { ReplyService } from '../service/reply-service';
 
 export class ReplyController {
   notFound: Boom;
   router: express.Router;
   // How do I make array of Repositories? : Repository<Entity> is not allowed :D
-  repositories: any;
+  replyService: ReplyService;
 
   constructor(options: Dependencies) {
     this.notFound = Boom.notFound("Comment doesn't exist");
     this.router = express.Router();
-    this.repositories = {
-      reply: options.replyRepository,
-      post: options.postRepository,
-      user: options.userRepository
-    };
+    this.replyService = options.replyService;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
-    this.router.get('/', this.getAll.bind(this));
-    this.router.get('/:id', validateParams, this.getOne.bind(this));
-    this.router.post('/', validateReply, this.post.bind(this));
-    this.router.delete('/:id', validateParams, this.delete.bind(this));
-    this.router.put('/:id', validateParams, validateReplyPUT, this.update.bind(this));
+    this.router.get('/', this.getAll);
+    this.router.get('/:id', validateParams, this.getOne);
+    this.router.post('/', validateReply, this.post);
+    this.router.delete('/:id', validateParams, this.delete);
+    this.router.put('/:id', validateParams, validateReplyPUT, this.update);
   }
-  async getAll(req: Request, res: Response, next: NextFunction) {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const replies = await this.repositories.reply.find();
+      const replies = await this.replyService.find();
       res.status(200).send(replies);
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 
-  async getOne(req: Request, res: Response, next: NextFunction) {
+  getOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const reply = await this.repositories.reply.findOne(req.params.id);
+      const reply = await this.replyService.findOne(req.params.id);
       if (reply) {
         res.status(200).send(reply);
       } else {
@@ -51,28 +46,28 @@ export class ReplyController {
       // in case of an internal error
       next(Boom.badImplementation());
     }
-  }
+  };
 
-  post(req: Request, res: Response, next: NextFunction) {
-    Promise.all([
-      this.repositories.user.findOne(req.body.userId),
-      this.repositories.post.findOne(req.body.postId)
-    ])
-      .then(([user, post]) => {
-        if (user && post) {
-          const reply: Reply = new Reply(user, post, req.body.message);
-          getRepository(Reply).save(reply);
-          res.status(201).send(reply);
-        } else {
-          next(Boom.notFound());
-        }
-      })
-      .catch(error => next(Boom.badImplementation()));
-  }
-
-  async delete(req: Request, res: Response, next: NextFunction) {
+  post = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const deleted = await this.repositories.reply.delete(req.params.id);
+      const reply = await this.replyService.save(
+        req.body.userId,
+        req.body.postId,
+        req.body.message
+      );
+      if (reply) {
+        res.status(201).send(reply);
+      } else {
+        next(Boom.notFound());
+      }
+    } catch (error) {
+      next(Boom.badImplementation());
+    }
+  };
+
+  delete = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const deleted = await this.replyService.delete(req.params.id);
       if (deleted.affected) {
         res.sendStatus(204);
       } else {
@@ -81,13 +76,12 @@ export class ReplyController {
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 
-  async update(req: Request, res: Response, next: NextFunction) {
+  update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Validate out any unnecessary fields
-      await getRepository(Reply).update(req.params.id, req.body);
-      const updated = await this.repositories.reply.findOne(req.params.id);
+      const updated = await this.replyService.update(req.params.id, req.body);
       if (updated) {
         res.status(200).send(updated);
       } else {
@@ -96,5 +90,5 @@ export class ReplyController {
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 }

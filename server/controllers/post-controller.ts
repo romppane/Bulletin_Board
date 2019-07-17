@@ -85,8 +85,7 @@ export class PostController {
   // LETS CHANGE ID
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      await this.postService.update(req.params.id, req.body);
-      const updated = await this.postService.findOne(req.params.id);
+      const updated = await this.postService.update(req.params.id, req.body);
       if (updated) {
         res.status(200).send(updated);
       } else {

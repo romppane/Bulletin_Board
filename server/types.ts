@@ -9,6 +9,7 @@ import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
 import { ErrorRequestHandler } from 'express-serve-static-core';
 import { Logger } from './middleware/logger';
+import { ReplyService } from './service/reply-service';
 
 export type Dependencies = {
   postRouter: PostController;
@@ -19,6 +20,7 @@ export type Dependencies = {
   userService: UserService;
   replyRouter: ReplyController;
   replyRepository: Repository<Reply>;
+  replyService: ReplyService;
   errorHandler: ErrorRequestHandler;
   logger: Logger;
 };

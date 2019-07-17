@@ -1,29 +1,49 @@
-import { Repository } from 'typeorm';
 import { Reply } from '../entities/reply';
 import { Dependencies } from '../types';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class ReplyService {
-  repository: Repository<Reply>;
+  repositories: any;
   constructor(options: Dependencies) {
-    this.repository = options.replyRepository;
+    this.repositories = {
+      reply: options.replyRepository,
+      post: options.postRepository,
+      user: options.userRepository
+    };
   }
 
   find() {
-    return this.repository.find();
+    return this.repositories.reply.find();
   }
 
   findOne(id: number) {
-    return this.repository.findOne(id);
+    return this.repositories.reply.findOne(id);
   }
 
-  save() {}
+  save(userId: number, postId: number, message: string) {
+    return Promise.all([
+      this.repositories.user.findOne(userId),
+      this.repositories.post.findOne(postId)
+    ])
+      .then(([user, post]) => {
+        if (user && post) {
+          const reply: Reply = new Reply(user, post, message);
+          return this.repositories.reply.save(reply);
+        } else {
+          return undefined;
+        }
+      })
+      .catch(error => {
+        return undefined;
+      });
+  }
 
   delete(id: number) {
-    return this.repository.delete(id);
+    return this.repositories.reply.delete(id);
   }
 
   update(id: number, obj: QueryDeepPartialEntity<Reply>) {
-    return this.repository.update(id, obj);
+    this.repositories.reply.update(id, obj);
+    return this.repositories.reply.findOne(id);
   }
 }

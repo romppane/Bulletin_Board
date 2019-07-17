@@ -23,17 +23,19 @@ export class PostService {
     return this.repository.findOne(id);
   }
 
-  save(ownerId: number, category: string, message: string, userService: UserService) {
-    return userService.findOne(ownerId).then(result => {
-      const user = plainToClass(User, result);
+  async save(ownerId: number, category: string, message: string, userService: UserService) {
+    try {
+      const temp = await userService.findOne(ownerId);
+      const user = plainToClass(User, temp);
       if (user) {
         const post: Post = new Post(user, category, message);
-        this.repository.save(post);
-        return post;
+        return await this.repository.save(post);
       } else {
         return undefined;
       }
-    });
+    } catch (error) {
+      return undefined;
+    }
   }
 
   delete(id: number) {
@@ -41,6 +43,7 @@ export class PostService {
   }
 
   update(id: number, obj: QueryDeepPartialEntity<Post>) {
-    return this.repository.update(id, obj);
+    this.repository.update(id, obj);
+    return this.repository.findOne(id);
   }
 }

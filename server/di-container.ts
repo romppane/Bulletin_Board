@@ -11,6 +11,7 @@ import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
 import { handleErrors } from './middleware/errors';
 import { Logger } from './middleware/logger';
+import { ReplyService } from './service/reply-service';
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
@@ -30,6 +31,7 @@ export function configureContainer() {
       userService: awilix.asClass(UserService),
       replyRouter: awilix.asClass(ReplyController),
       replyRepository: awilix.asValue(getRepository(Reply)),
+      replyService: awilix.asClass(ReplyService),
       logger: awilix.asClass(Logger),
       app: awilix.asClass(Server)
     });

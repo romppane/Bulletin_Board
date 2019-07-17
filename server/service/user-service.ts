@@ -18,7 +18,8 @@ export class UserService {
     return this.repository.findOne(id);
   }
 
-  save(user: User) {
+  save(avatar: string) {
+    const user: User = new User(avatar);
     return this.repository.save(user);
   }
 
@@ -28,6 +29,8 @@ export class UserService {
 
   // Create interface to replace generic object?
   update(id: number, obj: QueryDeepPartialEntity<User>) {
-    return this.repository.update(id, obj);
+    return this.repository.update(id, obj).then(result => {
+      return this.repository.findOne(id);
+    });
   }
 }

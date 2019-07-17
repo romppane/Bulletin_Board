@@ -49,11 +49,8 @@ export class UserController {
   }
 
   async post(req: Request, res: Response, next: NextFunction) {
-    // Should probably make the avatar default to ""
-    // Using the constructors for now instead of repository.create()
     try {
-      const user: User = new User(req.body.avatar);
-      await this.userService.save(user);
+      const user = await this.userService.save(req.body.avatar);
       res.status(201).send(user);
     } catch (error) {
       next(Boom.badImplementation());
@@ -81,9 +78,7 @@ export class UserController {
       // Bootleg validator as user has only few fields now and avatar is the only one you can change.
       // When user gets more advaced create proper validation to it! Class-validator can check Base64 encoding for the avatar.
       req.body = { avatar: req.body.avatar };
-      await this.userService.update(req.params.id, req.body);
-      // Not class instance
-      const updated = await this.userService.findOne(req.params.id);
+      const updated = await this.userService.update(req.params.id, req.body);
       if (updated) {
         res.status(200).send(updated);
       } else {
