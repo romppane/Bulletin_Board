@@ -7,7 +7,7 @@ import { Reply } from './entities/reply';
 import { ReplyController } from './controllers/reply-controller';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
-import { ErrorRequestHandler } from 'express-serve-static-core';
+import { ErrorRequestHandler, RequestHandler } from 'express-serve-static-core';
 import { Logger } from './middleware/logger';
 import { ReplyService } from './service/reply-service';
 
@@ -22,5 +22,10 @@ export type Dependencies = {
   replyRepository: Repository<Reply>;
   replyService: ReplyService;
   errorHandler: ErrorRequestHandler;
+  validatePost: RequestHandler;
+  validatePostPUT: RequestHandler;
+  validateParams: RequestHandler;
+  validateReply: RequestHandler;
+  validateReplyPUT: RequestHandler;
   logger: Logger;
 };

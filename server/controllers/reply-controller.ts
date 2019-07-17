@@ -1,28 +1,33 @@
 import express from 'express';
 import Boom from '@hapi/boom';
-import { validateReply, validateReplyPUT, validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
-import { Request, Response, NextFunction } from 'express-serve-static-core';
+import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
 import { ReplyService } from '../service/reply-service';
 
 export class ReplyController {
   notFound: Boom;
   router: express.Router;
   replyService: ReplyService;
+  validateReply: RequestHandler;
+  validateReplyPUT: RequestHandler;
+  validateParams: RequestHandler;
 
   constructor(options: Dependencies) {
     this.notFound = Boom.notFound("Comment doesn't exist");
     this.router = express.Router();
     this.replyService = options.replyService;
+    this.validateReply = options.validateReply;
+    this.validateReplyPUT = options.validateReplyPUT;
+    this.validateParams = options.validateParams;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
     this.router.get('/', this.getAll);
-    this.router.get('/:id', validateParams, this.getOne);
-    this.router.post('/', validateReply, this.post);
-    this.router.delete('/:id', validateParams, this.delete);
-    this.router.put('/:id', validateParams, validateReplyPUT, this.update);
+    this.router.get('/:id', this.validateParams, this.getOne);
+    this.router.post('/', this.validateReply, this.post);
+    this.router.delete('/:id', this.validateParams, this.delete);
+    this.router.put('/:id', this.validateParams, this.validateReplyPUT, this.update);
   }
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {

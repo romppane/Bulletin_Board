@@ -1,7 +1,6 @@
 import express from 'express';
-import { validatePost, validatePostPUT, validateParams } from '../middleware/validation';
 import Boom from '@hapi/boom';
-import { Request, Response, NextFunction } from 'express-serve-static-core';
+import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
 import { UserService } from '../service/user-service';
@@ -11,20 +10,26 @@ export class PostController {
   router: express.Router;
   postService: PostService;
   userService: UserService;
+  validatePost: RequestHandler;
+  validatePostPUT: RequestHandler;
+  validateParams: RequestHandler;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
     this.userService = options.userService;
+    this.validatePost = options.validatePost;
+    this.validatePostPUT = options.validatePostPUT;
+    this.validateParams = options.validateParams;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
     this.router.get('/', this.getAll.bind(this));
-    this.router.get('/:id', validateParams, this.getOne.bind(this));
-    this.router.post('/', validatePost, this.post.bind(this));
-    this.router.delete('/:id', validateParams, this.delete.bind(this));
-    this.router.put('/:id', validateParams, validatePostPUT, this.update.bind(this));
+    this.router.get('/:id', this.validateParams, this.getOne.bind(this));
+    this.router.post('/', this.validatePost, this.post.bind(this));
+    this.router.delete('/:id', this.validateParams, this.delete.bind(this));
+    this.router.put('/:id', this.validateParams, this.validatePostPUT, this.update.bind(this));
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {

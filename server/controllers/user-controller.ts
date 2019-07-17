@@ -1,28 +1,28 @@
 import express from 'express';
 import Boom from '@hapi/boom';
-import { validateParams } from '../middleware/validation';
 import { Dependencies } from '../types';
-import { Request, Response, NextFunction } from 'express-serve-static-core';
+import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
 import { UserService } from '../service/user-service';
 
 export class UserController {
   notFound: Boom;
   router: express.Router;
   userService: UserService;
+  validateParams: RequestHandler;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("User doesn't exist");
     this.userService = options.userService;
-
+    this.validateParams = options.validateParams;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
     this.router.get('/', this.getAll.bind(this));
-    this.router.get('/:id', validateParams, this.getOne.bind(this));
+    this.router.get('/:id', this.validateParams, this.getOne.bind(this));
     this.router.post('/', this.post.bind(this));
-    this.router.delete('/:id', validateParams, this.delete.bind(this));
-    this.router.put('/:id', validateParams, this.update.bind(this));
+    this.router.delete('/:id', this.validateParams, this.delete.bind(this));
+    this.router.put('/:id', this.validateParams, this.update.bind(this));
   }
 
   async getAll(req: Request, res: Response, next: NextFunction) {
