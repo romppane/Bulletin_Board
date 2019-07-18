@@ -8,6 +8,7 @@
     "dev": "ts-node-dev --respawn --transpileOnly ./server/start-server.ts",
     "prod": "tsc && node ./build/start-server.js",
     "test": "jest",
+    "postinstall": "npm run tsc",
     "start": "npm run prod"
   },
   "engines": {
