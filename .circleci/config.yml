@@ -1,61 +1,60 @@
 # Javascript Node CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#  
-version: 2
-jobs:
-  build:
-    working_directory: ~/repo
-    # The primary container is an instance of the first image listed. The job's commands run in this container.
+#
+version: 2.1
+
+executors:
+  my-executor:
     docker:
       - image: circleci/node:10.15.3
-    # The secondary container is an instance of the second listed image which is run in a common network where ports exposed on the primary container are available on localhost.
-    #  - image: mongo:3.4.4-jessie
+    working_directory: ~/repo
+
+jobs:
+  build:
+    executor: my-executor
     steps:
       - checkout
+      # Update npm to the latest
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      # Install dependencies
       - run:
           name: Install npm wee
           command: npm install
-      - save_cache:
+      - persist_to_workspace:
+          root: ~/repo
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
 
   test:
-    working_directory: ~/repo
-    docker:
-      - image: circleci/node:10.15.3
-    #  - image: mongo:3.4.4-jessie
+    executor: my-executor
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      - attach_workspace:
+          at: ~/repo
       - run: npm test
-  #        name: Test
-  #        command: npm test
-#      - run:
-#          name: Generate code coverage
-#          command: './node_modules/.bin/nyc report --reporter=text-lcov'
-#      - store_artifacts:
-#          path: test-results.xml
-#          prefix: tests
-#      - store_artifacts:
-#          path: coverage
-#          prefix: coverage
+
+  compile:
+    executor: my-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run: npm run tsc
 
 workflows:
   version: 2
-  build_and_test:
+
+  btd:
     jobs:
       - build
       - test:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: circleTesting
+      - compile:
+          requires:
+            - build
+            - test
