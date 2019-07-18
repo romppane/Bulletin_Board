@@ -17,6 +17,7 @@ export class UserController {
     this.initializeRoutes();
   }
 
+  // Leaving this binded for the sake of memorizing this!
   initializeRoutes() {
     this.router.get('/', this.getAll.bind(this));
     this.router.get('/:id', this.validateParams, this.getOne.bind(this));

@@ -25,23 +25,23 @@ export class PostController {
   }
 
   initializeRoutes() {
-    this.router.get('/', this.getAll.bind(this));
-    this.router.get('/:id', this.validateParams, this.getOne.bind(this));
-    this.router.post('/', this.validatePost, this.post.bind(this));
-    this.router.delete('/:id', this.validateParams, this.delete.bind(this));
-    this.router.put('/:id', this.validateParams, this.validatePostPUT, this.update.bind(this));
+    this.router.get('/', this.getAll);
+    this.router.get('/:id', this.validateParams, this.getOne);
+    this.router.post('/', this.validatePost, this.post);
+    this.router.delete('/:id', this.validateParams, this.delete);
+    this.router.put('/:id', this.validateParams, this.validatePostPUT, this.update);
   }
 
-  async getAll(req: Request, res: Response, next: NextFunction) {
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const posts = await this.postService.find();
       res.status(200).send(posts);
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 
-  async getOne(req: Request, res: Response, next: NextFunction) {
+  getOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const post = await this.postService.findOne(req.params.id);
       if (post) {
@@ -52,10 +52,10 @@ export class PostController {
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 
   // Create post
-  async post(req: Request, res: Response, next: NextFunction) {
+  post = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const post = await this.postService.save(
         req.body.ownerId,
@@ -71,9 +71,9 @@ export class PostController {
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 
-  async delete(req: Request, res: Response, next: NextFunction) {
+  delete = async (req: Request, res: Response, next: NextFunction) => {
     // Delete post
     try {
       const deleted = await this.postService.delete(req.params.id);
@@ -85,10 +85,10 @@ export class PostController {
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
   // Update post, change the tittle and/or the message
   // LETS CHANGE ID
-  async update(req: Request, res: Response, next: NextFunction) {
+  update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const updated = await this.postService.update(req.params.id, req.body);
       if (updated) {
@@ -99,5 +99,5 @@ export class PostController {
     } catch (error) {
       next(Boom.badImplementation());
     }
-  }
+  };
 }
