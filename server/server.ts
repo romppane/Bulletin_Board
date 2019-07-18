@@ -43,7 +43,7 @@ export class Server {
     this.app.use('/comments', this.replyRouter.router);
     // Error handler
     this.app.use(this.errorHandler);
-    this.app.listen(3000, () => {
+    this.app.listen(process.env.PORT || 3000, () => {
       console.log('Server listening on 3000');
     });
   }
