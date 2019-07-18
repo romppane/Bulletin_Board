@@ -25,8 +25,6 @@ const container = awilix.createContainer({
 });
 
 export function configureContainer() {
-  // Add exception handler
-  // Start server only if connection established.
   return createConnection().then(() => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
