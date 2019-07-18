@@ -46,7 +46,8 @@ export class ReplyService {
   }
 
   update(id: number, obj: QueryDeepPartialEntity<Reply>) {
-    this.repositories.reply.update(id, obj);
-    return this.repositories.reply.findOne(id);
+    return this.repositories.reply.update(id, obj).then(() => {
+      return this.repositories.reply.findOne(id);
+    });
   }
 }

@@ -29,7 +29,7 @@ export class UserService {
 
   // Create interface to replace generic object?
   update(id: number, obj: QueryDeepPartialEntity<User>) {
-    return this.repository.update(id, obj).then(result => {
+    return this.repository.update(id, obj).then(() => {
       return this.repository.findOne(id);
     });
   }
