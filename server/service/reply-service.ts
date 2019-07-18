@@ -1,53 +1,54 @@
 import { Reply } from '../entities/reply';
 import { Dependencies } from '../types';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Repository } from 'typeorm';
+import { Post } from '../entities/post';
+import { User } from '../entities/user';
 
 export class ReplyService {
   // Can't use Repository<Entity>, needs specific?
   // Should the service know all the repositories or get access to services via parameters from controllers?
-  repositories: any;
+  replyRepository: Repository<Reply>;
+  postRepository: Repository<Post>;
+  userRepository: Repository<User>;
+
   constructor(options: Dependencies) {
-    this.repositories = {
-      reply: options.replyRepository,
-      post: options.postRepository,
-      user: options.userRepository
-    };
+    this.replyRepository = options.replyRepository;
+    this.postRepository = options.postRepository;
+    this.userRepository = options.userRepository;
   }
 
   find() {
-    return this.repositories.reply.find();
+    return this.replyRepository.find();
   }
 
   findOne(id: number) {
-    return this.repositories.reply.findOne(id);
+    return this.replyRepository.findOne(id);
   }
 
   // Fetch user and post first, return the saved reply
-  save(userId: number, postId: number, message: string) {
-    return Promise.all([
-      this.repositories.user.findOne(userId),
-      this.repositories.post.findOne(postId)
-    ])
-      .then(([user, post]) => {
-        if (user && post) {
-          const reply: Reply = new Reply(user, post, message);
-          return this.repositories.reply.save(reply);
-        } else {
-          return undefined;
-        }
-      })
-      .catch(error => {
+  async save(userId: number, postId: number, message: string) {
+    try {
+      const user = await this.userRepository.findOne(userId);
+      const post = await this.postRepository.findOne(postId);
+      if (user && post) {
+        const reply: Reply = new Reply(user, post, message);
+        return this.replyRepository.save(reply);
+      } else {
         return undefined;
-      });
+      }
+    } catch (error) {
+      return undefined;
+    }
   }
 
   delete(id: number) {
-    return this.repositories.reply.delete(id);
+    return this.replyRepository.delete(id);
   }
 
   update(id: number, obj: QueryDeepPartialEntity<Reply>) {
-    return this.repositories.reply.update(id, obj).then(() => {
-      return this.repositories.reply.findOne(id);
+    return this.replyRepository.update(id, obj).then(() => {
+      return this.replyRepository.findOne(id);
     });
   }
 }
