@@ -1,10 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Post } from './post';
 import { Reply } from './reply';
 
 @Entity()
 export class User {
-
   @PrimaryGeneratedColumn()
   private id!: number;
 
