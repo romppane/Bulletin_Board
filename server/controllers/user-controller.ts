@@ -19,14 +19,14 @@ export class UserController {
 
   // Leaving this binded for the sake of memorizing this!
   initializeRoutes() {
-    this.router.get('/', this.getAll.bind(this));
-    this.router.get('/:id', this.validateParams, this.getOne.bind(this));
-    this.router.post('/', this.post.bind(this));
+    this.router.get('/', this.readAll.bind(this));
+    this.router.get('/:id', this.validateParams, this.readOne.bind(this));
+    this.router.post('/', this.create.bind(this));
     this.router.delete('/:id', this.validateParams, this.delete.bind(this));
     this.router.put('/:id', this.validateParams, this.update.bind(this));
   }
 
-  async getAll(req: Request, res: Response, next: NextFunction) {
+  async readAll(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await this.userService.find();
       res.status(200).send(users);
@@ -35,7 +35,7 @@ export class UserController {
     }
   }
 
-  async getOne(req: Request, res: Response, next: NextFunction) {
+  async readOne(req: Request, res: Response, next: NextFunction) {
     try {
       const responce = await this.userService.findOne(req.params.id);
       if (responce) {
@@ -48,7 +48,7 @@ export class UserController {
     }
   }
 
-  async post(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.userService.save(req.body.avatar);
       res.status(201).send(user);

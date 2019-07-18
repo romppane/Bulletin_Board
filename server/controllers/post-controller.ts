@@ -25,14 +25,14 @@ export class PostController {
   }
 
   initializeRoutes() {
-    this.router.get('/', this.getAll);
-    this.router.get('/:id', this.validateParams, this.getOne);
-    this.router.post('/', this.validatePost, this.post);
+    this.router.get('/', this.readAll);
+    this.router.get('/:id', this.validateParams, this.readOne);
+    this.router.post('/', this.validatePost, this.create);
     this.router.delete('/:id', this.validateParams, this.delete);
     this.router.put('/:id', this.validateParams, this.validatePostPUT, this.update);
   }
 
-  getAll = async (req: Request, res: Response, next: NextFunction) => {
+  readAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const posts = await this.postService.find();
       res.status(200).send(posts);
@@ -41,7 +41,7 @@ export class PostController {
     }
   };
 
-  getOne = async (req: Request, res: Response, next: NextFunction) => {
+  readOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const post = await this.postService.findOne(req.params.id);
       if (post) {
@@ -54,8 +54,7 @@ export class PostController {
     }
   };
 
-  // Create post
-  post = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const post = await this.postService.save(
         req.body.ownerId,
@@ -74,7 +73,6 @@ export class PostController {
   };
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    // Delete post
     try {
       const deleted = await this.postService.delete(req.params.id);
       if (deleted.affected) {
@@ -86,8 +84,8 @@ export class PostController {
       next(Boom.badImplementation());
     }
   };
+
   // Update post, change the tittle and/or the message
-  // LETS CHANGE ID
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const updated = await this.postService.update(req.params.id, req.body);

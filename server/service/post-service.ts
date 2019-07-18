@@ -42,7 +42,7 @@ export class PostService {
   }
 
   update(id: number, obj: QueryDeepPartialEntity<Post>) {
-    this.repository.update(id, obj);
+    const temp = this.repository.update(id, obj);
     return this.repository.findOne(id);
   }
 }

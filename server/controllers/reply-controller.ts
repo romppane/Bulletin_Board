@@ -23,13 +23,14 @@ export class ReplyController {
   }
 
   initializeRoutes() {
-    this.router.get('/', this.getAll);
-    this.router.get('/:id', this.validateParams, this.getOne);
-    this.router.post('/', this.validateReply, this.post);
+    this.router.get('/', this.readAll);
+    this.router.get('/:id', this.validateParams, this.readOne);
+    this.router.post('/', this.validateReply, this.create);
     this.router.delete('/:id', this.validateParams, this.delete);
     this.router.put('/:id', this.validateParams, this.validateReplyPUT, this.update);
   }
-  getAll = async (req: Request, res: Response, next: NextFunction) => {
+
+  readAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const replies = await this.replyService.find();
       res.status(200).send(replies);
@@ -38,7 +39,7 @@ export class ReplyController {
     }
   };
 
-  getOne = async (req: Request, res: Response, next: NextFunction) => {
+  readOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const reply = await this.replyService.findOne(req.params.id);
       if (reply) {
@@ -52,7 +53,7 @@ export class ReplyController {
     }
   };
 
-  post = async (req: Request, res: Response, next: NextFunction) => {
+  create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const reply = await this.replyService.save(
         req.body.userId,
@@ -84,7 +85,6 @@ export class ReplyController {
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Validate out any unnecessary fields
       const updated = await this.replyService.update(req.params.id, req.body);
       if (updated) {
         res.status(200).send(updated);
