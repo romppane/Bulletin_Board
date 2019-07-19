@@ -26,8 +26,10 @@ const connection: any = {
   database: process.env.DATABASE,
   synchronize: process.env.SYNCHRONIZE,
   logging: process.env.LOGGING,
-  entities: process.env.ENTITIES,
-  cli: process.env.CLI
+  entities: [process.env.ENTITIES],
+  cli: {
+    entitiesDir: 'entities'
+  }
 };
 
 const container = awilix.createContainer({
