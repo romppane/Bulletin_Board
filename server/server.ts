@@ -32,6 +32,7 @@ export class Server {
   }
 
   start() {
+    const port = process.env.PORT || 3000;
     this.app.use(express.json());
     this.app.use(this.logger.incomingRequests());
     this.app.use(this.logger.successfulResponces());
@@ -43,8 +44,8 @@ export class Server {
     this.app.use('/comments', this.replyRouter.router);
     // Error handler
     this.app.use(this.errorHandler);
-    this.app.listen(process.env.PORT || 3000, () => {
-      console.log('Server listening on 3000');
+    this.app.listen(port, () => {
+      console.log('Server listening on %s', port);
     });
   }
 }
