@@ -20,12 +20,22 @@ import {
   validateReplyPUT
 } from './middleware/validation';
 
+const connection: any = {
+  type: 'mariadb',
+  url: process.env.JAWSDB_MARIA_URL,
+  database: process.env.DATABASE,
+  synchronize: process.env.SYNCHRONIZE,
+  logging: process.env.LOGGING,
+  entities: process.env.ENTITIES,
+  cli: process.env.CLI
+};
+
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
 });
 
 export function configureContainer() {
-  return createConnection().then(() => {
+  return createConnection(connection).then(() => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
       postRouter: awilix.asClass(PostController),
