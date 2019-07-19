@@ -20,13 +20,16 @@ import {
   validateReplyPUT
 } from './middleware/validation';
 
+const path = process.env.ENTITIES || './server/entities/*.ts';
 const connection: any = {
   type: 'mariadb',
-  url: process.env.JAWSDB_MARIA_URL,
-  database: process.env.DATABASE,
-  synchronize: process.env.SYNCHRONIZE,
-  logging: process.env.LOGGING,
-  entities: [process.env.ENTITIES],
+  url:
+    process.env.JAWSDB_MARIA_URL ||
+    'mysql://BulletinBoarder:fjWvxuY4edDwGiAv6qOa6@localhost:3306/relaa',
+  database: process.env.DATABASE || 'relaa',
+  synchronize: process.env.SYNCHRONIZE || false,
+  logging: process.env.LOGGING || false,
+  entities: [path],
   cli: {
     entitiesDir: 'entities'
   }
