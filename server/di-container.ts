@@ -20,6 +20,7 @@ import {
   validateReplyPUT
 } from './middleware/validation';
 
+// Either use local DB with dev mode on typescript or remote DB in prod mode on server with environment variables
 const path = process.env.ENTITIES || './server/entities/*.ts';
 const connection: any = {
   type: 'mariadb',
