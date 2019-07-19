@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "postinstall": "npm run tsc",
-    "start": "npm run ./build/start-server.js"
+    "start": "node ./build/start-server.js"
   },
   "engines": {
     "node": "10.15.3"
