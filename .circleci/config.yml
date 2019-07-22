@@ -62,13 +62,10 @@ workflows:
             - build
       - compile:
           requires:
-            - build
             - test
       - deploy:
           filters:
             branches:
               only: master
           requires:
-            - build
-            - test
             - compile
