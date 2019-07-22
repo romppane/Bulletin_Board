@@ -19,29 +19,14 @@ import {
   validateReply,
   validateReplyPUT
 } from './middleware/validation';
-
-// Either use local DB with dev mode on typescript or remote DB in prod mode on server with environment variables
-const path = process.env.ENTITIES || './server/entities/*.ts';
-const connection: any = {
-  type: 'mariadb',
-  url:
-    process.env.JAWSDB_MARIA_URL ||
-    'mysql://BulletinBoarder:fjWvxuY4edDwGiAv6qOa6@localhost:3306/relaa',
-  database: process.env.DATABASE || 'relaa',
-  synchronize: process.env.SYNCHRONIZE || false,
-  logging: process.env.LOGGING || false,
-  entities: [path],
-  cli: {
-    entitiesDir: 'entities'
-  }
-};
+import { dbConnection } from './db';
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
 });
 
 export function configureContainer() {
-  return createConnection(connection).then(() => {
+  return createConnection(dbConnection).then(() => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
       postRouter: awilix.asClass(PostController),

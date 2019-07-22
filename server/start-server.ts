@@ -1,8 +1,13 @@
 import { configureContainer } from './di-container';
 import { Server } from './server';
+import { start } from './db';
 
-configureContainer()
-  .then(container => {
-    container.resolve<Server>('app').start();
-  })
-  .catch(err => console.log(err));
+if (start()) {
+  configureContainer()
+    .then(container => {
+      container.resolve<Server>('app').start();
+    })
+    .catch(err => console.log(err));
+} else {
+  console.log('Fill out environmental variables');
+}
