@@ -17,7 +17,7 @@ $ npm install
 3. Fill in `DB_NAME` with the same value as you did for the URL.
 4. If it is necessary for you to make changes in your database, leave the value of synchronize as `true`.
 
-   NOTE: In case you're running the project in production mode, switch the value of `DB_ENTITIES` to `./build/entities/\*.js`
+   NOTE: In case you're running the project in production mode, switch the value of `DB_ENTITIES` to `./build/entities/*.js`
 
 Example:
 
