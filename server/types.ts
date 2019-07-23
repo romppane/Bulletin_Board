@@ -10,6 +10,7 @@ import { UserService } from './service/user-service';
 import { ErrorRequestHandler, RequestHandler } from 'express-serve-static-core';
 import { Logger } from './middleware/logger';
 import { ReplyService } from './service/reply-service';
+import { Environment } from './db';
 
 export type Dependencies = {
   postRouter: PostController;
@@ -28,4 +29,5 @@ export type Dependencies = {
   validateReply: RequestHandler;
   validateReplyPUT: RequestHandler;
   logger: Logger;
+  Env: Environment;
 };

@@ -1,6 +1,6 @@
 import * as awilix from 'awilix';
 import { PostController } from './controllers/post-controller';
-import { createConnection, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { Post } from './entities/post';
 import { Server } from './server';
 import { User } from './entities/user';
@@ -19,14 +19,15 @@ import {
   validateReply,
   validateReplyPUT
 } from './middleware/validation';
-import { dbConnection } from './db';
+import { connectDB, Environment } from './db';
+import { plainToClass } from 'class-transformer';
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
 });
 
 export function configureContainer() {
-  return createConnection(dbConnection).then(() => {
+  return connectDB().then(() => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
       postRouter: awilix.asClass(PostController),
@@ -44,6 +45,16 @@ export function configureContainer() {
       validateReply: awilix.asValue(validateReply),
       validateReplyPUT: awilix.asValue(validateReplyPUT),
       logger: awilix.asClass(Logger),
+      Env: awilix.asValue(
+        plainToClass(Environment, {
+          DB_URL: process.env.DB_URL,
+          DB_NAME: process.env.DB_NAME,
+          DB_SYNCHRONIZE: process.env.DB_SYNCHRONIZE,
+          DB_LOGGING: process.env.DB_LOGGING,
+          DB_ENTITIES: process.env.DB_ENTITIES,
+          PORT: process.env.PORT
+        })
+      ),
       app: awilix.asClass(Server)
     });
   });
