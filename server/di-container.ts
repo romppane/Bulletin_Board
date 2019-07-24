@@ -1,6 +1,5 @@
 import * as awilix from 'awilix';
 import { PostController } from './controllers/post-controller';
-import { getRepository } from 'typeorm';
 import { Post } from './entities/post';
 import { Server } from './server';
 import { User } from './entities/user';
@@ -27,17 +26,17 @@ const container = awilix.createContainer({
 });
 
 export function configureContainer(Env: Environment) {
-  return connectDB(Env).then(() => {
+  return connectDB(Env).then(connection => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
       postRouter: awilix.asClass(PostController),
-      postRepository: awilix.asValue(getRepository(Post)),
+      postRepository: awilix.asValue(connection.getRepository(Post)),
       postService: awilix.asClass(PostService),
       userRouter: awilix.asClass(UserController),
-      userRepository: awilix.asValue(getRepository(User)),
+      userRepository: awilix.asValue(connection.getRepository(User)),
       userService: awilix.asClass(UserService),
       replyRouter: awilix.asClass(ReplyController),
-      replyRepository: awilix.asValue(getRepository(Reply)),
+      replyRepository: awilix.asValue(connection.getRepository(Reply)),
       replyService: awilix.asClass(ReplyService),
       validatePost: awilix.asValue(validatePost),
       validatePostPUT: awilix.asValue(validatePostPUT),

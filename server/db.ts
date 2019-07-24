@@ -1,6 +1,9 @@
 import { createConnection } from 'typeorm';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { Environment } from './environment';
+import { User } from './entities/user';
+import { Post } from './entities/post';
+import { Reply } from './entities/reply';
 
 export const connectDB = (Env: Environment) => {
   const db: MysqlConnectionOptions = {
@@ -9,10 +12,7 @@ export const connectDB = (Env: Environment) => {
     database: Env.DB_NAME,
     synchronize: Env.DB_SYNCHRONIZE,
     logging: Env.DB_LOGGING,
-    entities: [Env.DB_ENTITIES],
-    cli: {
-      entitiesDir: 'entities'
-    }
+    entities: [User, Post, Reply]
   };
   return createConnection(db);
 };

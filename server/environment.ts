@@ -1,4 +1,4 @@
-import { Matches, MinLength, IsBoolean, IsNotEmpty, Min, validate } from 'class-validator';
+import { Matches, MinLength, IsBoolean, Min, validate } from 'class-validator';
 import { Expose, Transform, Type, plainToClass } from 'class-transformer';
 import dotenv from 'dotenv';
 
@@ -22,10 +22,6 @@ export class Environment {
   @Transform(value => value == 'true')
   DB_LOGGING: boolean;
 
-  @IsNotEmpty()
-  @Expose()
-  DB_ENTITIES: string;
-
   @Min(1000)
   @Expose()
   @Type(() => Number)
@@ -43,15 +39,13 @@ export class Environment {
     this.DB_NAME = DB_NAME;
     this.DB_SYNCHRONIZE = DB_SYNCHRONIZE;
     this.DB_LOGGING = DB_LOGGING;
-    this.DB_ENTITIES = DB_ENTITIES;
     this.PORT = PORT;
   }
 }
 
-// Load .env if exists
-dotenv.config();
-
 export const validateEnv = () => {
+  // Load .env if exists
+  dotenv.config();
   // Make Environment type object of the current env variables
   const Env = plainToClass(Environment, {
     DB_URL: process.env.DB_URL,
