@@ -3,7 +3,8 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2.1
-
+orbs:
+  heroku: circleci/heroku@0.0.8
 executors:
   my-executor:
     docker:
@@ -45,9 +46,14 @@ jobs:
           at: ~/repo
       - run: npm run tsc
 
-workflows:
-  version: 2
+  deploy:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - heroku/deploy-via-git
 
+workflows:
   btd:
     jobs:
       - build
@@ -56,5 +62,10 @@ workflows:
             - build
       - compile:
           requires:
-            - build
             - test
+      - deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - compile

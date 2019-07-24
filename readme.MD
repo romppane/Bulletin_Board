@@ -1,39 +1,58 @@
 # Bulletin Board
-RESTful API for a bulletin board.
+
+RESTful API for bulletin board web application.
 
 ## Project configurating and launching:
 
 ### Install
-npm install
 
-### Configurate
-Make a copy of "**ormconfig-example.json**" file and rename it as "**ormconfig.json**"
+```
+$ npm install
+```
 
-![Ormconfig](/images/ormconfig.PNG)
+### Configure
 
-Fill in the data for your desired database, leave the synchronize as **True** while you're doing development.
+1. Make a copy of `.env-example` file and rename it as `.env`
+2. Replace the values in DB_URL to match with your local development environment-
+3. Fill in `DB_NAME` with the same value as you did at the end of URL.
+4. If it's necessary for you to make changes in your database, leave the value of synchronize as `true`.
+
+Example:
+
+```
+DB_URL = mysql://user1234:CatsandDogs123@localhost:3306/testDB
+DB_NAME = testDB
+DB_SYNCHRONIZE = false
+DB_LOGGING = false
+PORT = 3000
+```
 
 To keep logs from updating in git, run:
 
-**git update-index --assume-unchanged logs/info.log**
+```
+$ git update-index --assume-unchanged logs/info.log
 
-**git update-index --assume-unchanged logs/error.log**
+$ git update-index --assume-unchanged logs/error.log
+```
 
 Your project should now be good to run.
+
 ### Compile
-npm run tsc
+
+```
+$ npm run tsc
+```
 
 ### Run
-dev: npm run dev</br>prod: npm run prod
 
+dev mode:
 
-# Routing
+```
+$ npm run dev
+```
 
-## posts
+producion mode:
 
-### /post
-GET</br>
-POST
-### /post/:id
-UPDATE</br>
-DELETE
+```
+$ npm run prod
+```
