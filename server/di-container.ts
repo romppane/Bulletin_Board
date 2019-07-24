@@ -19,14 +19,15 @@ import {
   validateReply,
   validateReplyPUT
 } from './middleware/validation';
-import { connectDB, Env } from './db';
+import { connectDB } from './db';
+import { Environment } from './environment';
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
 });
 
-export function configureContainer() {
-  return connectDB().then(() => {
+export function configureContainer(Env: Environment) {
+  return connectDB(Env).then(() => {
     return container.register({
       errorHandler: awilix.asValue(handleErrors),
       postRouter: awilix.asClass(PostController),

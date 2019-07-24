@@ -1,15 +1,13 @@
 import { configureContainer } from './di-container';
 import { Server } from './server';
-import { validateEnv } from './db';
+import { validateEnv } from './environment';
 
-validateEnv().then(value => {
-  if (value) {
-    configureContainer()
+validateEnv()
+  .then(Env => {
+    configureContainer(Env)
       .then(container => {
         container.resolve<Server>('app').start();
       })
       .catch(err => console.log(err));
-  } else {
-    console.log('Fill out environmental variables');
-  }
-});
+  })
+  .catch(err => console.log(err));
