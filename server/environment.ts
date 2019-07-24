@@ -32,7 +32,6 @@ export class Environment {
     DB_NAME: string,
     DB_SYNCHRONIZE: boolean,
     DB_LOGGING: boolean,
-    DB_ENTITIES: string,
     PORT: number
   ) {
     this.DB_URL = DB_URL;
@@ -52,7 +51,6 @@ export const validateEnv = () => {
     DB_NAME: process.env.DB_NAME,
     DB_SYNCHRONIZE: process.env.DB_SYNCHRONIZE,
     DB_LOGGING: process.env.DB_LOGGING,
-    DB_ENTITIES: process.env.DB_ENTITIES,
     PORT: process.env.PORT
   });
   return validate(Env).then(errors => {

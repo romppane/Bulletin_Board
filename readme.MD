@@ -17,8 +17,6 @@ $ npm install
 3. Fill in `DB_NAME` with the same value as you did at the end of URL.
 4. If it's necessary for you to make changes in your database, leave the value of synchronize as `true`.
 
-   NOTE: In case you're running the project in production mode, switch the value of `DB_ENTITIES` to `./build/entities/*.js`
-
 Example:
 
 ```
@@ -26,7 +24,6 @@ DB_URL = mysql://user1234:CatsandDogs123@localhost:3306/testDB
 DB_NAME = testDB
 DB_SYNCHRONIZE = false
 DB_LOGGING = false
-DB_ENTITIES = ./server/entities/*.ts
 PORT = 3000
 ```
 
