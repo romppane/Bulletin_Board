@@ -8,7 +8,7 @@ import { UserController } from './controllers/user-controller';
 import { ReplyController } from './controllers/reply-controller';
 import { Logger } from './middleware/logger';
 import { ErrorRequestHandler } from 'express-serve-static-core';
-import { Environment } from './db';
+import { Environment } from './environment';
 
 // It's essential to register schemas. Otherwise all will pass.
 registerSchema(postPUTSchema);

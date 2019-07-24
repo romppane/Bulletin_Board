@@ -19,8 +19,7 @@ import {
   validateReply,
   validateReplyPUT
 } from './middleware/validation';
-import { connectDB, Environment } from './db';
-import { plainToClass } from 'class-transformer';
+import { connectDB, Env } from './db';
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
@@ -45,16 +44,7 @@ export function configureContainer() {
       validateReply: awilix.asValue(validateReply),
       validateReplyPUT: awilix.asValue(validateReplyPUT),
       logger: awilix.asClass(Logger),
-      Env: awilix.asValue(
-        plainToClass(Environment, {
-          DB_URL: process.env.DB_URL,
-          DB_NAME: process.env.DB_NAME,
-          DB_SYNCHRONIZE: process.env.DB_SYNCHRONIZE,
-          DB_LOGGING: process.env.DB_LOGGING,
-          DB_ENTITIES: process.env.DB_ENTITIES,
-          PORT: process.env.PORT
-        })
-      ),
+      Env: awilix.asValue(Env),
       app: awilix.asClass(Server)
     });
   });
