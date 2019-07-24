@@ -13,9 +13,9 @@ $ npm install
 ### Configure
 
 1. Make a copy of `.env-example` file and rename it as `.env`
-2. Replace `USERNAME`, `PASSWORD`, `HOST_ADDRESS`, `DB_PORT` and `DB_NAME` in `DB_URL` to the ones of your local development environment.
-3. Fill in `DB_NAME` with the same value as you did for the URL.
-4. If it is necessary for you to make changes in your database, leave the value of synchronize as `true`.
+2. Replace the values in DB_URL to match with your local development environment-
+3. Fill in `DB_NAME` with the same value as you did at the end of URL.
+4. If it's necessary for you to make changes in your database, leave the value of synchronize as `true`.
 
    NOTE: In case you're running the project in production mode, switch the value of `DB_ENTITIES` to `./build/entities/*.js`
 
