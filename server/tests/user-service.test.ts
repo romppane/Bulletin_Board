@@ -1,12 +1,12 @@
 import { User } from '../entities/user';
-import { mock, instance, when, verify } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, reset } from 'ts-mockito';
 import { UserService } from '../service/user-service';
 import { Dependencies } from '../types';
 import { Repository, DeepPartial, DeleteResult, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 // Creating mock
-const mockRepository = mock(Repository);
+const mockRepository = <Repository<User>>mock(Repository);
 const repoInstance = instance(mockRepository);
 const service = new UserService(<Dependencies>{ userRepository: repoInstance });
 const testUser = new User('three');
@@ -90,4 +90,25 @@ test("Delete user that doesn't exist", () => {
     .catch(error => console.log(error));
 
   verify(mockRepository.delete(99)).called();
+});
+
+test('Update user that exist', () => {
+  let results = new UpdateResult();
+  when(mockRepository.update(2, deepEqual(testUser))).thenResolve(results);
+  when(mockRepository.findOne(2)).thenResolve(testUser);
+  service.update(2, testUser).then(result => {
+    expect(result).toStrictEqual(testUser);
+  });
+});
+
+test('Save a new user', () => {
+  when(mockRepository.save(deepEqual(testUser))).thenResolve(testUser);
+  service
+    .save('three')
+    .then(user => {
+      expect(user).toStrictEqual(testUser);
+    })
+    .catch(error => console.log(error));
+
+  verify(mockRepository.save(testUser));
 });
