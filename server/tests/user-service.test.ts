@@ -62,7 +62,7 @@ test("Fetch a user that doesn't exist", () => {
   verify(mockRepository.findOne(99)).called();
 });
 
-test('Delete user that exist', () => {
+test('Delete user that exists', () => {
   let results = new DeleteResult();
   results.affected = 1;
   when(mockRepository.delete(2)).thenResolve(results);
@@ -92,13 +92,28 @@ test("Delete user that doesn't exist", () => {
   verify(mockRepository.delete(99)).called();
 });
 
-test('Update user that exist', () => {
+test('Update user that exists', () => {
   let results = new UpdateResult();
   when(mockRepository.update(2, deepEqual(testUser))).thenResolve(results);
   when(mockRepository.findOne(2)).thenResolve(testUser);
-  service.update(2, testUser).then(result => {
-    expect(result).toStrictEqual(testUser);
-  });
+  service
+    .update(2, testUser)
+    .then(result => {
+      expect(result).toStrictEqual(testUser);
+    })
+    .catch(error => console.log(error));
+});
+
+test("Update user that doesn't exist", () => {
+  let results = new UpdateResult();
+  when(mockRepository.update(99, deepEqual(testUser))).thenResolve(results);
+  when(mockRepository.findOne(99)).thenResolve(undefined);
+  service
+    .update(99, testUser)
+    .then(result => {
+      expect(result).toBe(undefined);
+    })
+    .catch(error => console.log(error));
 });
 
 test('Save a new user', () => {
