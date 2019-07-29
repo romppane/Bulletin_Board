@@ -1,9 +1,8 @@
 import { User } from '../entities/user';
-import { mock, instance, when, verify, deepEqual, reset } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual } from 'ts-mockito';
 import { UserService } from '../service/user-service';
 import { Dependencies } from '../types';
-import { Repository, DeepPartial, DeleteResult, UpdateResult } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 
 // Creating mock
 const mockRepository = <Repository<User>>mock(Repository);
