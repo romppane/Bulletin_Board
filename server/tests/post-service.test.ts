@@ -24,6 +24,8 @@ beforeEach(() => {
 });
 
 test('Fetch empty collection of posts', async () => {
+  expect.assertions(1);
+
   when(postRepository.find()).thenResolve(new Array<Post>());
 
   const collection = await service.find();
@@ -33,6 +35,8 @@ test('Fetch empty collection of posts', async () => {
 });
 
 test('Fetch a post that exists', async () => {
+  expect.assertions(1);
+
   when(postRepository.findOne(2)).thenResolve(testPost);
 
   const post = await service.findOne(2);
@@ -42,6 +46,8 @@ test('Fetch a post that exists', async () => {
 });
 
 test("Fetch a post that doesn't exist", async () => {
+  expect.assertions(1);
+
   when(postRepository.findOne(99)).thenResolve(undefined);
 
   const post = await service.findOne(99);
@@ -51,6 +57,8 @@ test("Fetch a post that doesn't exist", async () => {
 });
 
 test('Delete post that exists', async () => {
+  expect.assertions(1);
+
   let results = new DeleteResult();
   results.affected = 1;
 
@@ -63,6 +71,8 @@ test('Delete post that exists', async () => {
 });
 
 test("Delete post that doesn't exist", async () => {
+  expect.assertions(1);
+
   let results = new DeleteResult();
   results.affected = 0;
 
@@ -75,6 +85,8 @@ test("Delete post that doesn't exist", async () => {
 });
 
 test('Update post that exists', async () => {
+  expect.assertions(1);
+
   let results = new UpdateResult();
   when(postRepository.update(2, deepEqual(testPost))).thenResolve(results);
   when(postRepository.findOne(2)).thenResolve(testPost);
@@ -87,6 +99,8 @@ test('Update post that exists', async () => {
 });
 
 test("Update post that doesn't exist", async () => {
+  expect.assertions(1);
+
   let results = new UpdateResult();
   when(postRepository.update(99, deepEqual(testPost))).thenResolve(results);
   when(postRepository.findOne(99)).thenResolve(undefined);
@@ -99,6 +113,8 @@ test("Update post that doesn't exist", async () => {
 });
 
 test('Save a new post', async () => {
+  expect.assertions(1);
+
   when(postRepository.save(deepEqual(testPost))).thenResolve(testPost);
   when(userRepository.findOne(1)).thenResolve(user);
 
@@ -110,6 +126,8 @@ test('Save a new post', async () => {
 });
 
 test('Fail saving post because of no user', async () => {
+  expect.assertions(1);
+
   when(userRepository.findOne(1)).thenResolve(undefined);
 
   const result = await service.save(1, 'category', 'message', userService);

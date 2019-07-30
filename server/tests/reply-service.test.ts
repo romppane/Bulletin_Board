@@ -30,9 +30,10 @@ beforeEach(() => {
 });
 
 test('Fetch empty collection of replies', async () => {
+  expect.assertions(1);
+
   when(replyRepository.find()).thenResolve(new Array<Reply>());
 
-  expect.assertions(1);
   const collection = await service.find();
   expect(collection).toStrictEqual([]);
 
@@ -40,6 +41,8 @@ test('Fetch empty collection of replies', async () => {
 });
 
 test('Fetch a reply that exists', async () => {
+  expect.assertions(1);
+
   when(replyRepository.findOne(2)).thenResolve(testReply);
 
   const reply = await service.findOne(2);
@@ -49,6 +52,8 @@ test('Fetch a reply that exists', async () => {
 });
 
 test("Fetch a reply that doesn't exist", async () => {
+  expect.assertions(1);
+
   when(replyRepository.findOne(99)).thenResolve(undefined);
 
   const reply = await service.findOne(99);
@@ -58,6 +63,8 @@ test("Fetch a reply that doesn't exist", async () => {
 });
 
 test('Delete reply that exists', async () => {
+  expect.assertions(1);
+
   let results = new DeleteResult();
   results.affected = 1;
 
@@ -70,6 +77,8 @@ test('Delete reply that exists', async () => {
 });
 
 test("Delete reply that doesn't exist", async () => {
+  expect.assertions(1);
+
   let results = new DeleteResult();
   results.affected = 0;
 
@@ -82,6 +91,8 @@ test("Delete reply that doesn't exist", async () => {
 });
 
 test('Update reply that exists', async () => {
+  expect.assertions(1);
+
   let results = new UpdateResult();
 
   when(replyRepository.update(2, deepEqual(testReply))).thenResolve(results);
@@ -95,6 +106,8 @@ test('Update reply that exists', async () => {
 });
 
 test("Update reply that doesn't exist", async () => {
+  expect.assertions(1);
+
   let results = new UpdateResult();
 
   when(replyRepository.update(99, deepEqual(testReply))).thenResolve(results);
@@ -108,6 +121,8 @@ test("Update reply that doesn't exist", async () => {
 });
 
 test('Save a new reply', async () => {
+  expect.assertions(1);
+
   when(replyRepository.save(deepEqual(testReply))).thenResolve(testReply);
   when(userRepository.findOne(1)).thenResolve(user);
   when(postRepository.findOne(1)).thenResolve(testPost);
@@ -121,6 +136,8 @@ test('Save a new reply', async () => {
 });
 
 test('Fail save because of missing user', async () => {
+  expect.assertions(2);
+
   when(userRepository.findOne(2)).thenResolve(undefined);
   when(postRepository.findOne(2)).thenResolve(testPost);
 
@@ -135,6 +152,8 @@ test('Fail save because of missing user', async () => {
 });
 
 test('Fail save because of missing post', async () => {
+  expect.assertions(2);
+
   when(userRepository.findOne(1)).thenResolve(user);
   when(postRepository.findOne(1)).thenResolve(undefined);
 
@@ -149,6 +168,8 @@ test('Fail save because of missing post', async () => {
 });
 
 test('Fail save because of missing post and user', async () => {
+  expect.assertions(2);
+
   when(userRepository.findOne(1)).thenResolve(undefined);
   when(postRepository.findOne(1)).thenResolve(undefined);
 

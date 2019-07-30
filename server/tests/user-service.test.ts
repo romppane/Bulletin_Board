@@ -16,6 +16,8 @@ beforeEach(() => {
 });
 
 test('Fetch empty collection of users', async () => {
+  expect.assertions(1);
+
   when(mockRepository.find()).thenResolve(new Array<User>());
 
   const collection = await service.find();
@@ -25,6 +27,8 @@ test('Fetch empty collection of users', async () => {
 });
 
 test('Fetch collection with 3 users', async () => {
+  expect.assertions(1);
+
   when(mockRepository.find()).thenResolve(users);
 
   const collection = await service.find();
@@ -34,6 +38,8 @@ test('Fetch collection with 3 users', async () => {
 });
 
 test('Fetch a user that exists', async () => {
+  expect.assertions(1);
+
   when(mockRepository.findOne(2)).thenResolve(testUser);
 
   const user = await service.findOne(2);
@@ -43,6 +49,8 @@ test('Fetch a user that exists', async () => {
 });
 
 test("Fetch a user that doesn't exist", async () => {
+  expect.assertions(1);
+
   when(mockRepository.findOne(99)).thenResolve(undefined);
 
   const user = await service.findOne(99);
@@ -52,6 +60,8 @@ test("Fetch a user that doesn't exist", async () => {
 });
 
 test('Delete user that exists', async () => {
+  expect.assertions(1);
+
   let results = new DeleteResult();
   results.affected = 1;
 
@@ -64,6 +74,8 @@ test('Delete user that exists', async () => {
 });
 
 test("Delete user that doesn't exist", async () => {
+  expect.assertions(1);
+
   let results = new DeleteResult();
   results.affected = 0;
 
@@ -76,6 +88,8 @@ test("Delete user that doesn't exist", async () => {
 });
 
 test('Update user that exists', async () => {
+  expect.assertions(1);
+
   let results = new UpdateResult();
 
   when(mockRepository.update(2, deepEqual(testUser))).thenResolve(results);
@@ -89,6 +103,8 @@ test('Update user that exists', async () => {
 });
 
 test("Update user that doesn't exist", async () => {
+  expect.assertions(1);
+
   let results = new UpdateResult();
 
   when(mockRepository.update(99, deepEqual(testUser))).thenResolve(results);
@@ -102,6 +118,8 @@ test("Update user that doesn't exist", async () => {
 });
 
 test('Save a new user', async () => {
+  expect.assertions(1);
+
   when(mockRepository.save(deepEqual(testUser))).thenResolve(testUser);
 
   const user = await service.save('three');
