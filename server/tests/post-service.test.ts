@@ -1,4 +1,4 @@
-import { mock, instance, when, verify, deepEqual, spy } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, spy, resetCalls } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 import { Post } from '../entities/post';
@@ -7,8 +7,8 @@ import { User } from '../entities/user';
 import { UserService } from '../service/user-service';
 
 // Creating mock
-const mockRepository = <Repository<Post>>mock(Repository);
-const repoInstance = instance(mockRepository);
+const postRepository = <Repository<Post>>mock(Repository);
+const repoInstance = instance(postRepository);
 const service = new PostService(<Dependencies>{ postRepository: repoInstance });
 const user = new User('test');
 const testPost = new Post(user, 'category', 'message', 1);
@@ -18,120 +18,93 @@ const userRepoInstance = instance(userRepository);
 const userService = new UserService({ userRepository: userRepoInstance } as Dependencies);
 const userServiceSpy = spy(userService);
 
-test('Fetch empty collection of posts', () => {
-  when(mockRepository.find()).thenResolve(new Array<Post>());
-
-  service
-    .find()
-    .then(collection => {
-      expect(collection).toStrictEqual([]);
-    })
-    .catch(error => console.log(error));
-
-  verify(mockRepository.find()).called();
+beforeEach(() => {
+  resetCalls(postRepository);
+  resetCalls(userRepository);
 });
 
-test('Fetch a post that exists', () => {
-  when(mockRepository.findOne(2)).thenResolve(testPost);
-  service
-    .findOne(2)
-    .then(post => {
-      expect(post).toStrictEqual(testPost);
-    })
-    .catch(error => console.log(error));
-  verify(mockRepository.findOne(2)).called();
+test('Fetch empty collection of posts', async () => {
+  when(postRepository.find()).thenResolve(new Array<Post>());
+
+  const collection = await service.find();
+  expect(collection).toStrictEqual([]);
+
+  verify(postRepository.find()).called();
 });
 
-test("Fetch a post that doesn't exist", () => {
-  when(mockRepository.findOne(99)).thenResolve(undefined);
+test('Fetch a post that exists', async () => {
+  when(postRepository.findOne(2)).thenResolve(testPost);
+  const post = await service.findOne(2);
+  expect(post).toStrictEqual(testPost);
 
-  service
-    .findOne(99)
-    .then(post => {
-      expect(post).toBe(undefined);
-    })
-    .catch(error => console.log(error));
-
-  verify(mockRepository.findOne(99)).called();
+  verify(postRepository.findOne(2)).called();
 });
 
-test('Delete post that exists', () => {
+test("Fetch a post that doesn't exist", async () => {
+  when(postRepository.findOne(99)).thenResolve(undefined);
+
+  const post = await service.findOne(99);
+  expect(post).toBe(undefined);
+
+  verify(postRepository.findOne(99)).called();
+});
+
+test('Delete post that exists', async () => {
   let results = new DeleteResult();
   results.affected = 1;
-  when(mockRepository.delete(2)).thenResolve(results);
+  when(postRepository.delete(2)).thenResolve(results);
 
-  service
-    .delete(2)
-    .then(deleted => {
-      expect(deleted.affected).toBe(1);
-    })
-    .catch(error => console.log(error));
+  const deleted = await service.delete(2);
+  expect(deleted.affected).toBe(1);
 
-  verify(mockRepository.delete(2)).called();
+  verify(postRepository.delete(2)).called();
 });
 
-test("Delete post that doesn't exist", () => {
+test("Delete post that doesn't exist", async () => {
   let results = new DeleteResult();
   results.affected = 0;
-  when(mockRepository.delete(99)).thenResolve(results);
+  when(postRepository.delete(99)).thenResolve(results);
 
-  service
-    .delete(99)
-    .then(deleted => {
-      expect(deleted.affected).toBe(0);
-    })
-    .catch(error => console.log(error));
+  const deleted = await service.delete(99);
+  expect(deleted.affected).toBe(0);
 
-  verify(mockRepository.delete(99)).called();
+  verify(postRepository.delete(99)).called();
 });
 
-test('Update post that exists', () => {
+test('Update post that exists', async () => {
   let results = new UpdateResult();
-  when(mockRepository.update(2, deepEqual(testPost))).thenResolve(results);
-  when(mockRepository.findOne(2)).thenResolve(testPost);
-  service
-    .update(2, testPost)
-    .then(result => {
-      expect(result).toStrictEqual(testPost);
-    })
-    .catch(error => console.log(error));
-  verify(mockRepository.update(2, deepEqual(testPost))).called();
-  verify(mockRepository.findOne(2)).called();
+  when(postRepository.update(2, deepEqual(testPost))).thenResolve(results);
+  when(postRepository.findOne(2)).thenResolve(testPost);
+  const result = await service.update(2, testPost);
+  expect(result).toStrictEqual(testPost);
+
+  verify(postRepository.update(2, deepEqual(testPost))).called();
+  verify(postRepository.findOne(2)).called();
 });
 
-test("Update post that doesn't exist", () => {
+test("Update post that doesn't exist", async () => {
   let results = new UpdateResult();
-  when(mockRepository.update(99, deepEqual(testPost))).thenResolve(results);
-  when(mockRepository.findOne(99)).thenResolve(undefined);
-  service
-    .update(99, testPost)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
-  verify(mockRepository.update(99, deepEqual(testPost))).called();
-  verify(mockRepository.findOne(99)).called();
+  when(postRepository.update(99, deepEqual(testPost))).thenResolve(results);
+  when(postRepository.findOne(99)).thenResolve(undefined);
+  const result = await service.update(99, testPost);
+  expect(result).toBe(undefined);
+
+  verify(postRepository.update(99, deepEqual(testPost))).called();
+  verify(postRepository.findOne(99)).called();
 });
 
-test('Save a new post', () => {
-  when(mockRepository.save(deepEqual(testPost))).thenResolve(testPost);
+test('Save a new post', async () => {
+  when(postRepository.save(deepEqual(testPost))).thenResolve(testPost);
   when(userRepository.findOne(1)).thenResolve(user);
-  service
-    .save(1, 'category', 'message', userService)
-    .then(result => {
-      expect(result).toStrictEqual(testPost);
-    })
-    .catch(error => console.log(error));
+  const result = await service.save(1, 'category', 'message', userService);
+  expect(result).toStrictEqual(testPost);
+
   verify(userServiceSpy.findOne(1)).called();
 });
 
-test('Fail saving post because of no user', () => {
+test('Fail saving post because of no user', async () => {
   when(userRepository.findOne(1)).thenResolve(undefined);
-  service
-    .save(1, 'category', 'message', userService)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
+  const result = await service.save(1, 'category', 'message', userService);
+  expect(result).toBe(undefined);
   verify(userServiceSpy.findOne(1)).called();
 });

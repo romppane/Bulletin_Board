@@ -1,4 +1,4 @@
-import { mock, instance, when, verify, deepEqual } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, resetCalls } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 import { Post } from '../entities/post';
@@ -23,172 +23,135 @@ const user = new User('test');
 const testPost = new Post(user, 'category', 'message', 1);
 const testReply = new Reply(user, testPost, 'message');
 
-test('Fetch empty collection of replies', () => {
+beforeEach(() => {
+  resetCalls(replyRepository);
+  resetCalls(postRepository);
+  resetCalls(userRepository);
+});
+
+test('Fetch empty collection of replies', async () => {
   when(replyRepository.find()).thenResolve(new Array<Reply>());
 
-  service
-    .find()
-    .then(collection => {
-      expect(collection).toStrictEqual([]);
-    })
-    .catch(error => console.log(error));
+  expect.assertions(1);
+  const collection = await service.find();
+  expect(collection).toStrictEqual([]);
 
   verify(replyRepository.find()).called();
 });
 
-test('Fetch a reply that exists', () => {
+test('Fetch a reply that exists', async () => {
   when(replyRepository.findOne(2)).thenResolve(testReply);
-  service
-    .findOne(2)
-    .then(reply => {
-      expect(reply).toStrictEqual(testReply);
-    })
-    .catch(error => console.log(error));
+
+  const reply = await service.findOne(2);
+  expect(reply).toStrictEqual(testReply);
+
   verify(replyRepository.findOne(2)).called();
 });
 
-test("Fetch a reply that doesn't exist", () => {
+test("Fetch a reply that doesn't exist", async () => {
   when(replyRepository.findOne(99)).thenResolve(undefined);
 
-  service
-    .findOne(99)
-    .then(reply => {
-      expect(reply).toBe(undefined);
-    })
-    .catch(error => console.log(error));
+  const reply = await service.findOne(99);
+  expect(reply).toBe(undefined);
 
   verify(replyRepository.findOne(99)).called();
 });
 
-test('Delete reply that exists', () => {
+test('Delete reply that exists', async () => {
   let results = new DeleteResult();
   results.affected = 1;
   when(replyRepository.delete(2)).thenResolve(results);
 
-  service
-    .delete(2)
-    .then(deleted => {
-      expect(deleted.affected).toBe(1);
-    })
-    .catch(error => console.log(error));
+  const deleted = await service.delete(2);
+  expect(deleted.affected).toBe(1);
 
   verify(replyRepository.delete(2)).called();
 });
 
-test("Delete reply that doesn't exist", () => {
+test("Delete reply that doesn't exist", async () => {
   let results = new DeleteResult();
   results.affected = 0;
   when(replyRepository.delete(99)).thenResolve(results);
 
-  service
-    .delete(99)
-    .then(deleted => {
-      expect(deleted.affected).toBe(0);
-    })
-    .catch(error => console.log(error));
+  const deleted = await service.delete(99);
+  expect(deleted.affected).toBe(0);
 
   verify(replyRepository.delete(99)).called();
 });
 
-test('Update reply that exists', () => {
+test('Update reply that exists', async () => {
   let results = new UpdateResult();
   when(replyRepository.update(2, deepEqual(testReply))).thenResolve(results);
   when(replyRepository.findOne(2)).thenResolve(testReply);
-  service
-    .update(2, testReply)
-    .then(result => {
-      expect(result).toStrictEqual(testReply);
-    })
-    .catch(error => console.log(error));
+
+  const result = await service.update(2, testReply);
+  expect(result).toStrictEqual(testReply);
 
   verify(replyRepository.update(2, deepEqual(testReply))).called();
   verify(replyRepository.findOne(2)).called();
 });
 
-test("Update reply that doesn't exist", () => {
+test("Update reply that doesn't exist", async () => {
   let results = new UpdateResult();
   when(replyRepository.update(99, deepEqual(testReply))).thenResolve(results);
   when(replyRepository.findOne(99)).thenResolve(undefined);
-  service
-    .update(99, testReply)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
+
+  const result = await service.update(99, testReply);
+  expect(result).toBe(undefined);
+
   verify(replyRepository.update(99, deepEqual(testReply))).called();
   verify(replyRepository.findOne(99)).called();
 });
 
-test('Save a new reply', () => {
+test('Save a new reply', async () => {
   when(replyRepository.save(deepEqual(testReply))).thenResolve(testReply);
   when(userRepository.findOne(1)).thenResolve(user);
   when(postRepository.findOne(1)).thenResolve(testPost);
-  service
-    .save(1, 1, 'message')
-    .then(result => {
-      expect(result).toStrictEqual(testReply);
-    })
-    .catch(error => console.log(error));
-  //verify(postRepository.findOne(1)).called(); - Test returns error of not called?
-  verify(userRepository.findOne(1)).called();
-});
 
-test('Fail save because of missing user', () => {
-  when(userRepository.findOne(1)).thenResolve(undefined);
-  when(postRepository.findOne(1)).thenResolve(testPost);
-
-  service.userRepository
-    .findOne(1)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
-  service.postRepository
-    .findOne(1)
-    .then(result => {
-      expect(result).toStrictEqual(testPost);
-    })
-    .catch(error => console.log(error));
-  verify(userRepository.findOne(1)).called();
+  const result = await service.save(1, 1, 'message');
+  expect(result).toStrictEqual(testReply);
   verify(postRepository.findOne(1)).called();
+  verify(userRepository.findOne(1)).called();
 });
 
-test('Fail save because of missing post', () => {
+test('Fail save because of missing user', async () => {
+  when(userRepository.findOne(2)).thenResolve(undefined);
+  when(postRepository.findOne(2)).thenResolve(testPost);
+
+  const foundUser = await service.userRepository.findOne(2);
+  expect(foundUser).toBe(undefined);
+
+  const foundPost = await service.postRepository.findOne(2);
+  expect(foundPost).toStrictEqual(testPost);
+
+  verify(userRepository.findOne(2)).called();
+  verify(postRepository.findOne(2)).called();
+});
+
+test('Fail save because of missing post', async () => {
   when(userRepository.findOne(1)).thenResolve(user);
   when(postRepository.findOne(1)).thenResolve(undefined);
 
-  service.userRepository
-    .findOne(1)
-    .then(result => {
-      expect(result).toStrictEqual(user);
-    })
-    .catch(error => console.log(error));
-  service.postRepository
-    .findOne(1)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
+  const foundUser = await service.userRepository.findOne(1);
+  expect(foundUser).toStrictEqual(user);
+
+  const foundPost = await service.postRepository.findOne(1);
+  expect(foundPost).toBe(undefined);
+
   verify(userRepository.findOne(1)).called();
   verify(postRepository.findOne(1)).called();
 });
 
-test('Fail save because of missing post and user', () => {
+test('Fail save because of missing post and user', async () => {
   when(userRepository.findOne(1)).thenResolve(undefined);
   when(postRepository.findOne(1)).thenResolve(undefined);
 
-  service.userRepository
-    .findOne(1)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
-  service.postRepository
-    .findOne(1)
-    .then(result => {
-      expect(result).toBe(undefined);
-    })
-    .catch(error => console.log(error));
+  const foundUser = await service.userRepository.findOne(1);
+  expect(foundUser).toBe(undefined);
+
+  const foundPost = await service.postRepository.findOne(1);
+  expect(foundPost).toBe(undefined);
+
   verify(userRepository.findOne(1)).called();
   verify(postRepository.findOne(1)).called();
 });
