@@ -60,6 +60,7 @@ test("Fetch a reply that doesn't exist", async () => {
 test('Delete reply that exists', async () => {
   let results = new DeleteResult();
   results.affected = 1;
+
   when(replyRepository.delete(2)).thenResolve(results);
 
   const deleted = await service.delete(2);
@@ -71,6 +72,7 @@ test('Delete reply that exists', async () => {
 test("Delete reply that doesn't exist", async () => {
   let results = new DeleteResult();
   results.affected = 0;
+
   when(replyRepository.delete(99)).thenResolve(results);
 
   const deleted = await service.delete(99);
@@ -81,6 +83,7 @@ test("Delete reply that doesn't exist", async () => {
 
 test('Update reply that exists', async () => {
   let results = new UpdateResult();
+
   when(replyRepository.update(2, deepEqual(testReply))).thenResolve(results);
   when(replyRepository.findOne(2)).thenResolve(testReply);
 
@@ -93,6 +96,7 @@ test('Update reply that exists', async () => {
 
 test("Update reply that doesn't exist", async () => {
   let results = new UpdateResult();
+
   when(replyRepository.update(99, deepEqual(testReply))).thenResolve(results);
   when(replyRepository.findOne(99)).thenResolve(undefined);
 
@@ -110,8 +114,10 @@ test('Save a new reply', async () => {
 
   const result = await service.save(1, 1, 'message');
   expect(result).toStrictEqual(testReply);
+
   verify(postRepository.findOne(1)).called();
   verify(userRepository.findOne(1)).called();
+  verify(replyRepository.save(deepEqual(testReply))).called();
 });
 
 test('Fail save because of missing user', async () => {

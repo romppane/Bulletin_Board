@@ -34,6 +34,7 @@ test('Fetch empty collection of posts', async () => {
 
 test('Fetch a post that exists', async () => {
   when(postRepository.findOne(2)).thenResolve(testPost);
+
   const post = await service.findOne(2);
   expect(post).toStrictEqual(testPost);
 
@@ -52,6 +53,7 @@ test("Fetch a post that doesn't exist", async () => {
 test('Delete post that exists', async () => {
   let results = new DeleteResult();
   results.affected = 1;
+
   when(postRepository.delete(2)).thenResolve(results);
 
   const deleted = await service.delete(2);
@@ -63,6 +65,7 @@ test('Delete post that exists', async () => {
 test("Delete post that doesn't exist", async () => {
   let results = new DeleteResult();
   results.affected = 0;
+
   when(postRepository.delete(99)).thenResolve(results);
 
   const deleted = await service.delete(99);
@@ -75,6 +78,7 @@ test('Update post that exists', async () => {
   let results = new UpdateResult();
   when(postRepository.update(2, deepEqual(testPost))).thenResolve(results);
   when(postRepository.findOne(2)).thenResolve(testPost);
+
   const result = await service.update(2, testPost);
   expect(result).toStrictEqual(testPost);
 
@@ -86,6 +90,7 @@ test("Update post that doesn't exist", async () => {
   let results = new UpdateResult();
   when(postRepository.update(99, deepEqual(testPost))).thenResolve(results);
   when(postRepository.findOne(99)).thenResolve(undefined);
+
   const result = await service.update(99, testPost);
   expect(result).toBe(undefined);
 
@@ -96,15 +101,19 @@ test("Update post that doesn't exist", async () => {
 test('Save a new post', async () => {
   when(postRepository.save(deepEqual(testPost))).thenResolve(testPost);
   when(userRepository.findOne(1)).thenResolve(user);
+
   const result = await service.save(1, 'category', 'message', userService);
   expect(result).toStrictEqual(testPost);
 
+  verify(postRepository.save(deepEqual(testPost))).called();
   verify(userServiceSpy.findOne(1)).called();
 });
 
 test('Fail saving post because of no user', async () => {
   when(userRepository.findOne(1)).thenResolve(undefined);
+
   const result = await service.save(1, 'category', 'message', userService);
   expect(result).toBe(undefined);
+
   verify(userServiceSpy.findOne(1)).called();
 });
