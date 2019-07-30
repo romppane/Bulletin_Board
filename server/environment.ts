@@ -1,4 +1,4 @@
-import { Matches, MinLength, IsBoolean, Min, validate } from 'class-validator';
+import { Matches, MinLength, IsBoolean, Min, validate, IsPort } from 'class-validator';
 import { Expose, Transform, Type, plainToClass } from 'class-transformer';
 import dotenv from 'dotenv';
 
@@ -22,9 +22,10 @@ export class Environment {
   @Transform(value => value == 'true')
   DB_LOGGING: boolean;
 
-  @Min(1000)
+  /*@Min(1000)
   @Expose()
-  @Type(() => Number)
+  @Type(() => Number)*/
+  @IsPort()
   PORT: number;
 
   constructor(
