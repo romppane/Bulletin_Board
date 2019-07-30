@@ -6,7 +6,6 @@ import { Reply } from '../entities/reply';
 import { ReplyService } from '../service/reply-service';
 import { User } from '../entities/user';
 
-// Creating mock
 const replyRepository = <Repository<Reply>>mock(Repository);
 const replyRepoInstance = instance(replyRepository);
 const postRepository = <Repository<Post>>mock(Repository);

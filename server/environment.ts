@@ -22,9 +22,6 @@ export class Environment {
   @Transform(value => value == 'true')
   DB_LOGGING: boolean;
 
-  /*@Min(1000)
-  @Expose()
-  @Type(() => Number)*/
   @IsPort()
   PORT: number;
 

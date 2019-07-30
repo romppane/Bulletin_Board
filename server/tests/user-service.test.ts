@@ -4,7 +4,6 @@ import { UserService } from '../service/user-service';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 
-// Creating mock
 const mockRepository = <Repository<User>>mock(Repository);
 const repoInstance = instance(mockRepository);
 const service = new UserService(<Dependencies>{ userRepository: repoInstance });

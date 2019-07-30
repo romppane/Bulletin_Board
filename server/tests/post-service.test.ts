@@ -6,7 +6,6 @@ import { PostService } from '../service/post-service';
 import { User } from '../entities/user';
 import { UserService } from '../service/user-service';
 
-// Creating mock
 const postRepository = <Repository<Post>>mock(Repository);
 const repoInstance = instance(postRepository);
 const service = new PostService(<Dependencies>{ postRepository: repoInstance });
