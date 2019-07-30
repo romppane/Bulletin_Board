@@ -1,5 +1,5 @@
-import { Matches, MinLength, IsBoolean, Min, validate, IsPort } from 'class-validator';
-import { Expose, Transform, Type, plainToClass } from 'class-transformer';
+import { Matches, MinLength, IsBoolean, validate, IsPort } from 'class-validator';
+import { Expose, Transform, plainToClass } from 'class-transformer';
 import dotenv from 'dotenv';
 
 export class Environment {
