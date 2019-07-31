@@ -1,4 +1,4 @@
-import { mock, instance, when, verify, deepEqual, resetCalls } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, resetCalls, reset } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 import { Post } from '../entities/post';
@@ -23,9 +23,9 @@ const testPost = new Post(user, 'category', 'message', 1);
 const testReply = new Reply(user, testPost, 'message');
 
 beforeEach(() => {
-  resetCalls(replyRepository);
-  resetCalls(postRepository);
-  resetCalls(userRepository);
+  reset(replyRepository);
+  reset(postRepository);
+  reset(userRepository);
 });
 
 test('Fetch empty collection of replies', async () => {

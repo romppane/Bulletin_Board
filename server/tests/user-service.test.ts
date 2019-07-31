@@ -1,5 +1,5 @@
 import { User } from '../entities/user';
-import { mock, instance, when, verify, deepEqual, resetCalls } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, resetCalls, reset } from 'ts-mockito';
 import { UserService } from '../service/user-service';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
@@ -11,7 +11,7 @@ const testUser = new User('three');
 const users: User[] = [new User('one'), new User('two'), testUser];
 
 beforeEach(() => {
-  resetCalls(mockRepository);
+  reset(mockRepository);
 });
 
 test('Fetch empty collection of users', async () => {

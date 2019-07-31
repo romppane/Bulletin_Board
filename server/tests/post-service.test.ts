@@ -1,4 +1,4 @@
-import { mock, instance, when, verify, deepEqual, spy, resetCalls } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, spy, resetCalls, reset } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 import { Post } from '../entities/post';
@@ -18,8 +18,8 @@ const userService = new UserService(<Dependencies>{ userRepository: userRepoInst
 const userServiceSpy = spy(userService);
 
 beforeEach(() => {
-  resetCalls(postRepository);
-  resetCalls(userRepository);
+  reset(postRepository);
+  reset(userRepository);
 });
 
 test('Fetch empty collection of posts', async () => {
