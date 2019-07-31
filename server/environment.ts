@@ -23,14 +23,14 @@ export class Environment {
   DB_LOGGING: boolean;
 
   @IsPort()
-  PORT: number;
+  PORT: string;
 
   constructor(
     DB_URL: string,
     DB_NAME: string,
     DB_SYNCHRONIZE: boolean,
     DB_LOGGING: boolean,
-    PORT: number
+    PORT: string
   ) {
     this.DB_URL = DB_URL;
     this.DB_NAME = DB_NAME;
