@@ -1,5 +1,5 @@
-import { Matches, MinLength, IsBoolean, Min, validate } from 'class-validator';
-import { Expose, Transform, Type, plainToClass } from 'class-transformer';
+import { Matches, MinLength, IsBoolean, validate, IsPort } from 'class-validator';
+import { Expose, Transform, plainToClass } from 'class-transformer';
 import dotenv from 'dotenv';
 
 export class Environment {
@@ -22,17 +22,15 @@ export class Environment {
   @Transform(value => value == 'true')
   DB_LOGGING: boolean;
 
-  @Min(1000)
-  @Expose()
-  @Type(() => Number)
-  PORT: number;
+  @IsPort()
+  PORT: string;
 
   constructor(
     DB_URL: string,
     DB_NAME: string,
     DB_SYNCHRONIZE: boolean,
     DB_LOGGING: boolean,
-    PORT: number
+    PORT: string
   ) {
     this.DB_URL = DB_URL;
     this.DB_NAME = DB_NAME;
