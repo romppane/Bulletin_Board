@@ -1,4 +1,4 @@
-import { mock, instance, when, verify, deepEqual, resetCalls, reset } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, reset } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 import { Post } from '../entities/post';
