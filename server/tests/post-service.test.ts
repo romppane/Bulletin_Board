@@ -14,7 +14,7 @@ const testPost = new Post(user, 'category', 'message', 1);
 
 const userRepository = <Repository<User>>mock(Repository);
 const userRepoInstance = instance(userRepository);
-const userService = new UserService({ userRepository: userRepoInstance } as Dependencies);
+const userService = new UserService(<Dependencies>{ userRepository: userRepoInstance });
 const userServiceSpy = spy(userService);
 
 beforeEach(() => {
