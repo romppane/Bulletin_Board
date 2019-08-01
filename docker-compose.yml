@@ -2,6 +2,7 @@ version: '3.7'
 services:
   database:
     image: mariadb
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: root
@@ -11,8 +12,9 @@ services:
       - '6000:3306'
   web:
     image: bulletin-board
-    command: sh -c 'bin/wait-for db:3306 -- bundle exec rails s'
     depends_on:
       - database
+    environment:
+      WAIT_HOSTS: database:3306
     ports:
       - '3000:3000'
