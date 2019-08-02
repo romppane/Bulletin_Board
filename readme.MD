@@ -10,7 +10,12 @@ RESTful API for bulletin board web application.
 $ npm install
 ```
 
-### Configure
+### Docker configuration
+
+1. Make a copy of `docker-compose.override-example.yml` and rename it as `docker-compose.override.yml`
+2. OPTIONAL! Change the environmental variables to your liking keeping the balance between database and web!
+
+### Windows configuration for development
 
 1. Make a copy of `.env-example` file and rename it as `.env`
 2. Replace the values in DB_URL to match with your local development environment-
