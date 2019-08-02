@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  database:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: testdb
+  web:
+    volumes:
+      - './server:/app/server'
+    environment:
+      DB_URL: mysql://root:root@database:3306/testdb
+      DB_NAME: testdb
+      DB_SYNCHRONIZE: 'true'
+      DB_LOGGING: 'false'
+      PORT: 3000

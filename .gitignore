@@ -68,3 +68,6 @@ build/
 .vscode/
 tmp/
 temp/
+
+#Docker
+docker-compose.override.yml
