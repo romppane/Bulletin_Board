@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly ./server/start-server.ts",
+    "dev": "ts-node-dev --poll --respawn --transpileOnly ./server/start-server.ts",
     "prod": "tsc && node ./build/start-server.js",
     "test": "jest",
     "postinstall": "npm run tsc",

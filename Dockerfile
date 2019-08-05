@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 3000
 
-## THE LIFE SAVER
+## Waits for database connection to be ready for receiving connections
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
 RUN chmod +x /wait
 
