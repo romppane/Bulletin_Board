@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   database:
-    image: mariadb
+    image: mariadb:10.4.7-bionic
     restart: always
     ports:
       - '6000:3306'
