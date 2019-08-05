@@ -9,6 +9,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm run tsc
+
 EXPOSE 3000
 
 ## Waits for database connection to be ready for receiving connections
@@ -16,4 +18,4 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait
 RUN chmod +x /wait
 
 ## Launch the wait tool and then your application
-CMD /wait && npm run dev
+CMD ["npm" "start"]
