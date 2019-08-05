@@ -7,8 +7,6 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_DATABASE: testdb
   web:
-    volumes:
-      - './server:/app/server'
     environment:
       DB_URL: mysql://root:root@database:3306/testdb
       DB_NAME: testdb

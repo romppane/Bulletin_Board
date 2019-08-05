@@ -9,6 +9,8 @@ services:
     image: bulletin-board
     depends_on:
       - database
+    volumes:
+      - './server:/app/server'
     environment:
       WAIT_HOSTS: database:3306
     ports:
