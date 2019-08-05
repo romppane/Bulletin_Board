@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  database:
+    image: mariadb:10.4.7-bionic
+    restart: always
+    ports:
+      - '6000:3306'
+  web:
+    image: bulletin-board
+    depends_on:
+      - database
+    volumes:
+      - './server:/app/server'
+    environment:
+      WAIT_HOSTS: database:3306
+    ports:
+      - '3000:3000'
