@@ -45,6 +45,7 @@ jobs:
       - run: npm run tsc
 
   deploy:
+    machine: true
     steps:
       - checkout
       - attach_workspace:
