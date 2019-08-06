@@ -53,7 +53,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-        at: ~/repo
+          at: ~/repo
       - run:
         name: Build the image
         command: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
