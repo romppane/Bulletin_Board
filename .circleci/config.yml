@@ -6,7 +6,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/node:10.15.3
+      - image: circleci/node:10.16.1
     working_directory: ~/repo
 
 jobs:
@@ -70,6 +70,13 @@ jobs:
           name: Release on Heroku
           command: docker push registry.heroku.com/$HEROKU_APP_NAME/web
 
+  release:
+    executor: my-executor
+    steps:
+      - run: sudo snap install --classic heroku
+      - run: heroku login -u $HEROKU_LOGIN -p $HEROKU_API_KEY
+      - run: heroku container:release web
+
 workflows:
   btd:
     jobs:
@@ -83,3 +90,6 @@ workflows:
       - deploy:
           requires:
             - compile
+      - release:
+          requires:
+            - deploy
