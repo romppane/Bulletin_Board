@@ -62,10 +62,10 @@ jobs:
           command: docker push romppane/bulletin-board:$CIRCLE_SHA1
       - run:
           name: Login to registery
-          command: docker login --username=$HEROKU_LOGIN --$HEROKU_API_KEY registery.heroku.com
+          command: docker login --username=$HEROKU_LOGIN --$HEROKU_API_KEY registry.heroku.com
       - run:
           name: Deploy to Heroku
-          command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registery.heroku.com/$HEROKU_APP_NAME/web
+          command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
   btd:
