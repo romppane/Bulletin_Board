@@ -68,7 +68,7 @@ jobs:
           command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
       - run:
           name: Release on Heroku
-          command: heroku container:release web
+          command: docker push registry.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
   btd:
