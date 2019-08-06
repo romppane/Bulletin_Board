@@ -8,10 +8,6 @@ executors:
     docker:
       - image: circleci/node:10.15.3
     working_directory: ~/repo
-  deployer:
-    docker:
-      - image: buildpack-deps:trusty
-    working_directory: ~/repo
 
 jobs:
   build:
@@ -49,13 +45,27 @@ jobs:
       - run: npm run tsc
 
   deploy:
-    executor: deployer
+    executor: my-executor
     steps:
       - checkout
       - attach_workspace:
           at: ~/repo
       - setup_remote_docker
-      - run: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
+      - run:
+          name: Build the image
+          command: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
+      - run:
+          name: Login to Docker
+          command: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Push to DockerHub
+          command: docker push romppane/bulletin-board:$CIRCLE_SHA1
+      - run:
+          name: Login to registery
+          command: docker login --username=$HEROKU_LOGIN --$HEROKU_API_KEY registery.heroku.com
+      - run:
+          name: Deploy to Heroku
+          command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registery.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
   btd:
