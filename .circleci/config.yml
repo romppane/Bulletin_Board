@@ -52,21 +52,18 @@ jobs:
       
       - run:
         name: Build the image
-        command: |
-        docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
+        command: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
 
 
       - run:
         name: Push to DockerHub
-        command: |
-        docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
-        docker push romppane/bulletin-board:$CIRCLE_SHA1
+        command: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+        command: docker push romppane/bulletin-board:$CIRCLE_SHA1
 
       - run:
         name: Deploy to Heroku
-        command: |
-        docker login --username=$HEROKU_LOGIN --$HEROKU_API_KEY registery.heroku.com
-        docker tag romppane/bulletin-board:$CIRCLE_SHA1 registery.heroku.com/$HEROKU_APP_NAME/web
+        command: docker login --username=$HEROKU_LOGIN --$HEROKU_API_KEY registery.heroku.com
+        command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registery.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
   btd:
