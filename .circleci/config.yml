@@ -54,6 +54,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
+      - setup_remote_docker
       - run: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
 
 workflows:
