@@ -54,9 +54,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
-      - run:
-        name: Build the image
-        command: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
+      - run: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
 
 workflows:
   btd:
