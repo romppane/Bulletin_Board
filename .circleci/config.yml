@@ -8,6 +8,10 @@ executors:
     docker:
       - image: circleci/node:10.15.3
     working_directory: ~/repo
+  deployer:
+    docker:
+      - image: buildpack-deps:trusty
+    working_directory: ~/repo
 
 jobs:
   build:
@@ -45,7 +49,7 @@ jobs:
       - run: npm run tsc
 
   deploy:
-    machine: true
+    executor: deployer
     steps:
       - checkout
       - attach_workspace:
