@@ -3,8 +3,6 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2.1
-orbs:
-  heroku: circleci/heroku@0.0.8
 executors:
   my-executor:
     docker:
@@ -47,11 +45,28 @@ jobs:
       - run: npm run tsc
 
   deploy:
-    executor: heroku/default
     steps:
       - checkout
-      - heroku/install
-      - heroku/deploy-via-git
+      - attach_workspace:
+        at: ~/repo
+      
+      - run:
+        name: Build the image
+        command: |
+        docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
+
+
+      - run:
+        name: Push to DockerHub
+        command: |
+        docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+        docker push romppane/bulletin-board:$CIRCLE_SHA1
+
+      - run:
+        name: Deploy to Heroku
+        command: |
+        docker login --username=$HEROKU_LOGIN --$HEROKU_API_KEY registery.heroku.com
+        docker tag romppane/bulletin-board:$CIRCLE_SHA1 registery.heroku.com/$HEROKU_APP_NAME/web
 
 workflows:
   btd:
@@ -64,8 +79,5 @@ workflows:
           requires:
             - test
       - deploy:
-          filters:
-            branches:
-              only: master
           requires:
             - compile
