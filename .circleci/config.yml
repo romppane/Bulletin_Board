@@ -74,7 +74,7 @@ jobs:
     executor: my-executor
     steps:
       - run: curl https://cli-assets.heroku.com/install.sh | sh
-      - run: heroku container:release web
+      - run: heroku container:release web -a bulletin-board-onboarding-api
 
 workflows:
   btd:
