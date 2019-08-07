@@ -58,7 +58,7 @@ jobs:
           name: Login to registery
           command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
       - run:
-          name: Deploy to Heroku
+          name: Tag image
           command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
       - run:
           name: Push to Heroku
@@ -68,7 +68,7 @@ jobs:
           command: curl https://cli-assets.heroku.com/install.sh | sh
       - run:
           name: Release the changes in Heroku
-          command: heroku container:release web -a bulletin-board-onboarding-api
+          command: heroku container:release web -a $HEROKU_APP_NAME
 
 workflows:
   btd:
