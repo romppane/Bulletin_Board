@@ -74,7 +74,9 @@ jobs:
     executor: my-executor
     steps:
       - run: curl https://cli-assets.heroku.com/install.sh | sh
-      - run: heroku login $HEROKU_API_KEY
+      - run: heroku login -i
+      - run: $HEROKU_LOGIN
+      - run: $HEROKU_API_KEY
       - run: heroku container:release web
 
 workflows:
