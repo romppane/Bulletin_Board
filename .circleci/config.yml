@@ -73,7 +73,7 @@ jobs:
   release:
     executor: my-executor
     steps:
-      - run: sudo snap install --classic heroku
+      - run: curl https://cli-assets.heroku.com/install.sh | sh
       - run: heroku login -u $HEROKU_LOGIN -p $HEROKU_API_KEY
       - run: heroku container:release web
 
