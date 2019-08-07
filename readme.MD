@@ -27,5 +27,3 @@ Your project should now be good to run.
 ```
 $ docker-compose up
 ```
-
-When ever you make a change in your code, run the command again in order to make it live!

@@ -9,6 +9,7 @@ services:
     image: bulletin-board
     depends_on:
       - database
+    command: sh -c "/wait && npm run dev"
     volumes:
       - './server:/app/server'
     environment:

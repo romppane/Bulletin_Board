@@ -3,12 +3,10 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2.1
-orbs:
-  heroku: circleci/heroku@0.0.8
 executors:
   my-executor:
     docker:
-      - image: circleci/node:10.15.3
+      - image: circleci/node:10.16.1
     working_directory: ~/repo
 
 jobs:
@@ -20,15 +18,18 @@ jobs:
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
-      # Install dependencies
       - run:
-          name: Install npm wee
+          name: Install npm
           command: npm install
+      - run:
+          name: Compile
+          command: npm run tsc
       - persist_to_workspace:
           root: ~/repo
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
+            - build
 
   test:
     executor: my-executor
@@ -38,20 +39,37 @@ jobs:
           at: ~/repo
       - run: npm test
 
-  compile:
+  deploy:
     executor: my-executor
     steps:
       - checkout
       - attach_workspace:
           at: ~/repo
-      - run: npm run tsc
-
-  deploy:
-    executor: heroku/default
-    steps:
-      - checkout
-      - heroku/install
-      - heroku/deploy-via-git
+      - setup_remote_docker
+      - run:
+          name: Build the image
+          command: docker build -t romppane/bulletin-board:$CIRCLE_SHA1 .
+      - run:
+          name: Login to Docker
+          command: docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Push to DockerHub
+          command: docker push romppane/bulletin-board:$CIRCLE_SHA1
+      - run:
+          name: Login to registery
+          command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
+          name: Tag image
+          command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
+      - run:
+          name: Push to Heroku
+          command: docker push registry.heroku.com/$HEROKU_APP_NAME/web
+      - run:
+          name: Download HerokuCLI
+          command: curl https://cli-assets.heroku.com/install.sh | sh
+      - run:
+          name: Release the changes in Heroku
+          command: heroku container:release web -a $HEROKU_APP_NAME
 
 workflows:
   btd:
@@ -60,12 +78,9 @@ workflows:
       - test:
           requires:
             - build
-      - compile:
-          requires:
-            - test
       - deploy:
           filters:
             branches:
               only: master
           requires:
-            - compile
+            - test
