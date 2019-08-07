@@ -87,6 +87,9 @@ workflows:
           requires:
             - test
       - deploy:
+          filters:
+            branches:
+              only: master
           requires:
             - compile
       - release:
