@@ -1,5 +1,4 @@
 .git
-build
 .env
 .vscode
 node_modules

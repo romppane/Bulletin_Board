@@ -18,10 +18,12 @@ jobs:
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
-      # Install dependencies
       - run:
-          name: Install npm wee
+          name: Install npm
           command: npm install
+      - run:
+          name: Compile
+          command: npm run tsc
       - persist_to_workspace:
           root: ~/repo
           key: dependency-cache-{{ checksum "package.json" }}
@@ -35,14 +37,6 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: npm test
-
-  compile:
-    executor: my-executor
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/repo
-      - run: npm run tsc
 
   deploy:
     executor: my-executor
@@ -67,14 +61,14 @@ jobs:
           name: Deploy to Heroku
           command: docker tag romppane/bulletin-board:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME/web
       - run:
-          name: Release on Heroku
+          name: Push to Heroku
           command: docker push registry.heroku.com/$HEROKU_APP_NAME/web
-
-  release:
-    executor: my-executor
-    steps:
-      - run: curl https://cli-assets.heroku.com/install.sh | sh
-      - run: heroku container:release web -a bulletin-board-onboarding-api
+      - run:
+          name: Download HerokuCLI
+          command: curl https://cli-assets.heroku.com/install.sh | sh
+      - run:
+          name: Release the changes in Heroku
+          command: heroku container:release web -a bulletin-board-onboarding-api
 
 workflows:
   btd:
@@ -83,15 +77,6 @@ workflows:
       - test:
           requires:
             - build
-      - compile:
+      - deploy:
           requires:
             - test
-      - deploy:
-          filters:
-            branches:
-              only: master
-          requires:
-            - compile
-      - release:
-          requires:
-            - deploy

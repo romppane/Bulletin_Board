@@ -9,8 +9,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run tsc
-
 EXPOSE 3000
 
 ## Waits for database connection to be ready for receiving connections
