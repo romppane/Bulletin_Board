@@ -15,4 +15,4 @@ services:
     environment:
       WAIT_HOSTS: database:3306
     ports:
-      - '3000:3000'
+      - '3001:3000'

@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import cors from 'cors';
 import { registerSchema } from 'class-validator';
 import { postPUTSchema, replyPUTSchema, requestParamSchema } from './middleware/validation';
 import { PostController } from './controllers/post-controller';
@@ -36,6 +37,7 @@ export class Server {
 
   start() {
     this.app.use(express.json());
+    this.app.use(cors());
     this.app.use(this.logger.incomingRequests());
     this.app.use(this.logger.successfulResponces());
     this.app.use(this.logger.errorResponces());
