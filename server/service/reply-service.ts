@@ -23,7 +23,7 @@ export class ReplyService {
   }
 
   findByPost(postId: number) {
-    return this.replyRepository.query('SELECT * FROM reply WHERE postId = ?', [postId]);
+    return this.replyRepository.find({ where: { postId: postId } });
   }
 
   findOne(id: number) {
