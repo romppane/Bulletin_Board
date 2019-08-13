@@ -20,3 +20,5 @@ $ npm install
 ```
 $ docker-compose up
 ```
+
+NOTE! When installing new dependencies, use the `--build` flag at the end of the command to update the image.
