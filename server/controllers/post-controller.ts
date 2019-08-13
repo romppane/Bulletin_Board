@@ -4,12 +4,14 @@ import { Request, Response, NextFunction, RequestHandler } from 'express-serve-s
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
 import { UserService } from '../service/user-service';
+import { CommentService } from '../service/comment-service';
 
 export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
   userService: UserService;
+  commentService: CommentService;
   validatePost: RequestHandler;
   validatePostPUT: RequestHandler;
   validateParams: RequestHandler;
@@ -18,6 +20,7 @@ export class PostController {
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
     this.userService = options.userService;
+    this.commentService = options.commentService;
     this.validatePost = options.validatePost;
     this.validatePostPUT = options.validatePostPUT;
     this.validateParams = options.validateParams;
@@ -27,6 +30,7 @@ export class PostController {
   initializeRoutes() {
     this.router.get('/', this.readAll);
     this.router.get('/:id', this.validateParams, this.readOne);
+    this.router.get('/:id/comments', this.validateParams, this.readPostComments);
     this.router.post('/', this.validatePost, this.create);
     this.router.delete('/:id', this.validateParams, this.delete);
     this.router.put('/:id', this.validateParams, this.validatePostPUT, this.update);
@@ -49,6 +53,15 @@ export class PostController {
       } else {
         next(this.notFound);
       }
+    } catch (error) {
+      next(Boom.badImplementation());
+    }
+  };
+
+  readPostComments = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const comments = await this.commentService.findByPost(req.params.id);
+      res.status(200).send(comments);
     } catch (error) {
       next(Boom.badImplementation());
     }

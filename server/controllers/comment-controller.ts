@@ -2,22 +2,22 @@ import express from 'express';
 import Boom from '@hapi/boom';
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
-import { ReplyService } from '../service/reply-service';
+import { CommentService } from '../service/comment-service';
 
-export class ReplyController {
+export class CommentController {
   notFound: Boom;
   router: express.Router;
-  replyService: ReplyService;
-  validateReply: RequestHandler;
-  validateReplyPUT: RequestHandler;
+  commentService: CommentService;
+  validateComment: RequestHandler;
+  validateCommentPUT: RequestHandler;
   validateParams: RequestHandler;
 
   constructor(options: Dependencies) {
     this.notFound = Boom.notFound("Comment doesn't exist");
     this.router = express.Router();
-    this.replyService = options.replyService;
-    this.validateReply = options.validateReply;
-    this.validateReplyPUT = options.validateReplyPUT;
+    this.commentService = options.commentService;
+    this.validateComment = options.validateComment;
+    this.validateCommentPUT = options.validateCommentPUT;
     this.validateParams = options.validateParams;
     this.initializeRoutes();
   }
@@ -25,15 +25,15 @@ export class ReplyController {
   initializeRoutes() {
     this.router.get('/', this.readAll);
     this.router.get('/:id', this.validateParams, this.readOne);
-    this.router.post('/', this.validateReply, this.create);
+    this.router.post('/', this.validateComment, this.create);
     this.router.delete('/:id', this.validateParams, this.delete);
-    this.router.put('/:id', this.validateParams, this.validateReplyPUT, this.update);
+    this.router.put('/:id', this.validateParams, this.validateCommentPUT, this.update);
   }
 
   readAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const replies = await this.replyService.find();
-      res.status(200).send(replies);
+      const comments = await this.commentService.find();
+      res.status(200).send(comments);
     } catch (error) {
       next(Boom.badImplementation());
     }
@@ -41,9 +41,9 @@ export class ReplyController {
 
   readOne = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const reply = await this.replyService.findOne(req.params.id);
-      if (reply) {
-        res.status(200).send(reply);
+      const comment = await this.commentService.findOne(req.params.id);
+      if (comment) {
+        res.status(200).send(comment);
       } else {
         next(this.notFound);
       }
@@ -55,13 +55,13 @@ export class ReplyController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const reply = await this.replyService.save(
+      const comment = await this.commentService.save(
         req.body.userId,
         req.body.postId,
         req.body.message
       );
-      if (reply) {
-        res.status(201).send(reply);
+      if (comment) {
+        res.status(201).send(comment);
       } else {
         next(Boom.notFound());
       }
@@ -72,7 +72,7 @@ export class ReplyController {
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const deleted = await this.replyService.delete(req.params.id);
+      const deleted = await this.commentService.delete(req.params.id);
       if (deleted.affected) {
         res.sendStatus(204);
       } else {
@@ -85,7 +85,7 @@ export class ReplyController {
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await this.replyService.update(req.params.id, req.body);
+      const updated = await this.commentService.update(req.params.id, req.body);
       if (updated) {
         res.status(200).send(updated);
       } else {

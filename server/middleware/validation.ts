@@ -3,7 +3,7 @@ import { validate, ValidationSchema } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 import { Post } from '../entities/post';
 import Boom from '@hapi/boom';
-import { Reply } from '../entities/reply';
+import { Comment } from '../entities/comment';
 // As the validation will be put to use on all the classes the structure of this file will need some refactoring.
 
 const validationError = Boom.badRequest('Validation error');
@@ -58,8 +58,8 @@ export const postPUTSchema: ValidationSchema = {
   }
 };
 
-export const replyPUTSchema: ValidationSchema = {
-  name: 'replyPUTSchema',
+export const commentPUTSchema: ValidationSchema = {
+  name: 'commentPUTSchema',
   properties: {
     message: [
       {
@@ -105,16 +105,16 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
   });
 };
 
-export const validateReply = (req: Request, res: Response, next: NextFunction) => {
+export const validateComment = (req: Request, res: Response, next: NextFunction) => {
   // Remove any extra fields and turn the plain object in to instance of a Post
-  const reply = plainToClass(Reply, req.body, { excludeExtraneousValues: true });
+  const comment = plainToClass(Comment, req.body, { excludeExtraneousValues: true });
   // See if the newly made Post is valid
-  validate(reply).then(errors => {
+  validate(comment).then(errors => {
     // errors is an array of validation errors
     if (errors.length > 0) {
       next(validationError);
     } else {
-      req.body = reply;
+      req.body = comment;
       next();
     }
   });
@@ -146,16 +146,16 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
   });
 };
 
-interface ValidReplyBody {
+interface ValidCommentBody {
   message: string;
 }
 
-export const validateReplyPUT = (req: Request, res: Response, next: NextFunction) => {
-  validate('replyPUTSchema', req.body).then(errors => {
+export const validateCommentPUT = (req: Request, res: Response, next: NextFunction) => {
+  validate('commentPUTSchema', req.body).then(errors => {
     if (errors.length > 0) {
       next(validationError);
     } else {
-      const valid: ValidReplyBody = {
+      const valid: ValidCommentBody = {
         message: req.body.message
       };
       req.body = valid;
