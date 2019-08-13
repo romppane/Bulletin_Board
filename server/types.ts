@@ -3,13 +3,13 @@ import { Repository } from 'typeorm';
 import { Post } from './entities/post';
 import { User } from './entities/user';
 import { UserController } from './controllers/user-controller';
-import { Reply } from './entities/reply';
-import { ReplyController } from './controllers/reply-controller';
+import { Comment } from './entities/comment';
+import { CommentController } from './controllers/comment-controller';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
 import { ErrorRequestHandler, RequestHandler } from 'express-serve-static-core';
 import { Logger } from './middleware/logger';
-import { ReplyService } from './service/reply-service';
+import { CommentService } from './service/comment-service';
 import { Environment } from './environment';
 
 export type Dependencies = {
@@ -19,15 +19,15 @@ export type Dependencies = {
   userRouter: UserController;
   userRepository: Repository<User>;
   userService: UserService;
-  replyRouter: ReplyController;
-  replyRepository: Repository<Reply>;
-  replyService: ReplyService;
+  commentRouter: CommentController;
+  commentRepository: Repository<Comment>;
+  commentService: CommentService;
   errorHandler: ErrorRequestHandler;
   validatePost: RequestHandler;
   validatePostPUT: RequestHandler;
   validateParams: RequestHandler;
-  validateReply: RequestHandler;
-  validateReplyPUT: RequestHandler;
+  validateComment: RequestHandler;
+  validateCommentPUT: RequestHandler;
   logger: Logger;
   Env: Environment;
 };

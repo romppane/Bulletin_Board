@@ -1,43 +1,43 @@
-import { Reply } from '../entities/reply';
+import { Comment } from '../entities/comment';
 import { Dependencies } from '../types';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Repository } from 'typeorm';
 import { Post } from '../entities/post';
 import { User } from '../entities/user';
 
-export class ReplyService {
+export class CommentService {
   // Can't use Repository<Entity>, needs specific?
   // Should the service know all the repositories or get access to services via parameters from controllers?
-  replyRepository: Repository<Reply>;
+  commentRepository: Repository<Comment>;
   postRepository: Repository<Post>;
   userRepository: Repository<User>;
 
   constructor(options: Dependencies) {
-    this.replyRepository = options.replyRepository;
+    this.commentRepository = options.commentRepository;
     this.postRepository = options.postRepository;
     this.userRepository = options.userRepository;
   }
 
   find() {
-    return this.replyRepository.find();
+    return this.commentRepository.find();
   }
 
   findByPost(postId: number) {
-    return this.replyRepository.find({ where: { postId: postId } });
+    return this.commentRepository.find({ where: { postId: postId } });
   }
 
   findOne(id: number) {
-    return this.replyRepository.findOne(id);
+    return this.commentRepository.findOne(id);
   }
 
-  // Fetch user and post first, return the saved reply
+  // Fetch user and post first, return the saved comment
   async save(userId: number, postId: number, message: string) {
     try {
       const user = await this.userRepository.findOne(userId);
       const post = await this.postRepository.findOne(postId);
       if (user && post) {
-        const reply: Reply = new Reply(user, post, message);
-        return this.replyRepository.save(reply);
+        const comment: Comment = new Comment(user, post, message);
+        return this.commentRepository.save(comment);
       } else {
         return undefined;
       }
@@ -47,12 +47,12 @@ export class ReplyService {
   }
 
   delete(id: number) {
-    return this.replyRepository.delete(id);
+    return this.commentRepository.delete(id);
   }
 
-  update(id: number, obj: QueryDeepPartialEntity<Reply>) {
-    return this.replyRepository.update(id, obj).then(() => {
-      return this.replyRepository.findOne(id);
+  update(id: number, obj: QueryDeepPartialEntity<Comment>) {
+    return this.commentRepository.update(id, obj).then(() => {
+      return this.commentRepository.findOne(id);
     });
   }
 }

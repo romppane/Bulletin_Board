@@ -9,6 +9,9 @@ services:
     image: bulletin-board
     depends_on:
       - database
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: sh -c "/wait && npm run dev"
     volumes:
       - './server:/app/server'

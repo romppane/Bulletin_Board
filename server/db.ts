@@ -3,7 +3,7 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { Environment } from './environment';
 import { User } from './entities/user';
 import { Post } from './entities/post';
-import { Reply } from './entities/reply';
+import { Comment } from './entities/comment';
 
 export const connectDB = (Env: Environment) => {
   const db: MysqlConnectionOptions = {
@@ -12,7 +12,7 @@ export const connectDB = (Env: Environment) => {
     database: Env.DB_NAME,
     synchronize: Env.DB_SYNCHRONIZE,
     logging: Env.DB_LOGGING,
-    entities: [User, Post, Reply]
+    entities: [User, Post, Comment]
   };
   return createConnection(db);
 };

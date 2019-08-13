@@ -4,14 +4,14 @@ import { Request, Response, NextFunction, RequestHandler } from 'express-serve-s
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
 import { UserService } from '../service/user-service';
-import { ReplyService } from '../service/reply-service';
+import { CommentService } from '../service/comment-service';
 
 export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
   userService: UserService;
-  replyService: ReplyService;
+  commentService: CommentService;
   validatePost: RequestHandler;
   validatePostPUT: RequestHandler;
   validateParams: RequestHandler;
@@ -20,7 +20,7 @@ export class PostController {
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
     this.userService = options.userService;
-    this.replyService = options.replyService;
+    this.commentService = options.commentService;
     this.validatePost = options.validatePost;
     this.validatePostPUT = options.validatePostPUT;
     this.validateParams = options.validateParams;
@@ -60,10 +60,9 @@ export class PostController {
 
   readPostComments = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const replies = await this.replyService.findByPost(req.params.id);
-      res.status(200).send(replies);
+      const comments = await this.commentService.findByPost(req.params.id);
+      res.status(200).send(comments);
     } catch (error) {
-      console.log(error);
       next(Boom.badImplementation());
     }
   };

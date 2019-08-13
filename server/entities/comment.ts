@@ -5,11 +5,11 @@ import { User } from './user';
 import { Post } from './post';
 
 @Entity()
-export class Reply {
+export class Comment {
   @PrimaryGeneratedColumn()
   private id!: number;
 
-  @ManyToOne(type => User, user => user.replies)
+  @ManyToOne(type => User, user => user.comments)
   @JoinColumn({ name: 'userId' })
   private user!: User;
 
@@ -19,7 +19,7 @@ export class Reply {
   @Min(1)
   private userId!: number;
 
-  @ManyToOne(type => Post, post => post.replies)
+  @ManyToOne(type => Post, post => post.comments)
   @JoinColumn({ name: 'postId' })
   private post: Post;
 

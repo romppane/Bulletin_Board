@@ -4,19 +4,19 @@ import { Post } from './entities/post';
 import { Server } from './server';
 import { User } from './entities/user';
 import { UserController } from './controllers/user-controller';
-import { Reply } from './entities/reply';
-import { ReplyController } from './controllers/reply-controller';
+import { Comment } from './entities/comment';
+import { CommentController } from './controllers/comment-controller';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
 import { handleErrors } from './middleware/errors';
 import { Logger } from './middleware/logger';
-import { ReplyService } from './service/reply-service';
+import { CommentService } from './service/comment-service';
 import {
   validatePost,
   validatePostPUT,
   validateParams,
-  validateReply,
-  validateReplyPUT
+  validateComment,
+  validateCommentPUT
 } from './middleware/validation';
 import { connectDB } from './db';
 import { Environment } from './environment';
@@ -35,14 +35,14 @@ export function configureContainer(Env: Environment) {
       userRouter: awilix.asClass(UserController),
       userRepository: awilix.asValue(connection.getRepository(User)),
       userService: awilix.asClass(UserService),
-      replyRouter: awilix.asClass(ReplyController),
-      replyRepository: awilix.asValue(connection.getRepository(Reply)),
-      replyService: awilix.asClass(ReplyService),
+      commentRouter: awilix.asClass(CommentController),
+      commentRepository: awilix.asValue(connection.getRepository(Comment)),
+      commentService: awilix.asClass(CommentService),
       validatePost: awilix.asValue(validatePost),
       validatePostPUT: awilix.asValue(validatePostPUT),
       validateParams: awilix.asValue(validateParams),
-      validateReply: awilix.asValue(validateReply),
-      validateReplyPUT: awilix.asValue(validateReplyPUT),
+      validateComment: awilix.asValue(validateComment),
+      validateCommentPUT: awilix.asValue(validateCommentPUT),
       logger: awilix.asClass(Logger),
       Env: awilix.asValue(Env),
       app: awilix.asClass(Server)
