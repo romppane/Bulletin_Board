@@ -13,12 +13,12 @@ const validationError = Boom.badRequest('Validation error');
 export const postPUTSchema: ValidationSchema = {
   name: 'postPUTSchema',
   properties: {
-    category: [
+    header: [
       {
         type: 'conditionalValidation',
         constraints: [
           (object: any, value: any) => {
-            return object['category'] !== null && object['category'] !== undefined;
+            return object['header'] !== null && object['header'] !== undefined;
           }
         ]
       },
@@ -122,7 +122,7 @@ export const validateComment = (req: Request, res: Response, next: NextFunction)
 
 interface ValidPostBody {
   message?: string;
-  category?: string;
+  header?: string;
 }
 
 // Validating a PUT request can not be done the same way as Post as PUT requires only half the data
@@ -137,8 +137,8 @@ export const validatePostPUT = (req: Request, res: Response, next: NextFunction)
       if (req.body.message) {
         fields.message = req.body.message;
       }
-      if (req.body.category) {
-        fields.category = req.body.category;
+      if (req.body.header) {
+        fields.header = req.body.header;
       }
       req.body = fields;
       next();

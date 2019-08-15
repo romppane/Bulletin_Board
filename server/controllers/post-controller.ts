@@ -71,7 +71,7 @@ export class PostController {
     try {
       const post = await this.postService.save(
         req.body.ownerId,
-        req.body.category,
+        req.body.header,
         req.body.message,
         this.userService
       );
