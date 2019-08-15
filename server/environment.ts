@@ -1,6 +1,5 @@
 import { Matches, MinLength, IsBoolean, validate, IsPort } from 'class-validator';
 import { Expose, Transform, plainToClass } from 'class-transformer';
-import dotenv from 'dotenv';
 
 export class Environment {
   @Matches(new RegExp('mysql://\\w+:\\w+@.+:\\d+/\\w+', 'g'))
@@ -41,8 +40,6 @@ export class Environment {
 }
 
 export const validateEnv = () => {
-  // Load .env if exists
-  dotenv.config();
   // Make Environment type object of the current env variables
   const Env = plainToClass(Environment, {
     DB_URL: process.env.DB_URL,

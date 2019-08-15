@@ -19,6 +19,9 @@ export class Post {
   @Min(1)
   private ownerId!: number;
 
+  @Column('text')
+  private category: Categories;
+
   @Column()
   @Expose()
   @IsNotEmpty()
@@ -37,10 +40,17 @@ export class Post {
   @OneToMany(() => Reply, reply => reply.getPost)
   replies!: Reply[];
 
-  public constructor(user: User, header: string, message: string, ownerId?: number) {
+  public constructor(
+    user: User,
+    header: string,
+    message: string,
+    category: Categories,
+    ownerId?: number
+  ) {
     this.user = user;
     this.header = header;
     this.message = message;
+    this.category = category;
   }
 
   public getid(): number {
@@ -78,4 +88,9 @@ export class Post {
   public getMessage(): string {
     return this.message;
   }
+}
+
+export enum Categories {
+  Default = 'default',
+  Other = 'other'
 }

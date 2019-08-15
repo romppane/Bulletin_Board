@@ -3,13 +3,11 @@ import Boom from '@hapi/boom';
 import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
-import { UserService } from '../service/user-service';
 
 export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
-  userService: UserService;
   validatePost: RequestHandler;
   validatePostPUT: RequestHandler;
   validateParams: RequestHandler;
@@ -17,7 +15,6 @@ export class PostController {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
-    this.userService = options.userService;
     this.validatePost = options.validatePost;
     this.validatePostPUT = options.validatePostPUT;
     this.validateParams = options.validateParams;
@@ -58,9 +55,9 @@ export class PostController {
     try {
       const post = await this.postService.save(
         req.body.ownerId,
+        req.body.category,
         req.body.header,
-        req.body.message,
-        this.userService
+        req.body.message
       );
       if (post) {
         res.status(201).send(post);
