@@ -75,10 +75,10 @@ export class PostController {
       if (post) {
         res.status(201).send(post);
       } else {
+        // Not valid thing!
         next(Boom.notFound("User doesn't exist"));
       }
     } catch (error) {
-      console.log(error);
       next(Boom.badImplementation());
     }
   };

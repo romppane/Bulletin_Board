@@ -95,7 +95,6 @@ export const validatePost = (req: Request, res: Response, next: NextFunction) =>
   const newpost = plainToClass(Post, req.body, { excludeExtraneousValues: true });
   // See if the newly made Post is valid
   validate(newpost).then(errors => {
-    console.log(errors);
     // errors is an array of validation errors
     if (errors.length > 0) {
       next(validationError);

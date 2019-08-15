@@ -4,6 +4,11 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMan
 import { User } from './user';
 import { Comment } from './comment';
 
+export enum Categories {
+  Default = 'default',
+  Other = 'other'
+}
+
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
@@ -19,7 +24,7 @@ export class Post {
   @Min(1)
   private ownerId!: number;
 
-  @Column('text')
+  @Column('enum', { enum: Categories })
   @Expose()
   private category: Categories;
 
@@ -89,9 +94,4 @@ export class Post {
   public getMessage(): string {
     return this.message;
   }
-}
-
-export enum Categories {
-  Default = 'default',
-  Other = 'other'
 }
