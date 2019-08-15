@@ -3,13 +3,19 @@ import Boom from '@hapi/boom';
 import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
+<<<<<<< HEAD
 import { CommentService } from '../service/comment-service';
+=======
+>>>>>>> 286958d31fb3be37413b3edca246bfa334a690e4
 
 export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
+<<<<<<< HEAD
   commentService: CommentService;
+=======
+>>>>>>> 286958d31fb3be37413b3edca246bfa334a690e4
   validatePost: RequestHandler;
   validatePostPUT: RequestHandler;
   validateParams: RequestHandler;
@@ -17,7 +23,10 @@ export class PostController {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
+<<<<<<< HEAD
     this.commentService = options.commentService;
+=======
+>>>>>>> 286958d31fb3be37413b3edca246bfa334a690e4
     this.validatePost = options.validatePost;
     this.validatePostPUT = options.validatePostPUT;
     this.validateParams = options.validateParams;
