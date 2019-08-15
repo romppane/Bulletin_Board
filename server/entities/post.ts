@@ -1,4 +1,4 @@
-import { Length, IsNotEmpty, IsInt, Min } from 'class-validator';
+import { Length, IsNotEmpty, IsInt, Min, IsEnum } from 'class-validator';
 import { Expose } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { User } from './user';
@@ -24,7 +24,8 @@ export class Post {
   @Min(1)
   private ownerId!: number;
 
-  @Column('enum', { enum: Categories })
+  @Column('enum', { enum: Categories, default: Categories.Default })
+  @IsEnum(Categories)
   @Expose()
   private category: Categories;
 
