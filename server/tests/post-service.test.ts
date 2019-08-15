@@ -10,7 +10,7 @@ const postRepository = <Repository<Post>>mock(Repository);
 const repoInstance = instance(postRepository);
 const service = new PostService(<Dependencies>{ postRepository: repoInstance });
 const user = new User('test');
-const testPost = new Post(user, 'category', 'message', 1);
+const testPost = new Post(user, 'header', 'message', 1);
 
 const userRepository = <Repository<User>>mock(Repository);
 const userRepoInstance = instance(userRepository);
@@ -117,7 +117,7 @@ test('Save a new post', async () => {
   when(postRepository.save(deepEqual(testPost))).thenResolve(testPost);
   when(userRepository.findOne(1)).thenResolve(user);
 
-  const result = await service.save(1, 'category', 'message', userService);
+  const result = await service.save(1, 'header', 'message', userService);
   expect(result).toStrictEqual(testPost);
 
   verify(postRepository.save(deepEqual(testPost))).called();
@@ -129,7 +129,7 @@ test('Fail saving post because of no user', async () => {
 
   when(userRepository.findOne(1)).thenResolve(undefined);
 
-  const result = await service.save(1, 'category', 'message', userService);
+  const result = await service.save(1, 'header', 'message', userService);
   expect(result).toBe(undefined);
 
   verify(userServiceSpy.findOne(1)).called();

@@ -9,7 +9,7 @@ export class Post {
   @PrimaryGeneratedColumn()
   private id!: number;
 
-  @ManyToOne(type => User, user => user.posts)
+  @ManyToOne(() => User, user => user.posts)
   @JoinColumn({ name: 'ownerId' })
   private user: User;
 
@@ -23,7 +23,7 @@ export class Post {
   @Expose()
   @IsNotEmpty()
   @Length(1, 50)
-  private category: string;
+  private header: string;
 
   @Column({ default: 0 })
   private views!: number;
@@ -34,12 +34,12 @@ export class Post {
   @Length(1, 1000)
   private message: string;
 
-  @OneToMany(type => Reply, reply => reply.getPost)
+  @OneToMany(() => Reply, reply => reply.getPost)
   replies!: Reply[];
 
-  public constructor(user: User, category: string, message: string, ownerId?: number) {
+  public constructor(user: User, header: string, message: string, ownerId?: number) {
     this.user = user;
-    this.category = category;
+    this.header = header;
     this.message = message;
   }
 
@@ -63,12 +63,12 @@ export class Post {
     return this.views;
   }
 
-  public setCategory(category: string) {
-    this.category = category;
+  public setHeader(header: string) {
+    this.header = header;
   }
 
-  public getCategory(): string {
-    return this.category;
+  public getHeader(): string {
+    return this.header;
   }
 
   public setMessage(message: string) {

@@ -19,7 +19,7 @@ const service = new ReplyService(<Dependencies>{
   userRepository: userRepoInstance
 });
 const user = new User('test');
-const testPost = new Post(user, 'category', 'message', 1);
+const testPost = new Post(user, 'header', 'message', 1);
 const testReply = new Reply(user, testPost, 'message');
 
 beforeEach(() => {

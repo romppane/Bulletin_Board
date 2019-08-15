@@ -22,12 +22,12 @@ export class PostService {
   }
 
   // Should this get access to service from upperlayer or have access to user repo on its own?
-  async save(ownerId: number, category: string, message: string, userService: UserService) {
+  async save(ownerId: number, header: string, message: string, userService: UserService) {
     try {
       const temp = await userService.findOne(ownerId);
       const user = plainToClass(User, temp);
       if (user) {
-        const post: Post = new Post(user, category, message);
+        const post: Post = new Post(user, header, message);
         return await this.repository.save(post);
       } else {
         return undefined;
