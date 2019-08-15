@@ -33,7 +33,7 @@ export class Post {
   @Expose()
   @IsNotEmpty()
   @Length(1, 50)
-  private tittle: string;
+  private title: string;
 
   @Column({ default: 0 })
   private views!: number;
@@ -49,13 +49,13 @@ export class Post {
 
   public constructor(
     user: User,
-    tittle: string,
+    title: string,
     message: string,
     category: Categories,
     ownerId?: number
   ) {
     this.user = user;
-    this.tittle = tittle;
+    this.title = title;
     this.message = message;
     this.category = category;
   }
@@ -80,12 +80,12 @@ export class Post {
     return this.views;
   }
 
-  public setTittle(tittle: string) {
-    this.tittle = tittle;
+  public setTitle(title: string) {
+    this.title = title;
   }
 
-  public getTittle(): string {
-    return this.tittle;
+  public getTitle(): string {
+    return this.title;
   }
 
   public setMessage(message: string) {

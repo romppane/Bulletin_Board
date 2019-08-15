@@ -68,7 +68,7 @@ export class PostController {
     try {
       const post = await this.postService.save(
         req.body.ownerId,
-        req.body.tittle,
+        req.body.title,
         req.body.message,
         req.body.category
       );
@@ -96,7 +96,7 @@ export class PostController {
     }
   };
 
-  // Update post, change the tittle and/or the message
+  // Update post, change the title and/or the message
   update = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const updated = await this.postService.update(req.params.id, req.body);

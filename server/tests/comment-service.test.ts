@@ -19,7 +19,7 @@ const service = new CommentService(<Dependencies>{
   userRepository: userRepoInstance
 });
 const user = new User('test');
-const testPost = new Post(user, 'tittle', 'message', Categories.Default, 1);
+const testPost = new Post(user, 'title', 'message', Categories.Default, 1);
 const testComment = new Comment(user, testPost, 'message');
 
 beforeEach(() => {

@@ -14,7 +14,7 @@ const service = new PostService(<Dependencies>{
   userRepository: userRepoInstance
 });
 const user = new User('test');
-const testPost = new Post(user, 'tittle', 'message', Categories.Default, 1);
+const testPost = new Post(user, 'title', 'message', Categories.Default, 1);
 
 beforeEach(() => {
   reset(postRepository);
@@ -116,7 +116,7 @@ test('Save a new post', async () => {
   when(postRepository.save(deepEqual(testPost))).thenResolve(testPost);
   when(userRepository.findOne(1)).thenResolve(user);
 
-  const result = await service.save(1, 'tittle', 'message', Categories.Default);
+  const result = await service.save(1, 'title', 'message', Categories.Default);
   expect(result).toStrictEqual(testPost);
 
   verify(postRepository.save(deepEqual(testPost))).called();
@@ -128,7 +128,7 @@ test('Fail saving post because of no user', async () => {
 
   when(userRepository.findOne(1)).thenResolve(undefined);
 
-  const result = await service.save(1, 'tittle', 'message', Categories.Default);
+  const result = await service.save(1, 'title', 'message', Categories.Default);
   expect(result).toBe(undefined);
 
   verify(userRepository.findOne(1)).called();

@@ -21,12 +21,12 @@ export class PostService {
     return this.repository.findOne(id);
   }
 
-  async save(ownerId: number, tittle: string, message: string, category: Categories) {
+  async save(ownerId: number, title: string, message: string, category: Categories) {
     try {
       const temp = await this.userRepository.findOne(ownerId);
       const user = plainToClass(User, temp);
       if (user) {
-        const post: Post = new Post(user, tittle, message, category);
+        const post: Post = new Post(user, title, message, category);
         return await this.repository.save(post);
       } else {
         return undefined;
