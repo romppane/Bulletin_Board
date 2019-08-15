@@ -20,13 +20,14 @@ export class Post {
   private ownerId!: number;
 
   @Column('text')
+  @Expose()
   private category: Categories;
 
   @Column()
   @Expose()
   @IsNotEmpty()
   @Length(1, 50)
-  private header: string;
+  private tittle: string;
 
   @Column({ default: 0 })
   private views!: number;
@@ -42,13 +43,13 @@ export class Post {
 
   public constructor(
     user: User,
-    header: string,
+    tittle: string,
     message: string,
     category: Categories,
     ownerId?: number
   ) {
     this.user = user;
-    this.header = header;
+    this.tittle = tittle;
     this.message = message;
     this.category = category;
   }
@@ -73,12 +74,12 @@ export class Post {
     return this.views;
   }
 
-  public setHeader(header: string) {
-    this.header = header;
+  public setTittle(tittle: string) {
+    this.tittle = tittle;
   }
 
-  public getHeader(): string {
-    return this.header;
+  public getTittle(): string {
+    return this.tittle;
   }
 
   public setMessage(message: string) {

@@ -68,9 +68,9 @@ export class PostController {
     try {
       const post = await this.postService.save(
         req.body.ownerId,
-        req.body.category,
-        req.body.header,
-        req.body.message
+        req.body.tittle,
+        req.body.message,
+        req.body.category
       );
       if (post) {
         res.status(201).send(post);
@@ -78,6 +78,7 @@ export class PostController {
         next(Boom.notFound("User doesn't exist"));
       }
     } catch (error) {
+      console.log(error);
       next(Boom.badImplementation());
     }
   };
