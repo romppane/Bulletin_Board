@@ -61,24 +61,4 @@ export class Comment {
   public getPost(): Post {
     return this.post;
   }
-
-  public getId(): number {
-    return this.id;
-  }
-
-  public getUser_id(): number {
-    return this.userId;
-  }
-
-  public getPost_id(): number {
-    return this.postId;
-  }
-
-  public setMessage(message: string) {
-    this.message = message;
-  }
-
-  public getMessage(): string {
-    return this.message;
-  }
 }

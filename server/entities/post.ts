@@ -75,39 +75,11 @@ export class Post {
     this.category = category;
   }
 
-  public getid(): number {
-    return this.id;
-  }
-
   public getOwner(): User {
     return this.user;
   }
 
-  public getOwnerId(): number {
-    return this.ownerId;
-  }
-
   public addView() {
     this.views += 1;
-  }
-
-  public getViews(): number {
-    return this.views;
-  }
-
-  public setTitle(title: string) {
-    this.title = title;
-  }
-
-  public getTitle(): string {
-    return this.title;
-  }
-
-  public setMessage(message: string) {
-    this.message = message;
-  }
-
-  public getMessage(): string {
-    return this.message;
   }
 }
