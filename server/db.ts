@@ -7,7 +7,6 @@ import { Comment } from './entities/comment';
 import { seed1565945881563 } from '../1565945881563-seed';
 
 export const connectDB = (Env: Environment) => {
-  console.log();
   const db: MysqlConnectionOptions = {
     type: 'mariadb',
     url: Env.DB_URL,
