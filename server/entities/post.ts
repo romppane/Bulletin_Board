@@ -1,6 +1,15 @@
 import { Length, IsNotEmpty, IsInt, Min, IsEnum } from 'class-validator';
 import { Expose } from 'class-transformer';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { User } from './user';
 import { Comment } from './comment';
 
@@ -46,6 +55,12 @@ export class Post {
 
   @OneToMany(() => Comment, comment => comment.getPost)
   comments!: Comment[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  private createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  private updatedAt!: Date;
 
   public constructor(
     user: User,

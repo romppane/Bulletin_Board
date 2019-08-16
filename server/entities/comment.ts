@@ -1,4 +1,12 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { IsInt, MaxLength, Min } from 'class-validator';
 import { Expose } from 'class-transformer';
 import { User } from './user';
@@ -33,6 +41,12 @@ export class Comment {
   @Expose()
   @MaxLength(500)
   private message: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  private createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  private updatedAt!: Date;
 
   public constructor(user: User, post: Post, message: string, userId?: number, postId?: number) {
     this.user = user;
