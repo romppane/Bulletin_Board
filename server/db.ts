@@ -4,7 +4,7 @@ import { Environment } from './environment';
 import { User } from './entities/user';
 import { Post } from './entities/post';
 import { Comment } from './entities/comment';
-import { UserSeed1565945881563 } from '../1565945881563-seed';
+import { UserSeed1565945881563 } from '../UserSeed1565945881563';
 
 export const connectDB = (Env: Environment) => {
   const db: MysqlConnectionOptions = {
