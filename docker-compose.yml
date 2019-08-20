@@ -12,6 +12,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    command: sh -c "/wait && npm run dev"
     volumes:
       - './server:/app/server'
     environment:
