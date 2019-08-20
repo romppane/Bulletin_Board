@@ -20,15 +20,7 @@ export class User {
     this.avatar = avatar;
   }
 
-  public getId(): number {
-    return this.id;
-  }
-
   public setAvatar(avatar: string) {
     this.avatar = avatar;
-  }
-
-  public getAvatar(): string {
-    return this.avatar;
   }
 }

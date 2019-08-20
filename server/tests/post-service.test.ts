@@ -1,21 +1,20 @@
-import { mock, instance, when, verify, deepEqual, spy, reset } from 'ts-mockito';
+import { mock, instance, when, verify, deepEqual, reset } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
-import { Post } from '../entities/post';
+import { Post, Categories } from '../entities/post';
 import { PostService } from '../service/post-service';
 import { User } from '../entities/user';
-import { UserService } from '../service/user-service';
 
 const postRepository = <Repository<Post>>mock(Repository);
 const repoInstance = instance(postRepository);
-const service = new PostService(<Dependencies>{ postRepository: repoInstance });
-const user = new User('test');
-const testPost = new Post(user, 'category', 'message', 1);
-
 const userRepository = <Repository<User>>mock(Repository);
 const userRepoInstance = instance(userRepository);
-const userService = new UserService(<Dependencies>{ userRepository: userRepoInstance });
-const userServiceSpy = spy(userService);
+const service = new PostService(<Dependencies>{
+  postRepository: repoInstance,
+  userRepository: userRepoInstance
+});
+const user = new User('test');
+const testPost = new Post(user, 'title', 'message', Categories.Default, 1);
 
 beforeEach(() => {
   reset(postRepository);
@@ -117,11 +116,11 @@ test('Save a new post', async () => {
   when(postRepository.save(deepEqual(testPost))).thenResolve(testPost);
   when(userRepository.findOne(1)).thenResolve(user);
 
-  const result = await service.save(1, 'category', 'message', userService);
+  const result = await service.save(1, 'title', 'message', Categories.Default);
   expect(result).toStrictEqual(testPost);
 
   verify(postRepository.save(deepEqual(testPost))).called();
-  verify(userServiceSpy.findOne(1)).called();
+  verify(userRepository.findOne(1)).called();
 });
 
 test('Fail saving post because of no user', async () => {
@@ -129,8 +128,8 @@ test('Fail saving post because of no user', async () => {
 
   when(userRepository.findOne(1)).thenResolve(undefined);
 
-  const result = await service.save(1, 'category', 'message', userService);
+  const result = await service.save(1, 'title', 'message', Categories.Default);
   expect(result).toBe(undefined);
 
-  verify(userServiceSpy.findOne(1)).called();
+  verify(userRepository.findOne(1)).called();
 });

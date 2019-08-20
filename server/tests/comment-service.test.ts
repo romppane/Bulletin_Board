@@ -1,7 +1,7 @@
 import { mock, instance, when, verify, deepEqual, reset } from 'ts-mockito';
 import { Dependencies } from '../types';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
-import { Post } from '../entities/post';
+import { Post, Categories } from '../entities/post';
 import { Comment } from '../entities/comment';
 import { CommentService } from '../service/comment-service';
 import { User } from '../entities/user';
@@ -19,7 +19,7 @@ const service = new CommentService(<Dependencies>{
   userRepository: userRepoInstance
 });
 const user = new User('test');
-const testPost = new Post(user, 'category', 'message', 1);
+const testPost = new Post(user, 'title', 'message', Categories.Default, 1);
 const testComment = new Comment(user, testPost, 'message');
 
 beforeEach(() => {

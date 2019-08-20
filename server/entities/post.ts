@@ -1,15 +1,29 @@
-import { Length, IsNotEmpty, IsInt, Min } from 'class-validator';
+import { Length, IsNotEmpty, IsInt, Min, IsEnum } from 'class-validator';
 import { Expose } from 'class-transformer';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { User } from './user';
 import { Comment } from './comment';
+
+export enum Categories {
+  Default = 'default',
+  Other = 'other'
+}
 
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
   private id!: number;
 
-  @ManyToOne(type => User, user => user.posts)
+  @ManyToOne(() => User, user => user.posts)
   @JoinColumn({ name: 'ownerId' })
   private user: User;
 
@@ -19,11 +33,16 @@ export class Post {
   @Min(1)
   private ownerId!: number;
 
+  @Column('enum', { enum: Categories, default: Categories.Default })
+  @IsEnum(Categories)
+  @Expose()
+  private category: Categories;
+
   @Column()
   @Expose()
   @IsNotEmpty()
   @Length(1, 50)
-  private category: string;
+  private title: string;
 
   @Column({ default: 0 })
   private views!: number;
@@ -34,48 +53,33 @@ export class Post {
   @Length(1, 1000)
   private message: string;
 
-  @OneToMany(type => Comment, comment => comment.getPost)
+  @OneToMany(() => Comment, comment => comment.getPost)
   comments!: Comment[];
 
-  public constructor(user: User, category: string, message: string, ownerId?: number) {
-    this.user = user;
-    this.category = category;
-    this.message = message;
-  }
+  @CreateDateColumn({ type: 'timestamp' })
+  private createdAt!: Date;
 
-  public getid(): number {
-    return this.id;
+  @UpdateDateColumn({ type: 'timestamp' })
+  private updatedAt!: Date;
+
+  public constructor(
+    user: User,
+    title: string,
+    message: string,
+    category: Categories,
+    ownerId?: number
+  ) {
+    this.user = user;
+    this.title = title;
+    this.message = message;
+    this.category = category;
   }
 
   public getOwner(): User {
     return this.user;
   }
 
-  public getOwnerId(): number {
-    return this.ownerId;
-  }
-
   public addView() {
     this.views += 1;
-  }
-
-  public getViews(): number {
-    return this.views;
-  }
-
-  public setCategory(category: string) {
-    this.category = category;
-  }
-
-  public getCategory(): string {
-    return this.category;
-  }
-
-  public setMessage(message: string) {
-    this.message = message;
-  }
-
-  public getMessage(): string {
-    return this.message;
   }
 }
