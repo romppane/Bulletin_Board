@@ -2,6 +2,8 @@
 
 RESTful API for bulletin board web application.
 
+[Checkout the UI Repository too!](https://github.com/romppane/Bulletin_Board_UI)
+
 ## Project configurating and launching:
 
 **Prerequisites:** **_Node_**:_10.16.1_, **_npm_**:_6.9.0_, **_Docker_**:_19.03.1_
@@ -188,8 +190,6 @@ Body
   "title": "Change title",
   "message": "Or message",
   "category": "Can't do else!",
-  "id": "asd",
-  "ownerId": 213124,
   "views": 10000
 }
 ```
@@ -309,11 +309,7 @@ Body
 ```json
 {
   "message": "Change message",
-  "id": "Other",
-  "userId": "Things",
-  "postId": "won't",
-  "createdAt": "be",
-  "updatedAt": "affected!"
+  "ASDASD": "Other columns are not cared of!"
 }
 ```
 
