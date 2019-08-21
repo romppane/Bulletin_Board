@@ -31,75 +31,7 @@ NOTE! When installing new dependencies, use the `--build` flag at the end of the
 
 # Demo
 
-[Try the project on Heroku!](https://bulletin-board-onboarding-api.herokuapp.com/)
-
-## /users/
-
-#### GET
-
-```json
-[
-  { "avatar": "Some link to image", "id": 1 },
-  { "avatar": "Test data", "id": 3 },
-  { "avatar": "Test data", "id": 4 },
-  { "avatar": "avatar", "id": 5 }
-]
-```
-
-#### POST
-
-Body
-
-```json
-{
-  "avatar": "New avatar"
-}
-```
-
-Response
-
-```json
-{
-  "avatar": "New avatar",
-  "id": 6
-}
-```
-
-## /users/:id
-
-Example: /users/1
-
-#### GET
-
-```json
-{
-  "avatar": "Some link to image",
-  "id": 1
-}
-```
-
-#### PUT
-
-Body
-
-```json
-{
-  "avatar": "Different avatar"
-}
-```
-
-Response
-
-```json
-{
-  "avatar": "Different avatar",
-  "id": 1
-}
-```
-
-#### DELETE
-
-`Status: 204 No Content`
+[Try the project on Heroku!](https://bulletin-board-onboarding-api.herokuapp.com/posts/)
 
 ## /posts/
 
@@ -358,3 +290,71 @@ Example: /posts/1/comments
   }
 ]
 ```
+
+## /users/
+
+#### GET
+
+```json
+[
+  { "avatar": "Some link to image", "id": 1 },
+  { "avatar": "Test data", "id": 3 },
+  { "avatar": "Test data", "id": 4 },
+  { "avatar": "avatar", "id": 5 }
+]
+```
+
+#### POST
+
+Body
+
+```json
+{
+  "avatar": "New avatar"
+}
+```
+
+Response
+
+```json
+{
+  "avatar": "New avatar",
+  "id": 6
+}
+```
+
+## /users/:id
+
+Example: /users/1
+
+#### GET
+
+```json
+{
+  "avatar": "Some link to image",
+  "id": 1
+}
+```
+
+#### PUT
+
+Body
+
+```json
+{
+  "avatar": "Different avatar"
+}
+```
+
+Response
+
+```json
+{
+  "avatar": "Different avatar",
+  "id": 1
+}
+```
+
+#### DELETE
+
+`Status: 204 No Content`
