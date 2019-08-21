@@ -54,7 +54,7 @@ Body
 }
 ```
 
-Responce
+Response
 
 ```json
 {
@@ -86,7 +86,7 @@ Body
 }
 ```
 
-Responce
+Response
 
 ```json
 {
@@ -143,7 +143,7 @@ Body
 }
 ```
 
-Responce
+Response
 
 ```json
 {
@@ -194,7 +194,7 @@ Body
 }
 ```
 
-Responce
+Response
 
 ```json
 {
@@ -258,7 +258,7 @@ Body
 }
 ```
 
-Responce
+Response
 
 ```json
 {
@@ -313,7 +313,7 @@ Body
 }
 ```
 
-Responce
+Response
 
 ```json
 {
