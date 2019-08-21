@@ -102,21 +102,62 @@ Responce
 #### GET
 
 ```json
-
+[
+  {
+    "title": "Tittle",
+    "message": "Cool!",
+    "category": "default",
+    "id": 1,
+    "ownerId": 1,
+    "views": 0,
+    "createdAt": "2019-08-20T06:49:52.076Z",
+    "updatedAt": "2019-08-21T11:42:21.000Z"
+  },
+  {
+    "title": "What!",
+    "message": "No one has ever done that!",
+    "category": "default",
+    "id": 3,
+    "ownerId": 3,
+    "views": 0,
+    "createdAt": "2019-08-20T06:49:52.076Z",
+    "updatedAt": "2019-08-21T11:33:46.000Z"
+  }
+]
 ```
 
 #### POST
 
+**Category options**: "default", "other"
+
 Body
 
 ```json
-
+{
+  "title": "Sunny day!",
+  "message": "Nice weather!",
+  "category": "other",
+  "ownerId": 1
+}
 ```
 
 Responce
 
 ```json
-
+{
+  "user": {
+    "avatar": "Different avatar",
+    "id": 1
+  },
+  "title": "Sunny day!",
+  "message": "Nice weather!",
+  "category": "other",
+  "ownerId": 1,
+  "id": 4,
+  "views": 0,
+  "createdAt": "2019-08-21T11:44:42.809Z",
+  "updatedAt": "2019-08-21T11:44:42.809Z"
+}
 ```
 
 ## /posts/:id
@@ -126,7 +167,16 @@ Example: /posts/1
 #### GET
 
 ```json
-
+{
+  "title": "Tittle",
+  "message": "Cool!",
+  "category": "default",
+  "id": 1,
+  "ownerId": 1,
+  "views": 0,
+  "createdAt": "2019-08-20T06:49:52.076Z",
+  "updatedAt": "2019-08-21T11:42:21.000Z"
+}
 ```
 
 #### PUT
@@ -134,25 +184,66 @@ Example: /posts/1
 Body
 
 ```json
-
+{
+  "title": "Change title",
+  "message": "Or message",
+  "category": "Can't do else!",
+  "id": "asd",
+  "ownerId": 213124,
+  "views": 10000
+}
 ```
 
 Responce
 
 ```json
-
+{
+  "title": "Change title",
+  "message": "Or message",
+  "category": "default",
+  "id": 1,
+  "ownerId": 1,
+  "views": 0,
+  "createdAt": "2019-08-20T06:49:52.076Z",
+  "updatedAt": "2019-08-21T11:50:21.000Z"
+}
 ```
 
 #### DELETE
 
 `Status: 204 No Content`
 
-## /users/
+## /comments/
 
 #### GET
 
 ```json
-
+[
+  {
+    "message": "New message",
+    "id": 1,
+    "userId": 1,
+    "postId": 1,
+    "createdAt": "2019-08-21T11:52:31.288Z",
+    "updatedAt": "2019-08-21T11:52:31.288Z"
+  },
+  {
+    "message": "Another one",
+    "id": 2,
+    "userId": 1,
+    "postId": 1,
+    "createdAt": "2019-08-21T11:54:07.415Z",
+    "updatedAt": "2019-08-21T11:54:07.415Z"
+  },
+  {
+    "message": "Keep'em comming!",
+    "id": 3,
+    "userId": 4,
+    "postId": 1,
+    "createdAt": "2019-08-21T11:54:31.162Z",
+    "updatedAt": "2019-08-21T11:54:31.162Z"
+  }
+]
 ```
 
 #### POST
@@ -160,13 +251,38 @@ Responce
 Body
 
 ```json
-
+{
+  "userId": 1,
+  "postId": 1,
+  "message": "New message"
+}
 ```
 
 Responce
 
 ```json
-
+{
+  "user": {
+    "avatar": "Different avatar",
+    "id": 1
+  },
+  "post": {
+    "title": "Change title",
+    "message": "Or message",
+    "category": "default",
+    "id": 1,
+    "ownerId": 1,
+    "views": 0,
+    "createdAt": "2019-08-20T06:49:52.076Z",
+    "updatedAt": "2019-08-21T11:50:21.000Z"
+  },
+  "message": "New message",
+  "userId": 1,
+  "postId": 1,
+  "id": 1,
+  "createdAt": "2019-08-21T11:52:31.288Z",
+  "updatedAt": "2019-08-21T11:52:31.288Z"
+}
 ```
 
 ## /comments/:id
@@ -176,7 +292,14 @@ Example: /comments/1
 #### GET
 
 ```json
-
+{
+  "message": "New message",
+  "id": 1,
+  "userId": 1,
+  "postId": 1,
+  "createdAt": "2019-08-21T11:52:31.288Z",
+  "updatedAt": "2019-08-21T11:52:31.288Z"
+}
 ```
 
 #### PUT
@@ -184,15 +307,56 @@ Example: /comments/1
 Body
 
 ```json
-
+{
+  "message": "Change message",
+  "id": "Other",
+  "userId": "Things",
+  "postId": "won't",
+  "createdAt": "be",
+  "updatedAt": "affected!"
+}
 ```
 
 Responce
 
 ```json
-
+{
+  "message": "Change message",
+  "id": 1,
+  "userId": 1,
+  "postId": 1,
+  "createdAt": "2019-08-21T11:52:31.288Z",
+  "updatedAt": "2019-08-21T11:56:32.000Z"
+}
 ```
 
 #### DELETE
 
 `Status: 204 No Content`
+
+## /posts/:id/comments
+
+Example: /posts/1/comments
+
+#### GET
+
+```json
+[
+  {
+    "message": "Change message",
+    "id": 1,
+    "userId": 1,
+    "postId": 1,
+    "createdAt": "2019-08-21T11:52:31.288Z",
+    "updatedAt": "2019-08-21T11:56:32.000Z"
+  },
+  {
+    "message": "Another one",
+    "id": 2,
+    "userId": 1,
+    "postId": 1,
+    "createdAt": "2019-08-21T11:54:07.415Z",
+    "updatedAt": "2019-08-21T11:54:07.415Z"
+  }
+]
+```
