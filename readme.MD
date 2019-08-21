@@ -2,11 +2,13 @@
 
 RESTful API for bulletin board web application.
 
-[Checkout the UI Repository too!](https://github.com/romppane/Bulletin_Board_UI)
-
 ## Project configurating and launching:
 
-**Prerequisites:** **_Node_**:_10.16.1_, **_npm_**:_6.9.0_, **_Docker_**:_19.03.1_
+**Prerequisites:**
+
+- **_Node_**: _10.16.1_
+- **_npm_**: _6.9.0_
+- **_Docker_**: _19.03.1_
 
 ### Install
 
