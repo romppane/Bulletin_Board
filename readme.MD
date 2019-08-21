@@ -106,7 +106,7 @@ Responce
 ```json
 [
   {
-    "title": "Tittle",
+    "title": "Title",
     "message": "Cool!",
     "category": "default",
     "id": 1,
