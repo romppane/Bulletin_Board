@@ -1,29 +1,30 @@
 import express from 'express';
 import Boom from '@hapi/boom';
 import { Dependencies } from '../types';
-import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
+import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { UserService } from '../service/user-service';
+import { Validation } from '../middleware/validation';
 
 export class UserController {
   notFound: Boom;
   router: express.Router;
   userService: UserService;
-  validateParams: RequestHandler;
+  validator: Validation;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("User doesn't exist");
     this.userService = options.userService;
-    this.validateParams = options.validateParams;
+    this.validator = options.validator;
     this.initializeRoutes();
   }
 
   // Leaving this binded for the sake of memorizing this!
   initializeRoutes() {
     this.router.get('/', this.readAll.bind(this));
-    this.router.get('/:id', this.validateParams, this.readOne.bind(this));
+    this.router.get('/:id', this.validator.validateParams, this.readOne.bind(this));
     this.router.post('/', this.create.bind(this));
-    this.router.delete('/:id', this.validateParams, this.delete.bind(this));
-    this.router.put('/:id', this.validateParams, this.update.bind(this));
+    this.router.delete('/:id', this.validator.validateParams, this.delete.bind(this));
+    this.router.put('/:id', this.validator.validateParams, this.update.bind(this));
   }
 
   async readAll(req: Request, res: Response, next: NextFunction) {

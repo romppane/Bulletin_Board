@@ -7,10 +7,11 @@ import { Comment } from './entities/comment';
 import { CommentController } from './controllers/comment-controller';
 import { PostService } from './service/post-service';
 import { UserService } from './service/user-service';
-import { ErrorRequestHandler, RequestHandler } from 'express-serve-static-core';
+import { ErrorRequestHandler } from 'express-serve-static-core';
 import { Logger } from './middleware/logger';
 import { CommentService } from './service/comment-service';
 import { Environment } from './environment';
+import { Validation } from './middleware/validation';
 
 export type Dependencies = {
   postRouter: PostController;
@@ -23,11 +24,7 @@ export type Dependencies = {
   commentRepository: Repository<Comment>;
   commentService: CommentService;
   errorHandler: ErrorRequestHandler;
-  validatePost: RequestHandler;
-  validatePostPUT: RequestHandler;
-  validateParams: RequestHandler;
-  validateComment: RequestHandler;
-  validateCommentPUT: RequestHandler;
+  validator: Validation;
   logger: Logger;
   Env: Environment;
 };
