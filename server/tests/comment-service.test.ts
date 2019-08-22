@@ -19,8 +19,8 @@ const service = new CommentService(<Dependencies>{
   userRepository: userRepoInstance
 });
 const user = new User('test');
-const testPost = new Post(user, 'title', 'message', Categories.Default, 1);
-const testComment = new Comment(user, testPost, 'message');
+const testPost = new Post(user, 'title', 'message', Categories.Default, 'testuser', 1);
+const testComment = new Comment(user, testPost, 'message', 'testuser');
 
 beforeEach(() => {
   reset(commentRepository);
@@ -126,7 +126,7 @@ test('Save a new comment', async () => {
   when(userRepository.findOne(1)).thenResolve(user);
   when(postRepository.findOne(1)).thenResolve(testPost);
 
-  const result = await service.save(1, 1, 'message');
+  const result = await service.save(1, 1, 'message', 'testuser');
   expect(result).toStrictEqual(testComment);
 
   verify(postRepository.findOne(1)).called();
