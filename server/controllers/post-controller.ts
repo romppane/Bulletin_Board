@@ -70,7 +70,8 @@ export class PostController {
         req.body.ownerId,
         req.body.title,
         req.body.message,
-        req.body.category
+        req.body.category,
+        req.body.username
       );
       if (post) {
         res.status(201).send(post);

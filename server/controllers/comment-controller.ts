@@ -58,7 +58,8 @@ export class CommentController {
       const comment = await this.commentService.save(
         req.body.userId,
         req.body.postId,
-        req.body.message
+        req.body.message,
+        req.body.username
       );
       if (comment) {
         res.status(201).send(comment);

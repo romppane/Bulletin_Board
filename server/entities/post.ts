@@ -53,6 +53,11 @@ export class Post {
   @Length(1, 1000)
   private message: string;
 
+  @Column({ length: 18 })
+  @Expose()
+  @Min(1)
+  private username: string;
+
   @OneToMany(() => Comment, comment => comment.getPost)
   comments!: Comment[];
 
@@ -67,12 +72,14 @@ export class Post {
     title: string,
     message: string,
     category: Categories,
+    username: string,
     ownerId?: number
   ) {
     this.user = user;
     this.title = title;
     this.message = message;
     this.category = category;
+    this.username = username;
   }
 
   public getOwner(): User {

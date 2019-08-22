@@ -31,12 +31,12 @@ export class CommentService {
   }
 
   // Fetch user and post first, return the saved comment
-  async save(userId: number, postId: number, message: string) {
+  async save(userId: number, postId: number, message: string, username: string) {
     try {
       const user = await this.userRepository.findOne(userId);
       const post = await this.postRepository.findOne(postId);
       if (user && post) {
-        const comment: Comment = new Comment(user, post, message);
+        const comment: Comment = new Comment(user, post, message, username);
         return this.commentRepository.save(comment);
       } else {
         return undefined;

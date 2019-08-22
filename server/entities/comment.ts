@@ -42,16 +42,29 @@ export class Comment {
   @MaxLength(500)
   private message: string;
 
+  @Column({ length: 18 })
+  @Expose()
+  @Min(1)
+  private username: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   private createdAt!: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   private updatedAt!: Date;
 
-  public constructor(user: User, post: Post, message: string, userId?: number, postId?: number) {
+  public constructor(
+    user: User,
+    post: Post,
+    message: string,
+    username: string,
+    userId?: number,
+    postId?: number
+  ) {
     this.user = user;
     this.post = post;
     this.message = message;
+    this.username = username;
   }
 
   public getOwner(): User {
