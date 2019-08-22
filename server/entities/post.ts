@@ -1,4 +1,4 @@
-import { Length, IsNotEmpty, IsInt, Min, IsEnum } from 'class-validator';
+import { Length, IsNotEmpty, IsInt, Min, IsEnum, IsAlphanumeric } from 'class-validator';
 import { Expose } from 'class-transformer';
 import {
   Entity,
@@ -55,7 +55,8 @@ export class Post {
 
   @Column({ length: 18 })
   @Expose()
-  @Min(1)
+  @IsAlphanumeric()
+  @Length(1, 18)
   private username: string;
 
   @OneToMany(() => Comment, comment => comment.getPost)

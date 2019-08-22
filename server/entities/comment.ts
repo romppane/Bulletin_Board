@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn
 } from 'typeorm';
-import { IsInt, MaxLength, Min } from 'class-validator';
+import { IsInt, MaxLength, Min, IsAlphanumeric, Length } from 'class-validator';
 import { Expose } from 'class-transformer';
 import { User } from './user';
 import { Post } from './post';
@@ -44,7 +44,8 @@ export class Comment {
 
   @Column({ length: 18 })
   @Expose()
-  @Min(1)
+  @IsAlphanumeric()
+  @Length(1, 18)
   private username: string;
 
   @CreateDateColumn({ type: 'timestamp' })
