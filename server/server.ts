@@ -43,9 +43,9 @@ export class Server {
     this.app.use(this.logger.errorResponces());
 
     // Routing
-    this.app.use('/posts', this.postRouter.router);
-    this.app.use('/users', this.userRouter.router);
-    this.app.use('/comments', this.commentRouter.router);
+    this.app.use('v1/posts', this.postRouter.router);
+    this.app.use('v1/users', this.userRouter.router);
+    this.app.use('v1/comments', this.commentRouter.router);
     // Error handler
     this.app.use(this.errorHandler);
     this.app.listen(this.Env.PORT, () => {
