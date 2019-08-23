@@ -99,7 +99,7 @@ interface ValidParams {
   id: number;
 }
 
-export class Validation {
+export class Validator {
   validationError = Boom.badRequest('Validation error');
 
   validatePost = (req: Request, res: Response, next: NextFunction) => {

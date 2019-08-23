@@ -3,13 +3,13 @@ import Boom from '@hapi/boom';
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { UserService } from '../service/user-service';
-import { Validation } from '../middleware/validation';
+import { Validator } from '../middleware/validation';
 
 export class UserController {
   notFound: Boom;
   router: express.Router;
   userService: UserService;
-  validator: Validation;
+  validator: Validator;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("User doesn't exist");

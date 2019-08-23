@@ -4,14 +4,14 @@ import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
 import { CommentService } from '../service/comment-service';
-import { Validation } from '../middleware/validation';
+import { Validator } from '../middleware/validation';
 
 export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
   commentService: CommentService;
-  validator: Validation;
+  validator: Validator;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");

@@ -3,13 +3,13 @@ import Boom from '@hapi/boom';
 import { Dependencies } from '../types';
 import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { CommentService } from '../service/comment-service';
-import { Validation } from '../middleware/validation';
+import { Validator } from '../middleware/validation';
 
 export class CommentController {
   notFound: Boom;
   router: express.Router;
   commentService: CommentService;
-  validator: Validation;
+  validator: Validator;
 
   constructor(options: Dependencies) {
     this.notFound = Boom.notFound("Comment doesn't exist");
