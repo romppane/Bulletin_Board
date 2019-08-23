@@ -35,7 +35,7 @@ NOTE! When installing new dependencies, use the `--build` flag at the end of the
 
 NOTE! Because of the structure of database, inserting ownerId in posts and userId in comments is mandatory! The username attributes in posts and comments is only a temporary solution designed for demoing purposes until user features get fully implemented! The project seeds the database with a user who's got an ID of 1 use that that when inserting data to the database!
 
-## /posts/
+## /v1/posts/
 
 #### GET
 
@@ -102,9 +102,9 @@ Response
 }
 ```
 
-## /posts/:id
+## /v1/posts/:id
 
-Example: /posts/1
+Example: /v1/posts/1
 
 #### GET
 
@@ -155,7 +155,7 @@ Response
 
 `Status: 204 No Content`
 
-## /comments/
+## /v1/comments/
 
 #### GET
 
@@ -233,9 +233,9 @@ Response
 }
 ```
 
-## /comments/:id
+## /v1/comments/:id
 
-Example: /comments/1
+Example: /v1/comments/1
 
 #### GET
 
@@ -280,9 +280,9 @@ Response
 
 `Status: 204 No Content`
 
-## /posts/:id/comments
+## /v1/posts/:id/comments
 
-Example: /posts/1/comments
+Example: /v1/posts/1/comments
 
 #### GET
 
@@ -309,7 +309,7 @@ Example: /posts/1/comments
 ]
 ```
 
-## /users/
+## /v1/users/
 
 #### GET
 
@@ -341,9 +341,9 @@ Response
 }
 ```
 
-## /users/:id
+## /v1/users/:id
 
-Example: /users/1
+Example: /v1/users/1
 
 #### GET
 
