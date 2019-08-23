@@ -7,7 +7,7 @@ import { Comment } from './entities/comment';
 import { UserSeed1565945881563 } from './migrations/1565945881563-UserSeed';
 
 export const connectDB = (Env: Environment) => {
-  const migrations = process.env.production ? './migrations/*' : UserSeed1565945881563;
+  const migrations = Env.DB_SYNCHRONIZE ? UserSeed1565945881563 : './migrations/*';
   const db: MysqlConnectionOptions = {
     type: 'mariadb',
     url: Env.DB_URL,
