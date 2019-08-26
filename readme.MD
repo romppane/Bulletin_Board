@@ -33,7 +33,9 @@ NOTE! When installing new dependencies, use the `--build` flag at the end of the
 
 [Try the project on Heroku!](https://bulletin-board-onboarding-api.herokuapp.com/posts/)
 
-## /posts/
+NOTE! Because of the structure of database, inserting ownerId in posts and userId in comments is mandatory! The username attributes in posts and comments is only a temporary solution designed for demoing purposes until user features get fully implemented! The project seeds the database with a user who's got an ID of 1 use that that when inserting data to the database!
+
+## /v1/posts/
 
 #### GET
 
@@ -43,6 +45,7 @@ NOTE! When installing new dependencies, use the `--build` flag at the end of the
     "title": "Title",
     "message": "Cool!",
     "category": "default",
+    "username": "Test user",
     "id": 1,
     "ownerId": 1,
     "views": 0,
@@ -53,6 +56,7 @@ NOTE! When installing new dependencies, use the `--build` flag at the end of the
     "title": "What!",
     "message": "No one has ever done that!",
     "category": "default",
+    "username": "PogChamp",
     "id": 3,
     "ownerId": 3,
     "views": 0,
@@ -73,6 +77,7 @@ Body
   "title": "Sunny day!",
   "message": "Nice weather!",
   "category": "other",
+  "username": "Chase McDude",
   "ownerId": 1
 }
 ```
@@ -88,6 +93,7 @@ Response
   "title": "Sunny day!",
   "message": "Nice weather!",
   "category": "other",
+  "username": "Chase McDude",
   "ownerId": 1,
   "id": 4,
   "views": 0,
@@ -96,9 +102,9 @@ Response
 }
 ```
 
-## /posts/:id
+## /v1/posts/:id
 
-Example: /posts/1
+Example: /v1/posts/1
 
 #### GET
 
@@ -107,6 +113,7 @@ Example: /posts/1
   "title": "Tittle",
   "message": "Cool!",
   "category": "default",
+  "username": "Test user",
   "id": 1,
   "ownerId": 1,
   "views": 0,
@@ -135,6 +142,7 @@ Response
   "title": "Change title",
   "message": "Or message",
   "category": "default",
+  "username": "Test user",
   "id": 1,
   "ownerId": 1,
   "views": 0,
@@ -147,7 +155,7 @@ Response
 
 `Status: 204 No Content`
 
-## /comments/
+## /v1/comments/
 
 #### GET
 
@@ -155,6 +163,7 @@ Response
 [
   {
     "message": "New message",
+    "username": "user",
     "id": 1,
     "userId": 1,
     "postId": 1,
@@ -163,6 +172,7 @@ Response
   },
   {
     "message": "Another one",
+    "username": "Anon",
     "id": 2,
     "userId": 1,
     "postId": 1,
@@ -171,6 +181,7 @@ Response
   },
   {
     "message": "Keep'em comming!",
+    "username": "Chase McDude",
     "id": 3,
     "userId": 4,
     "postId": 1,
@@ -188,7 +199,8 @@ Body
 {
   "userId": 1,
   "postId": 1,
-  "message": "New message"
+  "message": "New message",
+  "username": "user"
 }
 ```
 
@@ -204,6 +216,7 @@ Response
     "title": "Change title",
     "message": "Or message",
     "category": "default",
+    "username": "Test user",
     "id": 1,
     "ownerId": 1,
     "views": 0,
@@ -211,6 +224,7 @@ Response
     "updatedAt": "2019-08-21T11:50:21.000Z"
   },
   "message": "New message",
+  "username": "user",
   "userId": 1,
   "postId": 1,
   "id": 1,
@@ -219,15 +233,16 @@ Response
 }
 ```
 
-## /comments/:id
+## /v1/comments/:id
 
-Example: /comments/1
+Example: /v1/comments/1
 
 #### GET
 
 ```json
 {
   "message": "New message",
+  "username": "user",
   "id": 1,
   "userId": 1,
   "postId": 1,
@@ -252,6 +267,7 @@ Response
 ```json
 {
   "message": "Change message",
+  "username": "user",
   "id": 1,
   "userId": 1,
   "postId": 1,
@@ -264,9 +280,9 @@ Response
 
 `Status: 204 No Content`
 
-## /posts/:id/comments
+## /v1/posts/:id/comments
 
-Example: /posts/1/comments
+Example: /v1/posts/1/comments
 
 #### GET
 
@@ -274,6 +290,7 @@ Example: /posts/1/comments
 [
   {
     "message": "Change message",
+    "username": "user",
     "id": 1,
     "userId": 1,
     "postId": 1,
@@ -282,6 +299,7 @@ Example: /posts/1/comments
   },
   {
     "message": "Another one",
+    "username": "Test user",
     "id": 2,
     "userId": 1,
     "postId": 1,
@@ -291,7 +309,7 @@ Example: /posts/1/comments
 ]
 ```
 
-## /users/
+## /v1/users/
 
 #### GET
 
@@ -323,9 +341,9 @@ Response
 }
 ```
 
-## /users/:id
+## /v1/users/:id
 
-Example: /users/1
+Example: /v1/users/1
 
 #### GET
 

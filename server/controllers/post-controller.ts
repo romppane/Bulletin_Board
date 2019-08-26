@@ -1,36 +1,38 @@
 import express from 'express';
 import Boom from '@hapi/boom';
-import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
+import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { Dependencies } from '../types';
 import { PostService } from '../service/post-service';
 import { CommentService } from '../service/comment-service';
+import { Validator } from '../middleware/validation';
 
 export class PostController {
   notFound: Boom;
   router: express.Router;
   postService: PostService;
   commentService: CommentService;
-  validatePost: RequestHandler;
-  validatePostPUT: RequestHandler;
-  validateParams: RequestHandler;
+  validator: Validator;
   constructor(options: Dependencies) {
     this.router = express.Router();
     this.notFound = Boom.notFound("Post doesn't exist");
     this.postService = options.postService;
     this.commentService = options.commentService;
-    this.validatePost = options.validatePost;
-    this.validatePostPUT = options.validatePostPUT;
-    this.validateParams = options.validateParams;
+    this.validator = options.validator;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
     this.router.get('/', this.readAll);
-    this.router.get('/:id', this.validateParams, this.readOne);
-    this.router.get('/:id/comments', this.validateParams, this.readPostComments);
-    this.router.post('/', this.validatePost, this.create);
-    this.router.delete('/:id', this.validateParams, this.delete);
-    this.router.put('/:id', this.validateParams, this.validatePostPUT, this.update);
+    this.router.get('/:id', this.validator.validateParams, this.readOne);
+    this.router.get('/:id/comments', this.validator.validateParams, this.readPostComments);
+    this.router.post('/', this.validator.validatePost, this.create);
+    this.router.delete('/:id', this.validator.validateParams, this.delete);
+    this.router.put(
+      '/:id',
+      this.validator.validateParams,
+      this.validator.validatePostPUT,
+      this.update
+    );
   }
 
   readAll = async (req: Request, res: Response, next: NextFunction) => {
@@ -70,7 +72,8 @@ export class PostController {
         req.body.ownerId,
         req.body.title,
         req.body.message,
-        req.body.category
+        req.body.category,
+        req.body.username
       );
       if (post) {
         res.status(201).send(post);

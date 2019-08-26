@@ -1,33 +1,35 @@
 import express from 'express';
 import Boom from '@hapi/boom';
 import { Dependencies } from '../types';
-import { Request, Response, NextFunction, RequestHandler } from 'express-serve-static-core';
+import { Request, Response, NextFunction } from 'express-serve-static-core';
 import { CommentService } from '../service/comment-service';
+import { Validator } from '../middleware/validation';
 
 export class CommentController {
   notFound: Boom;
   router: express.Router;
   commentService: CommentService;
-  validateComment: RequestHandler;
-  validateCommentPUT: RequestHandler;
-  validateParams: RequestHandler;
+  validator: Validator;
 
   constructor(options: Dependencies) {
     this.notFound = Boom.notFound("Comment doesn't exist");
     this.router = express.Router();
     this.commentService = options.commentService;
-    this.validateComment = options.validateComment;
-    this.validateCommentPUT = options.validateCommentPUT;
-    this.validateParams = options.validateParams;
+    this.validator = options.validator;
     this.initializeRoutes();
   }
 
   initializeRoutes() {
     this.router.get('/', this.readAll);
-    this.router.get('/:id', this.validateParams, this.readOne);
-    this.router.post('/', this.validateComment, this.create);
-    this.router.delete('/:id', this.validateParams, this.delete);
-    this.router.put('/:id', this.validateParams, this.validateCommentPUT, this.update);
+    this.router.get('/:id', this.validator.validateParams, this.readOne);
+    this.router.post('/', this.validator.validateComment, this.create);
+    this.router.delete('/:id', this.validator.validateParams, this.delete);
+    this.router.put(
+      '/:id',
+      this.validator.validateParams,
+      this.validator.validateCommentPUT,
+      this.update
+    );
   }
 
   readAll = async (req: Request, res: Response, next: NextFunction) => {
@@ -58,7 +60,8 @@ export class CommentController {
       const comment = await this.commentService.save(
         req.body.userId,
         req.body.postId,
-        req.body.message
+        req.body.message,
+        req.body.username
       );
       if (comment) {
         res.status(201).send(comment);

@@ -11,13 +11,7 @@ import { UserService } from './service/user-service';
 import { handleErrors } from './middleware/errors';
 import { Logger } from './middleware/logger';
 import { CommentService } from './service/comment-service';
-import {
-  validatePost,
-  validatePostPUT,
-  validateParams,
-  validateComment,
-  validateCommentPUT
-} from './middleware/validation';
+import { Validator } from './middleware/validation';
 import { connectDB } from './db';
 import { Environment } from './environment';
 
@@ -38,11 +32,7 @@ export function configureContainer(Env: Environment) {
       commentRouter: awilix.asClass(CommentController),
       commentRepository: awilix.asValue(connection.getRepository(Comment)),
       commentService: awilix.asClass(CommentService),
-      validatePost: awilix.asValue(validatePost),
-      validatePostPUT: awilix.asValue(validatePostPUT),
-      validateParams: awilix.asValue(validateParams),
-      validateComment: awilix.asValue(validateComment),
-      validateCommentPUT: awilix.asValue(validateCommentPUT),
+      validator: awilix.asClass(Validator),
       logger: awilix.asClass(Logger),
       Env: awilix.asValue(Env),
       app: awilix.asClass(Server)
