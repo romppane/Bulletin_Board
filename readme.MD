@@ -35,7 +35,7 @@ NOTE! When installing new dependencies, use the `--build` flag at the end of the
 
 # Demo
 
-[Try the project on Heroku!](https://bulletin-board-onboarding-api.herokuapp.com/posts/)
+[Try the project on Heroku!](https://bulletin-board-onboarding-api.herokuapp.com/v1/posts/)
 
 NOTE! Because of the structure of database, inserting ownerId in posts and userId in comments is mandatory! The username attributes in posts and comments is only a temporary solution designed for demoing purposes until user features get fully implemented! The project seeds the database with a user who's got an ID of 1 use that that when inserting data to the database!
 
