@@ -2,6 +2,10 @@
 
 RESTful API for bulletin board web application.
 
+[Check out my UI project too that uses this project as it's backend!](https://goofy-jones-1c4e18.netlify.com/)
+
+[Link to the UI repository.](https://github.com/romppane/Bulletin_Board_UI)
+
 ## Project configurating and launching:
 
 **Prerequisites:**
