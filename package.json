@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/romppane/Bulletin_Board#readme",
   "dependencies": {
-    "@hapi/boom": "^7.4.2",
+    "@hapi/boom": "^7.4.11",
     "awilix": "^4.2.2",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.0-rc.1",
